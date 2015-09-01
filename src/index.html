@@ -1,0 +1,17 @@
+<html>
+    <head>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/js-yaml/3.4.0/js-yaml.min.js"></script>
+      <script type="text/javascript" src="js/app.js"></script>
+      <script type="text/javascript" src="https://www.google.com/jsapi?callback=apiLoaded"></script>
+    </head>
+    <body>
+        <div id="authorize-div" style="display: none">
+      <span>Authorize access to Drive API</span>
+      <!--Button for the user to click to initiate auth sequence -->
+      <button id="authorize-button" onclick="window.auth.handleAuthClick(event)">
+        Authorize
+      </button>
+    </div>
+    </body>
+
+</html>    
