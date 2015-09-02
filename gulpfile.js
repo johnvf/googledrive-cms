@@ -20,7 +20,7 @@ gulp.task('watch', function(){
 })
 
 gulp.task('less', function() {
-    gulp.src('./src/less/style.less')
+    gulp.src('./src/less/styles.less')
         .pipe(less({}))
         .pipe(gulp.dest('dist/css'));
 });

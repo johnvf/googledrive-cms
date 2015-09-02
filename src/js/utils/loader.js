@@ -12,7 +12,7 @@ var GAPI;
 function loadAll(gapi) {
   GAPI = gapi;
 
-  var config_file_id = "0B2GRGnCnDHZjc1A0UFRTOEhsd2M";
+  var config_file_id = "0B2GRGnCnDHZjV283R0VnbTFJdVk";
   GAPI.client.load('drive', 'v2', getFileContent.bind(null, config_file_id));
 }
 
@@ -52,35 +52,62 @@ function receiveProjectData(data) {
   var project_data = jsyaml.load(data);
   console.log(project_data);
 
-  drawReports(project_data);
+  makeReports(project_data);
 }
 
 
 
-function drawReports(project_data) {
+function makeReports(project_data) {
   var report = project_data.reports["2015_0825 Water Usage"]
-
-  Object.keys(report.charts).forEach(function(chart_id) {
-    var chart_data = report.charts[chart_id]
+  makeReportBody( report )
+  Object.keys(report.items).forEach(function(item_id) {
+    var item_data = report.items[item_id]
 
     // Set this for later
-    chart_data.chart_id = chart_id
+    item_data.item_id = item_id
 
-    var chart_div = document.createElement("div");
-    chart_div.setAttribute("id", chart_id);
-    document.body.appendChild(chart_div);
+    // In a template, these divs already exist and don't have to be created
+    // var item_div = document.createElement("div");
+    // item_div.setAttribute("id", item_id);
+    // document.body.appendChild(item_div);
 
-    drawChart(chart_data)
+    if( item_data.type == "chart"){
+      makeChart(item_data);
+    }
+    else if( item_data.type == "text"){
+      makeText(item_data);
+    }
+    
   });
 }
 
-function drawChart(chart_data) {
-  var queryString = ["sheet=" + encodeURIComponent(chart_data.sheet), "range=" + (chart_data.range)].join("&")
-  var query = new google.visualization.Query(chart_data.url + "/gviz/tq?&" + queryString)
-  query.send(handleChartQueryResponse.bind(null, chart_data));
+function makeReportBody( report ){
+  var element, content;
+  var theDiv = document.getElementById("report");
+
+  element = document.createElement('h3');
+  content = document.createTextNode(report.title);
+  element.appendChild(content);
+  theDiv.appendChild(element);
+
+  element = document.createElement('p');
+  content = document.createTextNode(report.body);
+  element.appendChild(content);
+  theDiv.appendChild(element);
 }
 
-function handleChartQueryResponse(chart_data, response) {
+function makeText(item_data) {
+  console.log(item_data)
+  document.getElementById(item_data.item_id).innerHTML = item_data.body;
+}
+
+function makeChart(item_data) {
+  var queryString = ["sheet=" + encodeURIComponent(item_data.sheet), "range=" + (item_data.range)].join("&")
+  var query = new google.visualization.Query(item_data.url + "/gviz/tq?&" + queryString)
+  query.send(handleChartQueryResponse.bind(null, item_data));
+}
+
+function handleChartQueryResponse(item_data, response) {
   if (response.isError()) {
     alert('Error in query: ' + response.getMessage() + ' ' + response.getDetailedMessage());
     return;
@@ -88,22 +115,22 @@ function handleChartQueryResponse(chart_data, response) {
 
   var data = response.getDataTable();
 
-  console.log(chart_data)
+  // console.log(item_data)
 
-  var chart = new google.visualization.ColumnChart(document.getElementById(chart_data.chart_id));
+  var chart = new google.visualization.ColumnChart(document.getElementById(item_data.item_id));
   chart.draw(data, {
     height: 400
   });
 
   function resize() {
-    var chart = new google.visualization.ColumnChart(document.getElementById(chart_data.chart_id));
+    var chart = new google.visualization.ColumnChart(document.getElementById(item_data.item_id));
     chart.draw(data, {
       height: 400
     });
   }
 
   window.onload = resize();
-  window.onresize = resize;
+  window.onresize = resize();
 }
 
 module.exports = {

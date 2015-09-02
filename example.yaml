@@ -4,17 +4,34 @@
     client: "-"
   reports: 
     2015_0825 Water Usage: 
-      text: "*   Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aliquam hendrerit mi posuere lectus. Vestibulum enim wisi, viverra nec, fringilla in, laoreet vitae, risus. *   Donec sit amet nisl. Aliquam semper ipsum sit amet velit. Suspendisse id sem consectetuer libero luctus adipiscing."
-      charts: 
-        chart_1: 
+      template: "Template_1"
+      title: "Eden Housing Water Usage Report"
+      body: "*   Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aliquam hendrerit mi posuere lectus. Vestibulum enim wisi, viverra nec, fringilla in, laoreet vitae, risus. *   Donec sit amet nisl. Aliquam semper ipsum sit amet velit. Suspendisse id sem consectetuer libero luctus adipiscing."
+      items: 
+        A:
+          type: "chart"
           url: "https://docs.google.com/spreadsheets/d/1Lg5VH8_mC316v-IeyAwTsSywphKEsW7nIYi12DwVoxE"
-          type: "ColumnChart"
           heading: "Petaluma Rainfall"
           sheet: "Data - Rainfall"
           range: "B2:C13"
-        chart_3: 
+        B:
+          type: "text"
+          body: "*   Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aliquam hendrerit mi posuere lectus. Vestibulum enim wisi, viverra nec, fringilla in, laoreet vitae, risus. *   Donec sit amet nisl. Aliquam semper ipsum sit amet velit. Suspendisse id sem consectetuer libero luctus adipiscing."
+        C:
+          type: "text"
+          body: "*   Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aliquam hendrerit mi posuere lectus. Vestibulum enim wisi, viverra nec, fringilla in, laoreet vitae, risus. *   Donec sit amet nisl. Aliquam semper ipsum sit amet velit. Suspendisse id sem consectetuer libero luctus adipiscing."
+        D: 
+          type: "chart"
           url: "https://docs.google.com/spreadsheets/d/1Lg5VH8_mC316v-IeyAwTsSywphKEsW7nIYi12DwVoxE"
-          type: "ColumnChart"
+          heading: "Richmond Rainfall"
+          sheet: "Data - Rainfall"
+          range: "B15:C26"
+        E: 
+          type: "chart"
+          url: "https://docs.google.com/spreadsheets/d/1Lg5VH8_mC316v-IeyAwTsSywphKEsW7nIYi12DwVoxE"
           heading: "Toilet Water Offset"
           sheet: "Data - Other"
           range: "B2:C13"
+        F:
+          type: "text"
+          body: "*   Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aliquam hendrerit mi posuere lectus. Vestibulum enim wisi, viverra nec, fringilla in, laoreet vitae, risus. *   Donec sit amet nisl. Aliquam semper ipsum sit amet velit. Suspendisse id sem consectetuer libero luctus adipiscing."

@@ -3,7 +3,7 @@ var loader = require('./loader.js')
 // Your Client ID can be retrieved from your project in the Google
 // Developer Console, https://console.developers.google.com
 // FIXME: Need to move 'service level auth' to server instead
-var CLIENT_ID = null// REMOVED to protect the innocent - ;
+var CLIENT_ID = // REMOVED to protect the innocent - ;
 
 var SCOPES = ['https://www.googleapis.com/auth/drive'];
 
