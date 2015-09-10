@@ -3,7 +3,7 @@ var Router = require('react-router');
 var { Link } = Router;
 
 // Components
-var Report = require('../components/Report.react');
+var Report = require('../components/Report');
 
 var Reports = React.createClass({
     

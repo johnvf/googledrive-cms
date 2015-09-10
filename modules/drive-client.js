@@ -9,7 +9,7 @@ var google = require('googleapis');
     Promise = require('promise'),
     yaml = require('yamljs');
 
-var key = require('../key.json');
+var key = require('../.keys/google.json');
 var scopes = ['https://www.googleapis.com/auth/drive'];
 var jwtClient = new google.auth.JWT(key.client_email, null, key.private_key, scopes , null);
 

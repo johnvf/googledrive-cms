@@ -4,6 +4,8 @@ var { Link } = Router;
 
 var ProjectStore = require('../stores/ProjectStore')
 
+var Login = require('../components/Login')
+
 function getStateFromStores() {
   return {
     project: ProjectStore.getProject(),
@@ -33,6 +35,7 @@ var Landing = React.createClass({
     return (
     <div>
       LANDING
+      <Login/>
       <pre>
       {project}
       </pre>

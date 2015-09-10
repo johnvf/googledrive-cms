@@ -11,8 +11,8 @@ var RouteHandler = Router.RouteHandler;
 var WebAPIUtils = require('./utils/WebAPIUtils');
 
 // Pages
-var Landing = require('./pages/Landing.react'),
-    Reports = require('./pages/Reports.react')
+var Landing = require('./pages/Landing'),
+    Reports = require('./pages/Reports')
 
 var App = React.createClass({
 
