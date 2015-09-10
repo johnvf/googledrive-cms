@@ -14,4 +14,5 @@ Mock-Up for dynamic content driven by spreadsheets/docs
 
 ### Notes:
 
-* env.sh should remain untracked using `git update-index --assume-unchanged env.sh`, then updated with personal keys etc. In deployment, these variables would come from elsewhere.
+* Requires service account key from https://console.developers.google.com
+The key JSON must be in the root directory of the repo.
