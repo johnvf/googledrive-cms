@@ -16,7 +16,10 @@ function setupServer(){
 	app.use( bodyParser.json() );
 	app.use( bodyParser.urlencoded({ extended: true }) );
 
-	driveClient.initialize();
+	driveClient.load( function(data){ 
+		console.log(JSON.stringify(data, undefined, 2));
+		console.log("success");
+	});
 
 	// Init routes
 	app.use("/", express.static( staticRoot ));
