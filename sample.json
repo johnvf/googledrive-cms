@@ -1,0 +1,492 @@
+{
+  "properties": {
+    "name": "Eden Housing",
+    "client": "-"
+  },
+  "reports": {
+    "2015_0825 Water Usage": {
+      "template": "Template_1",
+      "title": "Eden Housing Water Usage",
+      "body": "*   Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aliquam hendrerit mi posuere lectus. Vestibulum enim wisi, viverra nec, fringilla in, laoreet vitae, risus. *   Donec sit amet nisl. Aliquam semper ipsum sit amet velit. Suspendisse id sem consectetuer libero luctus adipiscing.",
+      "items": {
+        "A": {
+          "type": "chart",
+          "key": "1_Xwf9ska_pRZ4hMP8rW6a9PRDJOryqxPKmLTiO7io38",
+          "heading": "Petaluma Rainfall",
+          "sheet": "0",
+          "range": "B2:C13",
+          "data": {
+            "cells": {
+              "2": {
+                "2": {
+                  "row": "2",
+                  "col": "2",
+                  "value": "Jan"
+                },
+                "3": {
+                  "row": "2",
+                  "col": "3",
+                  "value": "4.93"
+                }
+              },
+              "3": {
+                "2": {
+                  "row": "3",
+                  "col": "2",
+                  "value": "Feb"
+                },
+                "3": {
+                  "row": "3",
+                  "col": "3",
+                  "value": "5.32"
+                }
+              },
+              "4": {
+                "2": {
+                  "row": "4",
+                  "col": "2",
+                  "value": "March "
+                },
+                "3": {
+                  "row": "4",
+                  "col": "3",
+                  "value": "3.79"
+                }
+              },
+              "5": {
+                "2": {
+                  "row": "5",
+                  "col": "2",
+                  "value": "April "
+                },
+                "3": {
+                  "row": "5",
+                  "col": "3",
+                  "value": "1.63"
+                }
+              },
+              "6": {
+                "2": {
+                  "row": "6",
+                  "col": "2",
+                  "value": "May "
+                },
+                "3": {
+                  "row": "6",
+                  "col": "3",
+                  "value": "0.87"
+                }
+              },
+              "7": {
+                "2": {
+                  "row": "7",
+                  "col": "2",
+                  "value": "June "
+                },
+                "3": {
+                  "row": "7",
+                  "col": "3",
+                  "value": "0.17"
+                }
+              },
+              "8": {
+                "2": {
+                  "row": "8",
+                  "col": "2",
+                  "value": "July"
+                },
+                "3": {
+                  "row": "8",
+                  "col": "3",
+                  "value": "0.01"
+                }
+              },
+              "9": {
+                "2": {
+                  "row": "9",
+                  "col": "2",
+                  "value": "August "
+                },
+                "3": {
+                  "row": "9",
+                  "col": "3",
+                  "value": "0.06"
+                }
+              },
+              "10": {
+                "2": {
+                  "row": "10",
+                  "col": "2",
+                  "value": "September "
+                },
+                "3": {
+                  "row": "10",
+                  "col": "3",
+                  "value": "0.21"
+                }
+              },
+              "11": {
+                "2": {
+                  "row": "11",
+                  "col": "2",
+                  "value": "October "
+                },
+                "3": {
+                  "row": "11",
+                  "col": "3",
+                  "value": "1.43"
+                }
+              },
+              "12": {
+                "2": {
+                  "row": "12",
+                  "col": "2",
+                  "value": "November "
+                },
+                "3": {
+                  "row": "12",
+                  "col": "3",
+                  "value": "3.29"
+                }
+              },
+              "13": {
+                "2": {
+                  "row": "13",
+                  "col": "2",
+                  "value": "December "
+                },
+                "3": {
+                  "row": "13",
+                  "col": "3",
+                  "value": "4.94"
+                }
+              }
+            }
+          }
+        },
+        "B": {
+          "type": "text",
+          "body": "*   Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aliquam hendrerit mi posuere lectus. Vestibulum enim wisi, viverra nec, fringilla in, laoreet vitae, risus. *   Donec sit amet nisl. Aliquam semper ipsum sit amet velit. Suspendisse id sem consectetuer libero luctus adipiscing."
+        },
+        "C": {
+          "type": "text",
+          "body": "*   Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aliquam hendrerit mi posuere lectus. Vestibulum enim wisi, viverra nec, fringilla in, laoreet vitae, risus. *   Donec sit amet nisl. Aliquam semper ipsum sit amet velit. Suspendisse id sem consectetuer libero luctus adipiscing."
+        },
+        "D": {
+          "type": "chart",
+          "key": "1_Xwf9ska_pRZ4hMP8rW6a9PRDJOryqxPKmLTiO7io38",
+          "heading": "Richmond Rainfall",
+          "sheet": "0",
+          "range": "B15:C26",
+          "data": {
+            "cells": {
+              "15": {
+                "2": {
+                  "row": "15",
+                  "col": "2",
+                  "value": "Jan"
+                },
+                "3": {
+                  "row": "15",
+                  "col": "3",
+                  "value": "4.83"
+                }
+              },
+              "16": {
+                "2": {
+                  "row": "16",
+                  "col": "2",
+                  "value": "Feb"
+                },
+                "3": {
+                  "row": "16",
+                  "col": "3",
+                  "value": "4.80"
+                }
+              },
+              "17": {
+                "2": {
+                  "row": "17",
+                  "col": "2",
+                  "value": "March "
+                },
+                "3": {
+                  "row": "17",
+                  "col": "3",
+                  "value": "3.37"
+                }
+              },
+              "18": {
+                "2": {
+                  "row": "18",
+                  "col": "2",
+                  "value": "April "
+                },
+                "3": {
+                  "row": "18",
+                  "col": "3",
+                  "value": "1.47"
+                }
+              },
+              "19": {
+                "2": {
+                  "row": "19",
+                  "col": "2",
+                  "value": "May "
+                },
+                "3": {
+                  "row": "19",
+                  "col": "3",
+                  "value": "0.75"
+                }
+              },
+              "20": {
+                "2": {
+                  "row": "20",
+                  "col": "2",
+                  "value": "June "
+                },
+                "3": {
+                  "row": "20",
+                  "col": "3",
+                  "value": "0.20"
+                }
+              },
+              "21": {
+                "2": {
+                  "row": "21",
+                  "col": "2",
+                  "value": "July"
+                },
+                "3": {
+                  "row": "21",
+                  "col": "3",
+                  "value": "0.00"
+                }
+              },
+              "22": {
+                "2": {
+                  "row": "22",
+                  "col": "2",
+                  "value": "August "
+                },
+                "3": {
+                  "row": "22",
+                  "col": "3",
+                  "value": "0.06"
+                }
+              },
+              "23": {
+                "2": {
+                  "row": "23",
+                  "col": "2",
+                  "value": "September "
+                },
+"3": {
+                  "row": "23",
+                  "col": "3",
+                  "value": "0.16"
+                }
+              },
+              "24": {
+                "2": {
+                  "row": "24",
+                  "col": "2",
+                  "value": "October "
+                },
+                "3": {
+                  "row": "24",
+                  "col": "3",
+                  "value": "1.44"
+                }
+              },
+              "25": {
+                "2": {
+                  "row": "25",
+                  "col": "2",
+                  "value": "November "
+                },
+                "3": {
+                  "row": "25",
+                  "col": "3",
+                  "value": "3.24"
+                }
+              },
+              "26": {
+                "2": {
+                  "row": "26",
+                  "col": "2",
+                  "value": "December "
+                },
+                "3": {
+                  "row": "26",
+                  "col": "3",
+                  "value": "4.61"
+                }
+              }
+            }
+          }
+        },
+        "E": {
+          "type": "chart",
+          "key": "1_Xwf9ska_pRZ4hMP8rW6a9PRDJOryqxPKmLTiO7io38",
+          "heading": "Toilet Water Offset",
+          "sheet": "1",
+          "range": "B2:C13",
+          "data": {
+            "cells": {
+              "2": {
+                "2": {
+                  "row": "2",
+                  "col": "2",
+                  "value": "Jan "
+                },
+                "3": {
+                  "row": "2",
+                  "col": "3",
+                  "value": "9,600"
+                }
+              },
+              "3": {
+                "2": {
+                  "row": "3",
+                  "col": "2",
+                  "value": "Feb "
+                },
+                "3": {
+                  "row": "3",
+                  "col": "3",
+                  "value": "9,600"
+                }
+              },
+              "4": {
+                "2": {
+                  "row": "4",
+                  "col": "2",
+                  "value": "Mar"
+                },
+                "3": {
+                  "row": "4",
+                  "col": "3",
+                  "value": "9,600"
+                }
+              },
+              "5": {
+                "2": {
+                  "row": "5",
+                  "col": "2",
+                  "value": "Apr"
+                },
+                "3": {
+                  "row": "5",
+                  "col": "3",
+                  "value": "9,600"
+                }
+              },
+              "6": {
+                "2": {
+                  "row": "6",
+                  "col": "2",
+                  "value": "May"
+                },
+                "3": {
+                  "row": "6",
+                  "col": "3",
+                  "value": "5,192"
+                }
+              },
+              "7": {
+                "2": {
+                  "row": "7",
+                  "col": "2",
+                  "value": "Jun"
+                },
+                "3": {
+                  "row": "7",
+                  "col": "3",
+                  "value": "1,166"
+                }
+              },
+              "8": {
+                "2": {
+                  "row": "8",
+                  "col": "2",
+                  "value": "Jul"
+                },
+                "3": {
+                  "row": "8",
+                  "col": "3",
+                  "value": "106"
+                }
+              },
+              "9": {
+                "2": {
+                  "row": "9",
+                  "col": "2",
+                  "value": "Aug"
+                },
+                "3": {
+                  "row": "9",
+                  "col": "3",
+                  "value": "318"
+                }
+              },
+              "10": {
+                "2": {
+                  "row": "10",
+                  "col": "2",
+                  "value": "Sep"
+                },
+                "3": {
+                  "row": "10",
+                  "col": "3",
+                  "value": "2,543"
+                }
+              },
+              "11": {
+                "2": {
+                  "row": "11",
+                  "col": "2",
+                  "value": "Oct"
+                },
+                "3": {
+                  "row": "11",
+                  "col": "3",
+                  "value": "9,600"
+                }
+              },
+              "12": {
+                "2": {
+                  "row": "12",
+                  "col": "2",
+                  "value": "Nov"
+                },
+                "3": {
+                  "row": "12",
+                  "col": "3",
+                  "value": "9,600"
+                }
+              },
+              "13": {
+                "2": {
+                  "row": "13",
+                  "col": "2",
+                  "value": "Dec"
+                },
+                "3": {
+                  "row": "13",
+                  "col": "3",
+                  "value": "9,600"
+                }
+              }
+            }
+          }
+        },
+        "F": {
+          "type": "text",
+          "body": "*   Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aliquam hendrerit mi posuere lectus. Vestibulum enim wisi, viverra nec, fringilla in, laoreet vitae, risus. *   Donec sit amet nisl. Aliquam semper ipsum sit amet velit. Suspendisse id sem consectetuer libero luctus adipiscing."
+        }
+      }
+    }
+  }
+}
