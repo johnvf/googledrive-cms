@@ -3,6 +3,8 @@ var express = require('express'),
 	http = require('http'),
 	source = require('shell-source');
 
+var driveClient = require('./modules/drive-client')
+
 
 function setupServer(){
 	// Set variables
@@ -13,6 +15,8 @@ function setupServer(){
 	var app = express();
 	app.use( bodyParser.json() );
 	app.use( bodyParser.urlencoded({ extended: true }) );
+
+	driveClient.initialize();
 
 	// Init routes
 	app.use("/", express.static( staticRoot ));
