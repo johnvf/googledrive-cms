@@ -3,9 +3,9 @@ var Router = require('react-router');
 var { Link } = Router;
 
 // Components
-var Report = require('../components/Report');
+var Dashboard = require('../components/Dashboard');
 
-var Reports = React.createClass({
+var Project = React.createClass({
     
   contextTypes: {
     router: React.PropTypes.func
@@ -14,11 +14,11 @@ var Reports = React.createClass({
   render: function() {
     return (
     <div>
-      REPORT
-      <Report/>
+      PROJECT
+      <Dashboard/>
     </div>
     );
   }
 });
 
-module.exports = Reports;
+module.exports = Project;

@@ -4,11 +4,11 @@ var { Link } = Router;
 
 var ProjectStore = require('../stores/ProjectStore')
 
-var Login = require('../components/Login')
+var WebAPIUtils = require('../utils/WebAPIUtils');
 
 function getStateFromStores() {
   return {
-    project: ProjectStore.getProject(),
+    project: ProjectStore.getProject()
   };
 }
 
@@ -17,6 +17,7 @@ var Landing = React.createClass({
   contextTypes: {
     router: React.PropTypes.func
   },
+
   /**
    * State Boilerplate 
    */
@@ -24,6 +25,7 @@ var Landing = React.createClass({
     return getStateFromStores();
   },
   componentDidMount: function() {
+    WebAPIUtils.getProject("Eden Housing");
     ProjectStore.addChangeListener(this._onChange);
   },
   _onChange: function() {
@@ -35,7 +37,6 @@ var Landing = React.createClass({
     return (
     <div>
       LANDING
-      <Login/>
       <pre>
       {project}
       </pre>

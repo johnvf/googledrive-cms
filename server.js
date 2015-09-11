@@ -1,24 +1,51 @@
 var express = require('express'),
 	bodyParser = require('body-parser'),
 	http = require('http'),
-	source = require('shell-source');
+	source = require('shell-source'),
+	path = require('path'),
+	stormpath = require('express-stormpath');
 
 function setupServer(){
-	// Set variables
-	var port = process.env.PORT
-	var staticRoot = process.env.STATICROOT
-
 	// Set up the app
 	var app = express();
 	app.use( bodyParser.json() );
 	app.use( bodyParser.urlencoded({ extended: true }) );
 
-	// Init routes
-	app.use("/", express.static( staticRoot ));
-	require("./modules/routes")(app);
+	app.use(stormpath.init(app, {
+		application: {
+		    href: process.env.STORMPATH_CLIENT_APPLICATION_HREF
+		},
+	  	web: {
+  		    login: { 
+  		    	enabled: true,
+  		    	nextUri: '../landing'
+  		    },
+	        logout: { 
+	        	enabled: true,
+	        	nextUri: '../login'
+	        },
+		    spaRoot: process.env.STATICROOT+'/index.html'
+	  	},
+	  	website: true
+	}));
 
-	var server = http.createServer(app).listen(port, function() {
-		console.log('Server listening on port ' + port);
+	app.use(function(req, res, next) {
+	  if ( req.user ) {
+	    console.log('Current User:', req.user.username);
+	  } else {
+	    console.log('Unauthenticated');
+	  }
+	  next();
+	});
+
+	// Init routes
+	app.use( express.static(process.env.STATICROOT));
+	require("./modules/routes")(app, stormpath);
+
+
+	app.on('stormpath.ready', function() {
+		console.log("app.js serving on port:" + process.env.PORT)
+		app.listen(process.env.PORT);
 	});
 }
 

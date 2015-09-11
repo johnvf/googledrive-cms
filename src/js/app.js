@@ -7,37 +7,56 @@ var Route = Router.Route;
 var Redirect = Router.Redirect;
 var RouteHandler = Router.RouteHandler;
 
-
-var WebAPIUtils = require('./utils/WebAPIUtils');
+var SessionStore = require( './stores/SessionStore')
+var Navbar = require( './components/Navbar')
 
 // Pages
-var Landing = require('./pages/Landing'),
-    Reports = require('./pages/Reports')
+var Login = require( './pages/Login'),
+    Landing = require('./pages/Landing'),
+    Project = require('./pages/Project');
+
+
+function getStateFromStores() {
+  return {
+    loggedIn: SessionStore.getLoggedIn()
+  };
+}
 
 var App = React.createClass({
 
-  componentDidMount: function(){
-    WebAPIUtils.getProject("Eden Housing");
+  getInitialState: function() {
+    return getStateFromStores();
+  },
+  componentDidMount: function() {
+    SessionStore.addChangeListener(this._onChange);
+  },
+  _onChange: function() {
+    this.setState(getStateFromStores());
   },
 
   render: function () {
+    loggedIn = this.state.loggedIn;
 
     return (
       <div className="main">
-        <RouteHandler/>
+        <Navbar loggedin={ loggedIn }/>
+        <div className="container-fluid">
+          <RouteHandler/>
+        </div>
       </div>
     );
   }
 });
 
 var routes = (
-    <Route handler={App}>
-        <Route name="landing" path="/" handler={Landing} />
-        <Route name="reports" path="/reports" handler={Reports} />
-        <DefaultRoute handler={Landing}/>   
-    </Route>
+  <Route path="/" handler={App}>
+      <Route name="login" handler={Login} />
+      <Route name="landing" handler={Landing} />
+      <Route name="project" handler={Project} /> 
+      <DefaultRoute handler={Landing} />
+  </Route>
 );
 
-Router.run(routes, Router.HashLocation, (Root) => {
-  React.render(<Root/>, document.body);
+Router.run(routes, Router.HistoryLocation, function (Handler) {
+  React.render(<Handler/>, document.body);
 });
