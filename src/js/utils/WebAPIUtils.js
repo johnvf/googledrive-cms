@@ -12,24 +12,19 @@ module.exports = {
         .send({username: username, password: password})
         .end(function(error, res){
             if (res) {
-                jwt = res.text;
-                localStorage.jwt = jwt;
-                ServerActions.loggedIn( jwt );
-                // window.location.assign("/");
+                localStorage.jwt = res.text;
+                ServerActions.loggedIn( res.text );
+                window.location.assign("/projects/landing");
             }
         });
     },
 
     logout: function( ){
-        request.get( "/auth/logout" )
-        .set('Accept', 'application/json')
-        .set('x-access-token', localStorage.jwt)
-        .end(function(error, res){
-            if (res) {
-                console.log(res)
-                ServerActions.loggedOut( res );
-            }
-        });
+        localStorage.jwt = null;
+        // At some point, this might require an API call.
+        // It IS going to require a redirect soon
+        ServerActions.loggedOut();
+        window.location.assign("/projects/login");
     },
 
     getProject: function(projectName){

@@ -9,15 +9,14 @@ var Navbar = React.createClass({
 
       if ( !loggedIn ){
         items = [
-        { text: "Login", target: "../login" },
-        { text: "Logout", target: "../logout" }
+        { text: "Login", target: "../projects/login" },
         ]
       }
       else {
         items = [
-        { text: "Home", target: "/landing" },
-        { text: "Project", target: "/project" },
-        { text: "Logout", target: "/logout" }
+        { text: "Home", target: "/projects/landing" },
+        { text: "Project", target: "/projects/project" },
+        { text: "Logout", target: "/projects/logout" }
         ]
       }
 
