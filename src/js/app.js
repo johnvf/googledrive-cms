@@ -1,6 +1,7 @@
 var React = require('react');
 
 var Router = require('react-router');
+
 var DefaultRoute = Router.DefaultRoute;
 var Link = Router.Link;
 var Route = Router.Route;
@@ -8,6 +9,8 @@ var Redirect = Router.Redirect;
 var RouteHandler = Router.RouteHandler;
 
 var LoginStore = require( './stores/LoginStore')
+var RouterStore = require( './stores/RouterStore')
+
 var Navbar = require( './components/Navbar')
 
 // Pages
@@ -22,6 +25,7 @@ function getStateFromStores() {
   };
 }
 
+
 var App = React.createClass({
 
   getInitialState: function() {
@@ -33,6 +37,32 @@ var App = React.createClass({
   _onChange: function() {
     this.setState(getStateFromStores());
   },
+
+  // _onLoginChange: function() {
+  //   //get any nextTransitionPath - NB it can only be got once then it self-nullifies
+  //   var transitionPath = RouterStore.nextTransitionPath || '/';
+
+  //   if(this.state.jwt){
+  //     this.transitionTo(transitionPath);
+  //   }else{
+  //     Router.transitionTo('login');
+  //   }
+  // },
+
+  // willTransitionTo: function(transition) {
+  //   if (!this.state.jwt) {
+
+  //     var transitionPath = transition.path;
+
+  //     //store next path in RouterStore for redirecting after authentication
+  //     //as opposed to storing in the router itself with:
+  //     // transition.redirect('/login', {}, {'nextPath' : transition.path});
+  //     RouterActionCreators.storeRouterTransitionPath(transitionPath);
+
+  //     //go to login page
+  //     transition.redirect('/login');
+  //   }
+  // },
 
   render: function () {
     return (
