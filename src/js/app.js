@@ -49,7 +49,7 @@ var App = React.createClass({
 });
 
 var routes = (
-  <Route path="/" handler={App}>
+  <Route path="/projects" handler={App}>
       <Route name="login" handler={Login} />
       <Route name="landing" handler={Landing} />
       <Route name="project" handler={Project} /> 
