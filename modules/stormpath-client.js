@@ -25,7 +25,6 @@ function getApp(name){
                 if (err) throw err;
 
                 app = applications.items[0];
-                console.log("app!")
                 resolve(app)
             });
         });
@@ -58,7 +57,6 @@ function getCustomData( account ){
 
 function makeToken( account ){
     return new Promise( function(resolve, reject){
-        console.log( JSON.stringify( account , null, 4 ) )
         var split_url = account.href.split('/')
 
         var claims = {

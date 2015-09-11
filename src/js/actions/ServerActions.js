@@ -2,10 +2,11 @@ var AppDispatcher = require('../dispatcher/AppDispatcher');
 
 module.exports = {
 
-  loggedIn: function(res) {
+  loggedIn: function(jwt) {
 
     AppDispatcher.handleServerAction({
-      type: "LOGGED_IN"
+      type: "LOGGED_IN",
+      jwt: jwt
     });
   },
 

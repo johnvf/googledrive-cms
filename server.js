@@ -10,15 +10,6 @@ function setupServer(){
 	app.use( bodyParser.json() );
 	app.use( bodyParser.urlencoded({ extended: true }) );
 
-	// app.use(function(req, res, next) {
-	//   if ( req.user ) {
-	//     console.log('Current User:', req.user.username);
-	//   } else {
-	//     console.log('Unauthenticated');
-	//   }
-	//   next();
-	// });
-
 	// Init routes
 	app.use('/projects', express.static(process.env.STATICROOT));
 	require("./modules/routes")(app);

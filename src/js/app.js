@@ -7,7 +7,7 @@ var Route = Router.Route;
 var Redirect = Router.Redirect;
 var RouteHandler = Router.RouteHandler;
 
-var SessionStore = require( './stores/SessionStore')
+var LoginStore = require( './stores/LoginStore')
 var Navbar = require( './components/Navbar')
 
 // Pages
@@ -18,7 +18,7 @@ var Login = require( './pages/Login'),
 
 function getStateFromStores() {
   return {
-    loggedIn: SessionStore.getLoggedIn()
+    jwt: LoginStore.getJWT()
   };
 }
 
@@ -28,18 +28,16 @@ var App = React.createClass({
     return getStateFromStores();
   },
   componentDidMount: function() {
-    SessionStore.addChangeListener(this._onChange);
+    LoginStore.addChangeListener(this._onChange);
   },
   _onChange: function() {
     this.setState(getStateFromStores());
   },
 
   render: function () {
-    loggedIn = this.state.loggedIn;
-
     return (
       <div className="main">
-        <Navbar loggedin={ loggedIn }/>
+        <Navbar/>
         <div className="container-fluid">
           <RouteHandler/>
         </div>

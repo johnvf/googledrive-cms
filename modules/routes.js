@@ -12,7 +12,6 @@ module.exports = function (app) {
     // Login Route
     app.post("/auth/login", function(req, res, next){
         stormpathClient.getToken( req.body.username, req.body.password, function(jwt){
-            console.log(jwt)
             res.send(jwt)
         })
     });
@@ -25,9 +24,7 @@ module.exports = function (app) {
 
       // decode token
       if (token) {
-
         stormpathClient.verifyToken(req, res, next, token)
-
       } else {
         return res.status(403).send({ 
             success: false, 

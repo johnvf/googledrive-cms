@@ -1,5 +1,7 @@
 var React = require('react');
 
+var Dashboard = require('./Dashboard')
+
 var Navbar = React.createClass({
 
     render: function() {
@@ -16,13 +18,21 @@ var Navbar = React.createClass({
         items = [
         { text: "Home", target: "/projects/landing" },
         { text: "Project", target: "/projects/project" },
+        26,
         { text: "Logout", target: "/projects/logout" }
         ]
       }
 
-    var itemMarkup = items.map( function (menuItem){ return (
-      <li> <a href={ menuItem.target }>{ menuItem.text }</a> </li>   
-    )})
+    var itemMarkup = items.map( function (menuItem){ 
+      if( typeof(menuItem) === "object"){
+        return (
+          <li> <a href={ menuItem.target }>{ menuItem.text }</a> </li>   
+        )
+      }
+      else{
+        return  <li> <a>{ "test" }</a> </li>   
+      }
+    })
 
       return (
       <div className="navbar navbar-inverse navbar-fixed-top" role="navigation">

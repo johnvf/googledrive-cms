@@ -2,7 +2,7 @@ var React = require('react');
 var Router = require('react-router');
 var { Link } = Router;
 
-var WebAPIUtils = require('../utils/WebAPIUtils');
+var ViewActions = require('../actions/ViewActions');
 
 var Login = React.createClass({
 
@@ -17,11 +17,11 @@ var Login = React.createClass({
   // This will be called when the user clicks on the login button
   login: function(e) {
     e.preventDefault();
-    WebAPIUtils.login(this.state.user, this.state.password);
+    ViewActions.logIn(this.state.user, this.state.password);
   },
 
   logout: function(e) {
-    WebAPIUtils.logout();
+    ViewActions.logOut();
   },
 
   changeUser: function(e){ 

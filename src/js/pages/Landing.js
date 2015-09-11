@@ -2,9 +2,10 @@ var React = require('react');
 var Router = require('react-router');
 var { Link } = Router;
 
+
+var ViewActions = require('../actions/ViewActions');
 var ProjectStore = require('../stores/ProjectStore')
 
-var WebAPIUtils = require('../utils/WebAPIUtils');
 
 function getStateFromStores() {
   return {
@@ -25,7 +26,7 @@ var Landing = React.createClass({
     return getStateFromStores();
   },
   componentDidMount: function() {
-    WebAPIUtils.getProject("Eden Housing");
+    ViewActions.getProject("Eden Housing");
     ProjectStore.addChangeListener(this._onChange);
   },
   _onChange: function() {
