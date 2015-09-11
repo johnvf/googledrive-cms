@@ -11,7 +11,7 @@ function setupServer(){
 	app.use( bodyParser.urlencoded({ extended: true }) );
 
 	// Init routes
-	app.use('/projects', express.static(process.env.STATICROOT));
+	app.use('/', express.static(process.env.STATICROOT));
 	require("./modules/routes")(app);
 	app.listen(process.env.PORT);
 }

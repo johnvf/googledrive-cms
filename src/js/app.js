@@ -21,7 +21,7 @@ var Login = require( './pages/Login'),
 
 function getStateFromStores() {
   return {
-    loggedIn: auth.loggedIn()
+    loggedIn: Auth.loggedIn()
   };
 }
 
@@ -32,8 +32,8 @@ var App = React.createClass({
     return getStateFromStores();
   },
   componentWillMount: function() {
-    auth.onChange = this.updateAuth;
-    auth.login();
+    Auth.onChange = this.updateAuth;
+    Auth.login();
   },
   componentDidMount: function() {
     LoginStore.addChangeListener(this._onChange);
@@ -61,19 +61,16 @@ var App = React.createClass({
 });
 
 function requireAuth(nextState, redirectTo) {
-  if (!auth.loggedIn())
+  if (!Auth.loggedIn())
     redirectTo('/login', null, { nextPathname: nextState.location.pathname });
 }
 
 React.render((
   <Router>
-   <Route path="/" >
-      <Route name="login" component={Login} />
-      <Route path="projects" component={App}>
-          <Route name="login" component={Login} />
-          <Route name="landing" component={Landing} onEnter={requireAuth}/>
-          <Route name="project" component={Project} onEnter={requireAuth}/> 
-      </Route>
+    <Route path="/" component={App}>
+        <Route name="login" component={Login} />
+        <Route name="landing" component={Landing} onEnter={requireAuth}/>
+        <Route name="project" component={Project}/> 
     </Route>
   </Router>
 ), document.body);

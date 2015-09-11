@@ -4,16 +4,17 @@ var stormpathClient = require('./stormpath-client')
 
 module.exports = function (app) {
 
-    // Serves the SPA
-    app.get("/projects/*", function(req, res, next){
-      res.sendFile(process.env.STATICROOT+'/index.html');
-    });
 
     // Login Route
     app.post("/auth/login", function(req, res, next){
         stormpathClient.getToken( req.body.username, req.body.password, function(jwt){
             res.send(jwt)
         })
+    });
+    
+    // Serves the SPA
+    app.get("/*", function(req, res, next){
+      res.sendFile(process.env.STATICROOT+'/index.html');
     });
 
     // Route middleware to verify a token

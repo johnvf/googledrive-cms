@@ -5,7 +5,7 @@ var Route = routerModule.Route;
 var Link = routerModule.Link;
 var History = routerModule.History;
 
-var Auth = require('../utils/Auth.js')
+var Auth = require('../utils/Auth.js');
 
 var ViewActions = require('../actions/ViewActions');
 
@@ -24,7 +24,7 @@ var Login = React.createClass({
 
     // FIXME: Once I can verify this is working ,
     // refactor it back to a store launched by an action per above.
-    auth.login(email, pass, (loggedIn) => {
+    Auth.login(email, pass, (loggedIn) => {
       if (!loggedIn)
         return this.setState({ error: true });
 
