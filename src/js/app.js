@@ -1,15 +1,15 @@
 var React = require('react');
 
-var Router = require('react-router');
-
-var DefaultRoute = Router.DefaultRoute;
-var Link = Router.Link;
-var Route = Router.Route;
-var Redirect = Router.Redirect;
-var RouteHandler = Router.RouteHandler;
+var routerModule = require('react-router');
+var Router = routerModule.Router;
+var Route = routerModule.Route;
+var Link = routerModule.Link;
+var History = routerModule.History;
+var DefaultRoute = routerModule.DefaultRoute;
 
 var LoginStore = require( './stores/LoginStore')
-var RouterStore = require( './stores/RouterStore')
+// FIXME: Perhaps this ought to be a store?
+var Auth = require('./utils/Auth.js')
 
 var Navbar = require( './components/Navbar')
 
@@ -21,7 +21,7 @@ var Login = require( './pages/Login'),
 
 function getStateFromStores() {
   return {
-    jwt: LoginStore.getJWT()
+    loggedIn: auth.loggedIn()
   };
 }
 
@@ -31,6 +31,10 @@ var App = React.createClass({
   getInitialState: function() {
     return getStateFromStores();
   },
+  componentWillMount: function() {
+    auth.onChange = this.updateAuth;
+    auth.login();
+  },
   componentDidMount: function() {
     LoginStore.addChangeListener(this._onChange);
   },
@@ -38,53 +42,64 @@ var App = React.createClass({
     this.setState(getStateFromStores());
   },
 
-  // _onLoginChange: function() {
-  //   //get any nextTransitionPath - NB it can only be got once then it self-nullifies
-  //   var transitionPath = RouterStore.nextTransitionPath || '/';
-
-  //   if(this.state.jwt){
-  //     this.transitionTo(transitionPath);
-  //   }else{
-  //     Router.transitionTo('login');
-  //   }
-  // },
-
-  // willTransitionTo: function(transition) {
-  //   if (!this.state.jwt) {
-
-  //     var transitionPath = transition.path;
-
-  //     //store next path in RouterStore for redirecting after authentication
-  //     //as opposed to storing in the router itself with:
-  //     // transition.redirect('/login', {}, {'nextPath' : transition.path});
-  //     RouterActionCreators.storeRouterTransitionPath(transitionPath);
-
-  //     //go to login page
-  //     transition.redirect('/login');
-  //   }
-  // },
+  updateAuth: function(loggedIn) {
+    this.setState({
+      loggedIn: !!loggedIn
+    });
+  },
 
   render: function () {
     return (
       <div className="main">
         <Navbar/>
         <div className="container-fluid">
-          <RouteHandler/>
+          {this.props.children}
         </div>
       </div>
     );
   }
 });
 
-var routes = (
-  <Route path="/projects" handler={App}>
-      <Route name="login" handler={Login} />
-      <Route name="landing" handler={Landing} />
-      <Route name="project" handler={Project} /> 
-      <DefaultRoute handler={Landing} />
-  </Route>
-);
+function requireAuth(nextState, redirectTo) {
+  if (!auth.loggedIn())
+    redirectTo('/login', null, { nextPathname: nextState.location.pathname });
+}
 
-Router.run(routes, Router.HistoryLocation, function (Handler) {
-  React.render(<Handler/>, document.body);
-});
+React.render((
+  <Router>
+   <Route path="/" >
+      <Route name="login" component={Login} />
+      <Route path="projects" component={App}>
+          <Route name="login" component={Login} />
+          <Route name="landing" component={Landing} onEnter={requireAuth}/>
+          <Route name="project" component={Project} onEnter={requireAuth}/> 
+      </Route>
+    </Route>
+  </Router>
+), document.body);
+
+// var routes = (
+//   <Route path="/projects" handler={App}>
+//       <Route name="login" handler={Login} />
+//       <Route name="landing" handler={Landing} onEnter={requireAuth}/>
+//       <Route name="project" handler={Project} onEnter={requireAuth}/> 
+//       <DefaultRoute handler={Landing} />
+//   </Route>
+// );
+
+// Router.run(routes,(Root) => {
+//   React.render(<Root/>, document.body);
+// });
+
+// var routes = (
+//   <Route path="/projects" handler={App}>
+//       <Route name="login" handler={Login} />
+//       <Route name="landing" handler={Landing} onEnter={requireAuth}/>
+//       <Route name="project" handler={Project} onEnter={requireAuth}/> 
+//       <DefaultRoute handler={Landing} />
+//   </Route>
+// );
+
+// Router.run(routes, Router.HistoryLocation, function (Handler) {
+//   React.render(<Handler/>, document.body);
+// });

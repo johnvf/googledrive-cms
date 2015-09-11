@@ -33,7 +33,7 @@
     "njwt": "^0.2.2",
     "promise": "^7.0.4",
     "react": "^0.13.3",
-    "react-router": "^0.13.3",
+    "react-router": "^1.0.0-rc1",
     "shell-source": "^1.1.0",
     "stormpath": "^0.11.4",
     "superagent": "^1.3.0",

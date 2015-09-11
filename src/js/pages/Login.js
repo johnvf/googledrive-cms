@@ -1,23 +1,42 @@
 var React = require('react');
-var Router = require('react-router');
-var { Link } = Router;
+var routerModule = require('react-router');
+var Router = routerModule.Router;
+var Route = routerModule.Route;
+var Link = routerModule.Link;
+var History = routerModule.History;
+
+var Auth = require('../utils/Auth.js')
 
 var ViewActions = require('../actions/ViewActions');
 
 var Login = React.createClass({
 
-  contextTypes: {
-    router: React.PropTypes.func
-  },
+  mixins: [ History ],
   
   getInitialState: function() {
-    return {user: "tk421", password: "Changeme1"};
+    return {user: "tk421", password: "Changeme1", error: false};
   },
 
   // This will be called when the user clicks on the login button
   login: function(e) {
     e.preventDefault();
-    ViewActions.logIn(this.state.user, this.state.password);
+    // ViewActions.logIn(this.state.user, this.state.password);
+
+    // FIXME: Once I can verify this is working ,
+    // refactor it back to a store launched by an action per above.
+    auth.login(email, pass, (loggedIn) => {
+      if (!loggedIn)
+        return this.setState({ error: true });
+
+      var { location } = this.props;
+
+      if (location.state && location.state.nextPathname) {
+        this.history.replaceState(null, location.state.nextPathname);
+      } else {
+        this.history.replaceState(null, '/about');
+      }
+    });
+
   },
 
   logout: function(e) {
@@ -39,6 +58,9 @@ var Login = React.createClass({
         <input type="text" onChange={this.changePassword} value={this.state.password} placeholder="Password" />
         <button type="submit" onClick={this.login.bind(this)}>Submit</button>
         <button onClick={this.logout.bind(this)}>Logout</button>
+        {this.state.error && (
+          <p>Bad login information</p>
+        )}
       </form>
     )
   }

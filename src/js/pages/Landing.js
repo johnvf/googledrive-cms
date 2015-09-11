@@ -1,6 +1,9 @@
 var React = require('react');
-var Router = require('react-router');
-var { Link } = Router;
+var routerModule = require('react-router');
+var Router = routerModule.Router;
+var Route = routerModule.Route;
+var Link = routerModule.Link;
+var History = routerModule.History;
 
 
 var ViewActions = require('../actions/ViewActions');
@@ -14,10 +17,6 @@ function getStateFromStores() {
 }
 
 var Landing = React.createClass({
-    
-  contextTypes: {
-    router: React.PropTypes.func
-  },
 
   /**
    * State Boilerplate 

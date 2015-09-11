@@ -1,7 +1,5 @@
 var React = require('react');
 
-var Dashboard = require('./Dashboard')
-
 var Navbar = React.createClass({
 
     render: function() {

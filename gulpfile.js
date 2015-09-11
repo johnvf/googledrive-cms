@@ -26,10 +26,10 @@ gulp.task('less', function() {
 });
 
 gulp.task('browserify', function() {
-    browserify('./src/js/app.js')
+    browserify('./src/js/App.js')
     .transform('reactify', { 'es6': true , 'global': true })
     .bundle()
-    .pipe(source('app.js'))
+    .pipe(source('App.js'))
     .pipe(gulp.dest('./dist/js'));
 });
 
