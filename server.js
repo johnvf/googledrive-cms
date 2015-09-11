@@ -11,7 +11,12 @@ function setupServer(){
 	app.use( bodyParser.urlencoded({ extended: true }) );
 
 	// Init routes
-	app.use('/', express.static(process.env.STATICROOT));
+	app.use(express.static(process.env.STATICROOT));
+    // Serves the SPA
+    app.get("*", function(req, res, next){
+      res.sendFile(process.env.STATICROOT+'/index.html');
+    });
+
 	require("./modules/routes")(app);
 	app.listen(process.env.PORT);
 }

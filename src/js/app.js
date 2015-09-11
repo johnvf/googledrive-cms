@@ -5,7 +5,8 @@ var Router = routerModule.Router;
 var Route = routerModule.Route;
 var Link = routerModule.Link;
 var History = routerModule.History;
-var DefaultRoute = routerModule.DefaultRoute;
+
+var createBrowserHistory = require('history/lib/createBrowserHistory');
 
 var LoginStore = require( './stores/LoginStore')
 // FIXME: Perhaps this ought to be a store?
@@ -65,12 +66,14 @@ function requireAuth(nextState, redirectTo) {
     redirectTo('/login', null, { nextPathname: nextState.location.pathname });
 }
 
+var BrowserHistory = createBrowserHistory();
+
 React.render((
-  <Router>
+  <Router history={ BrowserHistory } >
     <Route path="/" component={App}>
-        <Route name="login" component={Login} />
-        <Route name="landing" component={Landing} onEnter={requireAuth}/>
-        <Route name="project" component={Project}/> 
+        <Route path="login" component={Login} />
+        <Route path="landing" component={Landing} onEnter={requireAuth}/>
+        <Route path="project" component={Project}/> 
     </Route>
   </Router>
 ), document.body);

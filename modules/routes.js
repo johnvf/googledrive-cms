@@ -11,11 +11,6 @@ module.exports = function (app) {
             res.send(jwt)
         })
     });
-    
-    // Serves the SPA
-    app.get("/*", function(req, res, next){
-      res.sendFile(process.env.STATICROOT+'/index.html');
-    });
 
     // Route middleware to verify a token
     app.use(function(req, res, next) {
