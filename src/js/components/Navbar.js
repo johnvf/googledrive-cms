@@ -1,4 +1,5 @@
 var React = require('react');
+var Link = require('react-router').Link;
 
 var Navbar = React.createClass({
 
@@ -7,10 +8,9 @@ var Navbar = React.createClass({
       var loggedIn = this.props.loggedIn;
       var items;
 
-      if ( !loggedIn ){
+      if ( loggedIn == false ){
         items = [
-        { text: "Login", target: "../login" },
-        { text: "Logout", target: "../logout" }
+        { text: "Login", target: "/login" },
         ]
       }
       else {
@@ -21,9 +21,16 @@ var Navbar = React.createClass({
         ]
       }
 
-    var itemMarkup = items.map( function (menuItem){ return (
-      <li> <a href={ menuItem.target }>{ menuItem.text }</a> </li>   
-    )})
+    var itemMarkup = items.map( function (menuItem){ 
+      if( typeof(menuItem) === "object"){
+        return (
+          <li> <Link to={ menuItem.target }>{ menuItem.text }</Link> </li>   
+        )
+      }
+      else{
+        return  <li> <a>{ "test" }</a> </li>   
+      }
+    })
 
       return (
       <div className="navbar navbar-inverse navbar-fixed-top" role="navigation">

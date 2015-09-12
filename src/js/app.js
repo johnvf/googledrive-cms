@@ -1,62 +1,79 @@
 var React = require('react');
 
-var Router = require('react-router');
-var DefaultRoute = Router.DefaultRoute;
-var Link = Router.Link;
-var Route = Router.Route;
-var Redirect = Router.Redirect;
-var RouteHandler = Router.RouteHandler;
+var routerModule = require('react-router');
+var Router = routerModule.Router;
+var Route = routerModule.Route;
+var createBrowserHistory = require('history/lib/createBrowserHistory');
 
-var SessionStore = require( './stores/SessionStore')
+var LoginStore = require( './stores/LoginStore')
+// FIXME: Perhaps this ought to be a store?
+var Auth = require('./utils/Auth.js')
+
 var Navbar = require( './components/Navbar')
 
 // Pages
 var Login = require( './pages/Login'),
+    Logout = require( './pages/Logout'),
     Landing = require('./pages/Landing'),
     Project = require('./pages/Project');
 
 
 function getStateFromStores() {
   return {
-    loggedIn: SessionStore.getLoggedIn()
+    loggedIn: Auth.loggedIn()
   };
 }
+
 
 var App = React.createClass({
 
   getInitialState: function() {
     return getStateFromStores();
   },
+  componentWillMount: function() {
+    Auth.onChange = this.updateAuth;
+    Auth.login();
+  },
   componentDidMount: function() {
-    SessionStore.addChangeListener(this._onChange);
+    LoginStore.addChangeListener(this._onChange);
   },
   _onChange: function() {
     this.setState(getStateFromStores());
   },
 
-  render: function () {
-    loggedIn = this.state.loggedIn;
+  updateAuth: function(loggedIn) {
+    this.setState({
+      loggedIn: !!loggedIn
+    });
+  },
 
+  render: function () {
+    var loggedIn = this.state.loggedIn
     return (
       <div className="main">
-        <Navbar loggedin={ loggedIn }/>
+        <Navbar loggedIn={loggedIn}/>
         <div className="container-fluid">
-          <RouteHandler/>
+          {this.props.children}
         </div>
       </div>
     );
   }
 });
 
-var routes = (
-  <Route path="/" handler={App}>
-      <Route name="login" handler={Login} />
-      <Route name="landing" handler={Landing} />
-      <Route name="project" handler={Project} /> 
-      <DefaultRoute handler={Landing} />
-  </Route>
-);
+function requireAuth(nextState, redirectTo) {
+  if (!Auth.loggedIn())
+    redirectTo('/login', null, { nextPathname: nextState.location.pathname });
+}
 
-Router.run(routes, Router.HistoryLocation, function (Handler) {
-  React.render(<Handler/>, document.body);
-});
+var BrowserHistory = createBrowserHistory();
+
+React.render((
+  <Router history={ BrowserHistory } >
+    <Route path="/" component={App}>
+        <Route path="login" component={Login} />
+        <Route path="landing" component={Landing}/>
+        <Route path="project" component={Project} onEnter={requireAuth}/> 
+        <Route path="logout" component={Logout} />
+    </Route>
+  </Router>
+), document.body);

@@ -1,36 +1,38 @@
 var request = require('superagent');
-
 var ServerActions = require('../actions/ServerActions')
+
 
 module.exports = {
 
-    login: function(username, password){
-        request.post( "/login" )
+    login: function( username, password, cb){
+        request.post( "/auth/login" )
         .set('Accept', 'application/json')
         .send({username: username, password: password})
         .end(function(error, res){
             if (res) {
-                console.log(res)
-                ServerActions.loggedIn( res );
-                window.location.assign("/");
+                // ServerActions.loggedIn( res.text );
+                // window.location.assign("/projects/landing");
+                var cb_res = {
+                    authenticated: true,
+                    token: res.text
+                }
+                cb(cb_res);
             }
         });
     },
 
-    logout: function(){
-        request.get( "/logout" )
-        .set('Accept', 'application/json')
-        .end(function(error, res){
-            if (res) {
-                console.log(res)
-                ServerActions.loggedOut( res );
-            }
-        });
+    logout: function( ){
+        // localStorage.token = null;
+        // At some point, this might require an API call.
+        // It IS going to require a redirect soon
+        ServerActions.loggedOut();
+        window.location.assign("/projects/login");
     },
 
     getProject: function(projectName){
-        request.get( "/data" )
+        request.get( "/api/project" )
           .set('Accept', 'application/json')
+          .set('x-access-token', localStorage.token)
           .end(function(error, res){
             if (res) {
               ServerActions.receiveProject(JSON.parse(res.text));
