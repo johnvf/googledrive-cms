@@ -1,8 +1,6 @@
 var React = require('react');
 var History = require('react-router').History;
 
-var Auth = require('../utils/Auth.js');
-
 var ViewActions = require('../actions/ViewActions');
 
 var Login = React.createClass({
@@ -10,17 +8,13 @@ var Login = React.createClass({
   mixins: [ History ],
   
   getInitialState: function() {
-    return {user: "tk421", password: "Changeme1", error: false};
+    return {user: "tk421", password: "Changeme1", error: false };
   },
 
   // This will be called when the user clicks on the login button
   login: function(e) {
     e.preventDefault();
-    // ViewActions.logIn(this.state.user, this.state.password);
-
-    // FIXME: Once I can verify this is working ,
-    // refactor it back to a store launched by an action per above.
-    Auth.login(this.state.user, this.state.password, (loggedIn) => {
+    ViewActions.login(this.state.user, this.state.password, (loggedIn) => {
       if (!loggedIn)
         return this.setState({ error: true });
 
@@ -32,7 +26,6 @@ var Login = React.createClass({
         this.history.replaceState(null, '/landing');
       }
     });
-
   },
 
   logout: function(e) {

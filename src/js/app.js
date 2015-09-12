@@ -6,8 +6,7 @@ var Route = routerModule.Route;
 var createBrowserHistory = require('history/lib/createBrowserHistory');
 
 var LoginStore = require( './stores/LoginStore')
-// FIXME: Perhaps this ought to be a store?
-var Auth = require('./utils/Auth.js')
+var ViewActions = require('./actions/ViewActions');
 
 var Navbar = require( './components/Navbar')
 
@@ -20,7 +19,7 @@ var Login = require( './pages/Login'),
 
 function getStateFromStores() {
   return {
-    loggedIn: Auth.loggedIn()
+    loggedIn: LoginStore.loggedIn()
   };
 }
 
@@ -31,8 +30,7 @@ var App = React.createClass({
     return getStateFromStores();
   },
   componentWillMount: function() {
-    Auth.onChange = this.updateAuth;
-    Auth.login();
+    ViewActions.login();
   },
   componentDidMount: function() {
     LoginStore.addChangeListener(this._onChange);
@@ -51,7 +49,7 @@ var App = React.createClass({
     var loggedIn = this.state.loggedIn
     return (
       <div className="main">
-        <Navbar loggedIn={loggedIn}/>
+        <Navbar loggedIn={getStateFromStores().loggedIn}/>
         <div className="container-fluid">
           {this.props.children}
         </div>
@@ -61,7 +59,7 @@ var App = React.createClass({
 });
 
 function requireAuth(nextState, redirectTo) {
-  if (!Auth.loggedIn())
+  if (!LoginStore.loggedIn())
     redirectTo('/login', null, { nextPathname: nextState.location.pathname });
 }
 

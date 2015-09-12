@@ -1,9 +1,9 @@
 var React = require('react');
-var Auth = require('../utils/Auth.js');
+var ViewActions = require('../actions/ViewActions');
 
 var Logout = React.createClass({
   componentDidMount() {
-    Auth.logout();
+    ViewActions.logout();
   },
 
   render() {

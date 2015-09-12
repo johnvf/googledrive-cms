@@ -8,16 +8,6 @@ module.exports = {
       this.onChange(true);
       return;
     }
-    // pretendRequest(email, pass, (res) => {
-    //   if (res.authenticated) {
-    //     localStorage.token = res.token;
-    //     if (cb) cb(true);
-    //     this.onChange(true);
-    //   } else {
-    //     if (cb) cb(false);
-    //     this.onChange(false);
-    //   }
-    // });
     if ( !!email && !!pass ){
       WebAPIUtils.login(email, pass, (res) => {
         if (res.authenticated) {
@@ -48,16 +38,3 @@ module.exports = {
 
   onChange: function () {}
 };
-
-function pretendRequest(email, pass, cb) {
-  setTimeout(() => {
-    if (email === "tk421" && pass === "Changeme1") {
-      cb({
-        authenticated: true,
-        token: Math.random().toString(36).substring(7)
-      });
-    } else {
-      cb({authenticated: false});
-    }
-  }, 0);
-}

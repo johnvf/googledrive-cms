@@ -4,7 +4,9 @@ var assign = require("react/lib/Object.assign");
 
 var CHANGE_EVENT = 'change';
 
-var _jwt;
+var WebAPIUtils = require('../utils/WebAPIUtils');
+
+var _loggedIn = false;
 
 var LoginStore = assign({}, EventEmitter.prototype, {
 
@@ -16,18 +18,40 @@ var LoginStore = assign({}, EventEmitter.prototype, {
     this.on(CHANGE_EVENT, callback);
   },
 
-  getJWT: function(){
-    return _jwt;
+  login: function(email, pass, callback) {
+    var self = this;
+    if (localStorage.token) {
+      _loggedIn = true
+      if(callback){ callback( _loggedIn ); }
+      self.emitChange();
+      return;
+    }
+    if ( !!email && !!pass ){
+      WebAPIUtils.login(email, pass, (res) => {
+        if (res.authenticated) {
+          localStorage.token = res.token;
+          _loggedIn = true
+        } else {
+          _loggedIn = false
+        }
+        if(callback){ callback( _loggedIn ); }
+        self.emitChange();
+      });
+    }
   },
 
-  autoLogin: function() {
-    var jwt = localStorage.getItem("jwt");
-    if (jwt) {
-      _jwt = jwt;
-      // FIXME: Add support for this...
-      // this._user = jwt_decode(this._jwt);
-    }
-  }
+  getToken: function () {
+    return localStorage.token;
+  },
+
+  logout: function () {
+    delete localStorage.token;
+    _loggedIn = false
+  },
+
+  loggedIn: function () {
+    return _loggedIn;
+  },
 
 });
 
@@ -36,17 +60,23 @@ LoginStore.dispatchToken = AppDispatcher.register(function(payload) {
 
   switch(action.type) {
 
-    case "LOGGED_IN":
-      _jwt = action.jwt
-      localStorage.setItem("jwt", action.jwt)
+    case "LOG_IN":
+      LoginStore.login( action.username , action.password , action.callback)
+      // LoginStore.emitChange();
+      break;
+
+    case "LOG_OUT":
+      LoginStore.logout()
       LoginStore.emitChange();
       break;
 
-    case "LOGGED_OUT":
-      _jwt = null;
-     localStorage.setItem("jwt", null)
-      LoginStore.emitChange();
-      break;
+    // case "LOGGED_IN":
+    //   LoginStore.emitChange();
+    //   break;
+
+    // case "LOGGED_OUT":
+    //   LoginStore.emitChange();
+    //   break;
 
     default:
       // do nothing
