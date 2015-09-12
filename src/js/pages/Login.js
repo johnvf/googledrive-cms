@@ -28,10 +28,6 @@ var Login = React.createClass({
     });
   },
 
-  logout: function(e) {
-    ViewActions.logOut();
-  },
-
   changeUser: function(e){ 
     this.setState({user: e.target.value})
   },
@@ -46,7 +42,6 @@ var Login = React.createClass({
         <input type="text" onChange={this.changeUser} value={this.state.user} placeholder="Username" />
         <input type="text" onChange={this.changePassword} value={this.state.password} placeholder="Password" />
         <button type="submit" onClick={this.login.bind(this)}>Submit</button>
-        <button onClick={this.logout.bind(this)}>Logout</button>
         {this.state.error && (
           <p>Bad login information</p>
         )}

@@ -3,6 +3,7 @@ var React = require('react');
 var routerModule = require('react-router');
 var Router = routerModule.Router;
 var Route = routerModule.Route;
+var IndexRoute = routerModule.IndexRoute;
 var createBrowserHistory = require('history/lib/createBrowserHistory');
 
 var LoginStore = require( './stores/LoginStore')
@@ -59,19 +60,23 @@ var App = React.createClass({
 });
 
 function requireAuth(nextState, redirectTo) {
-  if (!LoginStore.loggedIn())
-    redirectTo('/login', null, { nextPathname: nextState.location.pathname });
+  if (!LoginStore.loggedIn()){
+    // FIXME: This is supposed to redirect to the original url on login, doesn't quite work
+    redirectTo('/login', '/login', { nextPathname: nextState.location.pathname });
+  }
 }
 
 var BrowserHistory = createBrowserHistory();
 
+
 React.render((
   <Router history={ BrowserHistory } >
     <Route path="/" component={App}>
-        <Route path="login" component={Login} />
-        <Route path="landing" component={Landing}/>
-        <Route path="project" component={Project} onEnter={requireAuth}/> 
-        <Route path="logout" component={Logout} />
+      <IndexRoute component={Login} />
+      <Route path="login" component={Login} />
+      <Route path="landing" component={Landing} onEnter={requireAuth}/>
+      <Route path="project" component={Project} onEnter={requireAuth}/> 
+      <Route path="logout" component={Logout} />
     </Route>
   </Router>
 ), document.body);
