@@ -1,9 +1,5 @@
 var React = require('react');
-var routerModule = require('react-router');
-var Router = routerModule.Router;
-var Route = routerModule.Route;
-var Link = routerModule.Link;
-var History = routerModule.History;
+var History = require('react-router').History;
 
 var Auth = require('../utils/Auth.js');
 

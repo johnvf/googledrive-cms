@@ -1,5 +1,5 @@
 var React = require('react');
-
+var Link = require('react-router').Link;
 
 var Navbar = React.createClass({
 
@@ -10,21 +10,21 @@ var Navbar = React.createClass({
 
       if ( loggedIn == false ){
         items = [
-        { text: "Login", target: "login" },
+        { text: "Login", target: "/login" },
         ]
       }
       else {
         items = [
-        { text: "Home", target: "landing" },
-        { text: "Project", target: "project" },
-        { text: "Logout", target: "logout" }
+        { text: "Home", target: "/landing" },
+        { text: "Project", target: "/project" },
+        { text: "Logout", target: "/logout" }
         ]
       }
 
     var itemMarkup = items.map( function (menuItem){ 
       if( typeof(menuItem) === "object"){
         return (
-          <li> <a href={ menuItem.target }>{ menuItem.text }</a> </li>   
+          <li> <Link to={ menuItem.target }>{ menuItem.text }</Link> </li>   
         )
       }
       else{

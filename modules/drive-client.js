@@ -26,7 +26,6 @@ function getConfig( ){
 
             resp.items.forEach(function(item){
                 if( item.title == "config.yaml" ){
-                    console.log(item.id)
                     drive.files.get({ 'fileId': item.id , 'alt': 'media'}, function(err, resp){ 
                         var config = yaml.parse(resp)
                         resolve(config);

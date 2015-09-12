@@ -3,9 +3,6 @@ var React = require('react');
 var routerModule = require('react-router');
 var Router = routerModule.Router;
 var Route = routerModule.Route;
-var Link = routerModule.Link;
-var History = routerModule.History;
-
 var createBrowserHistory = require('history/lib/createBrowserHistory');
 
 var LoginStore = require( './stores/LoginStore')
