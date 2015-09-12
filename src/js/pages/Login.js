@@ -1,8 +1,6 @@
 var React = require('react');
 var History = require('react-router').History;
 
-var Auth = require('../utils/Auth.js');
-
 var ViewActions = require('../actions/ViewActions');
 
 var Login = React.createClass({
@@ -10,17 +8,13 @@ var Login = React.createClass({
   mixins: [ History ],
   
   getInitialState: function() {
-    return {user: "tk421", password: "Changeme1", error: false};
+    return {user: "tk421", password: "Changeme1", error: false };
   },
 
   // This will be called when the user clicks on the login button
   login: function(e) {
     e.preventDefault();
-    // ViewActions.logIn(this.state.user, this.state.password);
-
-    // FIXME: Once I can verify this is working ,
-    // refactor it back to a store launched by an action per above.
-    Auth.login(this.state.user, this.state.password, (loggedIn) => {
+    ViewActions.login(this.state.user, this.state.password, (loggedIn) => {
       if (!loggedIn)
         return this.setState({ error: true });
 
@@ -32,11 +26,6 @@ var Login = React.createClass({
         this.history.replaceState(null, '/landing');
       }
     });
-
-  },
-
-  logout: function(e) {
-    ViewActions.logOut();
   },
 
   changeUser: function(e){ 
@@ -53,7 +42,6 @@ var Login = React.createClass({
         <input type="text" onChange={this.changeUser} value={this.state.user} placeholder="Username" />
         <input type="text" onChange={this.changePassword} value={this.state.password} placeholder="Password" />
         <button type="submit" onClick={this.login.bind(this)}>Submit</button>
-        <button onClick={this.logout.bind(this)}>Logout</button>
         {this.state.error && (
           <p>Bad login information</p>
         )}

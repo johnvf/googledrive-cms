@@ -3,11 +3,11 @@ var React = require('react');
 var routerModule = require('react-router');
 var Router = routerModule.Router;
 var Route = routerModule.Route;
+var IndexRoute = routerModule.IndexRoute;
 var createBrowserHistory = require('history/lib/createBrowserHistory');
 
 var LoginStore = require( './stores/LoginStore')
-// FIXME: Perhaps this ought to be a store?
-var Auth = require('./utils/Auth.js')
+var ViewActions = require('./actions/ViewActions');
 
 var Navbar = require( './components/Navbar')
 
@@ -20,7 +20,7 @@ var Login = require( './pages/Login'),
 
 function getStateFromStores() {
   return {
-    loggedIn: Auth.loggedIn()
+    loggedIn: LoginStore.loggedIn()
   };
 }
 
@@ -31,8 +31,7 @@ var App = React.createClass({
     return getStateFromStores();
   },
   componentWillMount: function() {
-    Auth.onChange = this.updateAuth;
-    Auth.login();
+    ViewActions.login();
   },
   componentDidMount: function() {
     LoginStore.addChangeListener(this._onChange);
@@ -51,7 +50,7 @@ var App = React.createClass({
     var loggedIn = this.state.loggedIn
     return (
       <div className="main">
-        <Navbar loggedIn={loggedIn}/>
+        <Navbar loggedIn={getStateFromStores().loggedIn}/>
         <div className="container-fluid">
           {this.props.children}
         </div>
@@ -61,19 +60,23 @@ var App = React.createClass({
 });
 
 function requireAuth(nextState, redirectTo) {
-  if (!Auth.loggedIn())
-    redirectTo('/login', null, { nextPathname: nextState.location.pathname });
+  if (!LoginStore.loggedIn()){
+    // FIXME: This is supposed to redirect to the original url on login, doesn't quite work
+    redirectTo('/login', '/login', { nextPathname: nextState.location.pathname });
+  }
 }
 
 var BrowserHistory = createBrowserHistory();
 
+
 React.render((
   <Router history={ BrowserHistory } >
     <Route path="/" component={App}>
-        <Route path="login" component={Login} />
-        <Route path="landing" component={Landing}/>
-        <Route path="project" component={Project} onEnter={requireAuth}/> 
-        <Route path="logout" component={Logout} />
+      <IndexRoute component={Login} />
+      <Route path="login" component={Login} />
+      <Route path="landing" component={Landing} onEnter={requireAuth}/>
+      <Route path="project" component={Project} onEnter={requireAuth}/> 
+      <Route path="logout" component={Logout} />
     </Route>
   </Router>
 ), document.body);

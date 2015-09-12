@@ -4,15 +4,16 @@ var WebAPIUtils = require('../utils/WebAPIUtils');
 
 module.exports = {
 
-  logIn: function(username, password) {
-    WebAPIUtils.logIn( username, password )
+  login: function(username, password, callback) {
     AppDispatcher.handleViewAction({
       type: "LOG_IN",
+      username: username,
+      password: password,
+      callback: callback
     });
   },
 
-  logOut: function(res) {
-    WebAPIUtils.logOut( );
+  logout: function(res) {
     AppDispatcher.handleViewAction({
       type: "LOG_OUT"
     });
