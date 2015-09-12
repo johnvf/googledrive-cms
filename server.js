@@ -10,14 +10,15 @@ function setupServer(){
 	app.use( bodyParser.json() );
 	app.use( bodyParser.urlencoded({ extended: true }) );
 
-	// Init routes
-	app.use(express.static(process.env.STATICROOT));
+    // Init routes
+	require("./modules/routes")(app);
+    
     // Serves the SPA
+    app.use(express.static(process.env.STATICROOT));
     app.get("*", function(req, res, next){
       res.sendFile(process.env.STATICROOT+'/index.html');
     });
 
-	require("./modules/routes")(app);
 	app.listen(process.env.PORT);
 }
 

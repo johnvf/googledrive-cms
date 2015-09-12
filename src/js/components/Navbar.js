@@ -1,5 +1,6 @@
 var React = require('react');
 
+
 var Navbar = React.createClass({
 
     render: function() {
@@ -7,17 +8,16 @@ var Navbar = React.createClass({
       var loggedIn = this.props.loggedIn;
       var items;
 
-      if ( !loggedIn ){
+      if ( loggedIn == false ){
         items = [
-        { text: "Login", target: "../projects/login" },
+        { text: "Login", target: "login" },
         ]
       }
       else {
         items = [
-        { text: "Home", target: "/projects/landing" },
-        { text: "Project", target: "/projects/project" },
-        26,
-        { text: "Logout", target: "/projects/logout" }
+        { text: "Home", target: "landing" },
+        { text: "Project", target: "project" },
+        { text: "Logout", target: "logout" }
         ]
       }
 

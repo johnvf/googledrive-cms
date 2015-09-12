@@ -7,13 +7,14 @@ module.exports = function (app) {
 
     // Login Route
     app.post("/auth/login", function(req, res, next){
+      console.log( req.body );
         stormpathClient.getToken( req.body.username, req.body.password, function(jwt){
             res.send(jwt)
         })
     });
 
     // Route middleware to verify a token
-    app.use(function(req, res, next) {
+    app.use('/api/*', function(req, res, next) {
 
       // check header or url parameters or post parameters for token
       var token = req.body.token || req.query.token || req.headers['x-access-token'];

@@ -18,7 +18,9 @@ var app;
 function getApp(name){
     return new Promise( function(resolve,reject){
         stormpath.loadApiKey(keyfile, function apiKeyFileLoaded(err, apiKey) {
-            if (err){ throw err; reject(); };
+            // if (err){ throw err; reject(); }; // FIXME: Add proper error handling
+            if (err){ console.log(err); reject(); return};
+
             client = new stormpath.Client({apiKey: apiKey});
 
             client.getApplications({name: name }, function(err, applications){
@@ -36,7 +38,8 @@ function login(  username, password, app ){
     return new Promise( function(resolve, reject){
 
         app.authenticateAccount({ username: username, password: password }, function (err, result) {
-          if (err){ throw err; reject(); };
+          // if (err){ throw err; reject(); }; // FIXME: Add proper error handling
+          if (err){ console.log(err); reject(); return};
 
           account = result.account;
           resolve( account )
@@ -71,19 +74,23 @@ function makeToken( account ){
 }
 
 function getToken( username, password , callback ){
-
-    if( !app ){
-        getApp(appName)
-        .then( login.bind( this, username, password ) )
-        .then( getCustomData )
-        .then( makeToken )
-        .then( callback );
+    if (!!username && !!password ){
+        if( !app ){
+            getApp(appName)
+            .then( login.bind( this, username, password ) )
+            .then( getCustomData )
+            .then( makeToken )
+            .then( callback );
+        }
+        else{
+            login( username, password, app )
+            .then( getCustomData )
+            .then( makeToken )
+            .then( callback );
+        }
     }
     else{
-        login( username, password, app )
-        .then( getCustomData )
-        .then( makeToken )
-        .then( callback );
+        console.log('No username or password');
     }
 }
 

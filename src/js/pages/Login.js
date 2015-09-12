@@ -24,7 +24,7 @@ var Login = React.createClass({
 
     // FIXME: Once I can verify this is working ,
     // refactor it back to a store launched by an action per above.
-    Auth.login(email, pass, (loggedIn) => {
+    Auth.login(this.state.user, this.state.password, (loggedIn) => {
       if (!loggedIn)
         return this.setState({ error: true });
 
@@ -33,7 +33,7 @@ var Login = React.createClass({
       if (location.state && location.state.nextPathname) {
         this.history.replaceState(null, location.state.nextPathname);
       } else {
-        this.history.replaceState(null, '/about');
+        this.history.replaceState(null, '/landing');
       }
     });
 

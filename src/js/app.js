@@ -16,6 +16,7 @@ var Navbar = require( './components/Navbar')
 
 // Pages
 var Login = require( './pages/Login'),
+    Logout = require( './pages/Logout'),
     Landing = require('./pages/Landing'),
     Project = require('./pages/Project');
 
@@ -50,9 +51,10 @@ var App = React.createClass({
   },
 
   render: function () {
+    var loggedIn = this.state.loggedIn
     return (
       <div className="main">
-        <Navbar/>
+        <Navbar loggedIn={loggedIn}/>
         <div className="container-fluid">
           {this.props.children}
         </div>
@@ -72,34 +74,9 @@ React.render((
   <Router history={ BrowserHistory } >
     <Route path="/" component={App}>
         <Route path="login" component={Login} />
-        <Route path="landing" component={Landing} onEnter={requireAuth}/>
-        <Route path="project" component={Project}/> 
+        <Route path="landing" component={Landing}/>
+        <Route path="project" component={Project} onEnter={requireAuth}/> 
+        <Route path="logout" component={Logout} />
     </Route>
   </Router>
 ), document.body);
-
-// var routes = (
-//   <Route path="/projects" handler={App}>
-//       <Route name="login" handler={Login} />
-//       <Route name="landing" handler={Landing} onEnter={requireAuth}/>
-//       <Route name="project" handler={Project} onEnter={requireAuth}/> 
-//       <DefaultRoute handler={Landing} />
-//   </Route>
-// );
-
-// Router.run(routes,(Root) => {
-//   React.render(<Root/>, document.body);
-// });
-
-// var routes = (
-//   <Route path="/projects" handler={App}>
-//       <Route name="login" handler={Login} />
-//       <Route name="landing" handler={Landing} onEnter={requireAuth}/>
-//       <Route name="project" handler={Project} onEnter={requireAuth}/> 
-//       <DefaultRoute handler={Landing} />
-//   </Route>
-// );
-
-// Router.run(routes, Router.HistoryLocation, function (Handler) {
-//   React.render(<Handler/>, document.body);
-// });
