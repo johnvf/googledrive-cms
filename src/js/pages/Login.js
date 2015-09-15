@@ -36,17 +36,17 @@ var Login = React.createClass({
     this.setState({password: e.target.value})
   },
 
-  render: function() {
+  render: function(){
     return (
-      <form className="form-group">
-        <input type="text" onChange={this.changeUser} value={this.state.user} placeholder="Username" />
-        <input type="text" onChange={this.changePassword} value={this.state.password} placeholder="Password" />
-        <button type="submit" onClick={this.login.bind(this)}>Submit</button>
-        {this.state.error && (
-          <p>Bad login information</p>
-        )}
+      <form className="form-signin centered">
+        <h2 className="form-signin-heading">Please sign in</h2>
+        <label for="inputEmail" className="sr-only">Email address</label>
+        <input id="inputUser" className="form-control" onChange={this.changeUser} value={this.state.user} placeholder="Username" required="" autofocus=""/>
+        <label for="inputPassword" className="sr-only">Password</label>
+        <input type="password" id="inputPassword" className="form-control" onChange={this.changePassword} value={this.state.password} placeholder="Password" required=""/>
+        <button className="btn btn-lg btn-primary btn-block" type="submit" onClick={this.login.bind(this)}>Sign in</button>
       </form>
-    )
+      )
   }
 
 });
