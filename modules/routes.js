@@ -30,15 +30,19 @@ module.exports = function(app) {
 
     }
   });
-
-  // Gets project data
+  
+  // Gets all available projects
   app.get('/api/project', function(req, res) {
-    driveClient.load(function(data) {
+    driveClient.getProjectList(function(data) {
       res.send(data);
     });
   });
 
-  // Gets a specific project report
+  // Gets the project data
+  app.get('/api/project/:folder_id', function(req, res) {
+    driveClient.getProjectData( req.params.folder_id, function(data) {
+      res.send(data);
+    });
+  });
 
-  // Gets a report resource
 };

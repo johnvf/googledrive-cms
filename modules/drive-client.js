@@ -17,33 +17,77 @@ var jwtClient = new google.auth.JWT(key.client_email, null, key.private_key, sco
  * Private
  */
 
-// Loads the config object
-function getConfig( ){
+function auth( ){
     return new Promise( function(resolve,reject){
-        var drive = google.drive({ version: 'v2', auth: jwtClient });
-        // Make an authorized request to list Drive files.
-        drive.files.list({ auth: jwtClient }, function(err, resp) {
-
-            resp.items.forEach(function(item){
-                if( item.title == "config.yaml" ){
-                    drive.files.get({ 'fileId': item.id , 'alt': 'media'}, function(err, resp){ 
-                        var config = yaml.parse(resp)
-                        resolve(config);
-                    } );
-                }
-            })
+        jwtClient.authorize(function(err, tokens) {
+            if (err) {
+                console.log(err);
+                return;
+            }
+            console.log("authed")
+            resolve( );        
         });
-    });
+    })
+}
+
+function getProjectFolders( ){
+    return new Promise( function(resolve,reject){
+        console.log('loading project folders..')
+        var drive = google.drive({ version: 'v2', auth: jwtClient });
+
+        var q =  "title contains 'cms'"
+        drive.files.list({ auth: jwtClient, q: q}, function(err, resp) {
+
+            var cms_folder = resp.items[0]
+            q = "mimeType = 'application/vnd.google-apps.folder'"
+
+            drive.children.list({ 'folderId': cms_folder.id, q: q }, function(err, resp){ 
+                resolve( resp.items )
+            });
+        });
+    })
+}
+
+function getProjects( folders ){
+    return new Promise( function(resolve,reject){
+        console.log('loading configs..')
+
+        var folder_ids = folders.map( function( folder ){ return folder.id });
+        
+        var projects = folder_ids.map(  getProject );
+
+        Promise.all( projects )
+            .then(function (resp) {
+                resolve(resp)
+            });
+
+    })
+}
+
+function getProject( folder_id ){
+    return new Promise( function(resolve,reject){
+
+        q ="title contains 'config'"
+        var drive = google.drive({ version: 'v2', auth: jwtClient });
+
+        drive.children.list({ 'folderId': folder_id, q: q }, function(err, resp){ 
+
+            drive.files.get({ 'fileId': resp.items[0].id , 'alt': 'media'}, function(err, resp){ 
+                resolve( { folder: folder_id, config:  yaml.parse(resp) } )
+            } );
+
+        }); 
+
+    });      
 }
 
 // Loads data from spreadsheets and assigns to config
-function getData( config ){
+function getData( project ){
     return new Promise( function(resolve,reject){
         // Array of items that need to have spreadsheet data loaded
         sheetRefItems = []
-
-        Object.keys(config.reports).forEach( function(report_key){
-            var report = config.reports[report_key]
+        Object.keys( project.config.reports ).forEach( function(report_key){
+            var report = project.config.reports[report_key]
             Object.keys(report.items).forEach( function(item_key){
                 var item = report.items[item_key]
                 if( item.type === "chart" ){
@@ -53,7 +97,7 @@ function getData( config ){
         })
 
         Promise.all( sheetRefItems.map( getSheetData ) ).done( function(){
-            resolve( config )
+            resolve( project )
         });
     });
 }
@@ -79,21 +123,44 @@ function getSheetData( item ){
  * Public
  */
 
-// Connects to google drive, loads the config, 
-// populates the config with data, 
-// and finally calls the callback with the data-loaded config
-function load( callback ){
-    jwtClient.authorize(function(err, tokens) {
+function test( ){
 
-        if (err) {
-            console.log(err);
-            return;
-        }
+    var gotData = function(projectData){ console.log(JSON.stringify(projectData, undefined, 2)) };
 
-        getConfig().then( getData ).then( callback );
-    });
+    var gotProjects = function (projects){
+        projects.forEach( function(project){
+            getProjectData(project, gotData)
+        });
+    }
+
+    getProjects( gotProjects );
+}
+
+if (!module.parent) {
+    test();
+}
+
+// Connects to google drive, loads the configs from their folders, 
+// and passes this information back to the callback
+function getProjectList( callback ){
+    console.log("getting projects...");
+    auth()
+        .then( getProjectFolders )
+        .then( getProjects )
+        .then( callback )
+}
+
+// Connects to google drive, loads the configs from their folders, 
+// and passes this information back to the callback
+function getProjectData( folder_id, callback ){
+    console.log("getting project data...");
+    auth()
+        .then( getProject.bind( null,folder_id )) 
+        .then( getData )
+        .then( callback )
 }
 
 module.exports = {
-    load: load
+    getProjectList: getProjectList,
+    getProjectData: getProjectData
 }
