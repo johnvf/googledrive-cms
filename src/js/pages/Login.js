@@ -44,7 +44,7 @@ var Login = React.createClass({
         <input id="inputUser" className="form-control" onChange={this.changeUser} value={this.state.user} placeholder="Username" required="" autofocus=""/>
         <label for="inputPassword" className="sr-only">Password</label>
         <input type="password" id="inputPassword" className="form-control" onChange={this.changePassword} value={this.state.password} placeholder="Password" required=""/>
-        <button className="btn btn-lg btn-primary btn-block" type="submit" onClick={this.login.bind(this)}>Sign in</button>
+        <button className="btn btn-lg btn-default btn-block" type="submit" onClick={this.login.bind(this)}>Sign in</button>
       </form>
       )
   }
