@@ -28,7 +28,7 @@ var Landing = React.createClass({
   },
 
   render: function() {
-    var projects = this.state.projects || [];
+    var projects = this.state.projects ? this.state.projects : [];
 
     var project_components = projects.map( function(project){ 
       return <Project project={project}/>

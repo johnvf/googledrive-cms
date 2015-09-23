@@ -38,6 +38,17 @@ module.exports = {
               ServerActions.receiveProjects(JSON.parse(res.text));
             }
           });
-    }
+    },
 
+    getProjectData: function(folder_id, project_id){
+        // FIXME: Make this accept the folder_id + project_id
+        request.get( "/api/project/" + folder_id + "/" + project_id )
+          .set('Accept', 'application/json')
+          .set('x-access-token', localStorage.token)
+          .end(function(error, res){
+            if (res) {
+              ServerActions.receiveProjectData(JSON.parse(res.text));
+            }
+          });
+    }
 };

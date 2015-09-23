@@ -13,7 +13,7 @@ module.exports = function(app) {
     })
   });
 
-  // Route middleware to verify a token
+  // // Route middleware to verify a token
   app.use('/api/*', function(req, res, next) {
 
     // check header or url parameters or post parameters for token
@@ -38,9 +38,9 @@ module.exports = function(app) {
     });
   });
 
-  // Gets the project data
-  app.get('/api/project/:folder_id', function(req, res) {
-    driveClient.getProjectData( req.params.folder_id, function(data) {
+  // Gets specific project report data
+  app.get('/api/project/:folder_id/:report_id', function(req, res) {
+    driveClient.getProjectData( req.params.folder_id, req.params.report_id, function(data) {
       res.send(data);
     });
   });

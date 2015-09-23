@@ -81,23 +81,29 @@ function getProject( folder_id ){
     });      
 }
 
+// FIXME: If reports are configured in separate text files (which they should be), 
+// this will change
+function getReport( report_id, project ){
+    return new Promise( function(resolve,reject){
+        resolve( project.config.reports[report_id] )
+    }); 
+}
+
 // Loads data from spreadsheets and assigns to config
-function getData( project ){
+function getData( report ){
     return new Promise( function(resolve,reject){
         // Array of items that need to have spreadsheet data loaded
         sheetRefItems = []
-        Object.keys( project.config.reports ).forEach( function(report_key){
-            var report = project.config.reports[report_key]
-            Object.keys(report.items).forEach( function(item_key){
-                var item = report.items[item_key]
-                if( item.type === "chart" ){
-                    sheetRefItems.push( item )
-                }
-            })
+
+        Object.keys(report.items).forEach( function(item_key){
+            var item = report.items[item_key]
+            if( item.type === "chart" ){
+                sheetRefItems.push( item )
+            }
         })
 
         Promise.all( sheetRefItems.map( getSheetData ) ).done( function(){
-            resolve( project )
+            resolve( report )
         });
     });
 }
@@ -152,10 +158,11 @@ function getProjectList( callback ){
 
 // Connects to google drive, loads the configs from their folders, 
 // and passes this information back to the callback
-function getProjectData( folder_id, callback ){
+function getProjectData( folder_id, report_id, callback ){
     console.log("getting project data...");
     auth()
-        .then( getProject.bind( null,folder_id )) 
+        .then( getProject.bind( null, folder_id ))
+        .then( getReport.bind( null, report_id))
         .then( getData )
         .then( callback )
 }

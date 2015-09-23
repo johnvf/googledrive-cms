@@ -26,8 +26,8 @@ module.exports = {
     });
   },
 
-  getProjectData: function(projectName){
-    WebAPIUtils.getProject( projectName )
+  getProjectData: function(folder_id , report_id){
+    WebAPIUtils.getProjectData(folder_id , report_id)
     AppDispatcher.handleViewAction({
       type: "GET_PROJECT_DATA"
     });

@@ -21,6 +21,13 @@ module.exports = {
       type: "RECEIVE_PROJECTS",
       projects: projects
     });
+  },
+
+  receiveProjectData: function(projectData) {
+    AppDispatcher.handleServerAction({
+      type: "RECEIVE_PROJECT_DATA",
+      projectData: projectData
+    });
   }
 
 };
