@@ -36,7 +36,7 @@ var Navbar = React.createClass({
       <div className="navbar navbar navbar-fixed-top" role="navigation">
         <div className="container">
           <div className="navbar-header">
-            <a className="navbar-brand" href="#">BRAND</a>
+            <a className="navbar-brand" href="#">BRAND | reports</a>
           </div>
         <ul className="nav navbar-nav navbar-right">
           { itemMarkup }

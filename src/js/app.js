@@ -15,7 +15,7 @@ var Navbar = require( './components/Navbar')
 var Login = require( './pages/Login'),
     Logout = require( './pages/Logout'),
     Landing = require('./pages/Landing'),
-    Project = require('./pages/Project');
+    Report = require('./pages/Report');
 
 
 function getStateFromStores() {
@@ -51,7 +51,7 @@ var App = React.createClass({
     return (
       <div className="main">
         <Navbar loggedIn={getStateFromStores().loggedIn}/>
-        <div className="container-fluid">
+        <div className="container-fluid centered">
           {this.props.children}
         </div>
       </div>
@@ -75,7 +75,9 @@ React.render((
       <IndexRoute component={Login} />
       <Route path="login" component={Login} />
       <Route path="landing" component={Landing} onEnter={requireAuth}/>
-      <Route path="project" component={Project} onEnter={requireAuth}/> 
+      <Route path="project" onEnter={requireAuth}>
+        <Route path=":folder_id/:report_id" component={Report} onEnter={requireAuth}/>
+      </Route>
       <Route path="logout" component={Logout} />
     </Route>
   </Router>

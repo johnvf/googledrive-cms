@@ -4,7 +4,7 @@ var assign = require("react/lib/Object.assign");
 
 var CHANGE_EVENT = 'change';
 
-var _project;
+var _projects;
 
 var ProjectStore = assign({}, EventEmitter.prototype, {
 
@@ -16,8 +16,8 @@ var ProjectStore = assign({}, EventEmitter.prototype, {
     this.on(CHANGE_EVENT, callback);
   },
 
-  getProject: function(){
-    return _project;
+  getProjects: function(){
+    return _projects;
   },
 
 });
@@ -27,8 +27,8 @@ ProjectStore.dispatchToken = AppDispatcher.register(function(payload) {
 
   switch(action.type) {
 
-    case "RECEIVE_PROJECT":
-      _project = action.project
+    case "RECEIVE_PROJECTS":
+      _projects = action.projects
       ProjectStore.emitChange();
       break;
 

@@ -3,10 +3,11 @@ var React = require('react');
 var ViewActions = require('../actions/ViewActions');
 var ProjectStore = require('../stores/ProjectStore')
 
+var Project = require('../components/Project')
 
 function getStateFromStores() {
   return {
-    project: ProjectStore.getProject()
+    projects: ProjectStore.getProjects()
   };
 }
 
@@ -19,7 +20,7 @@ var Landing = React.createClass({
     return getStateFromStores();
   },
   componentDidMount: function() {
-    ViewActions.getProject("Eden Housing");
+    ViewActions.getProjects();
     ProjectStore.addChangeListener(this._onChange);
   },
   _onChange: function() {
@@ -27,13 +28,15 @@ var Landing = React.createClass({
   },
 
   render: function() {
-    var project = JSON.stringify(this.state.project, null, 2) || ''
+    var projects = this.state.projects || [];
+
+    var project_components = projects.map( function(project){ 
+      return <Project project={project}/>
+    });
+
     return (
     <div>
-      LANDING
-      <pre>
-      {project}
-      </pre>
+      {project_components}
     </div>
     );
   }

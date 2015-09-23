@@ -19,10 +19,17 @@ module.exports = {
     });
   },
 
-  getProject: function(projectName){
+  getProjects: function(){
+    WebAPIUtils.getProjects( )
+    AppDispatcher.handleViewAction({
+      type: "GET_PROJECTS"
+    });
+  },
+
+  getProjectData: function(projectName){
     WebAPIUtils.getProject( projectName )
     AppDispatcher.handleViewAction({
-      type: "LOAD_PROJECT"
+      type: "GET_PROJECT_DATA"
     });
   }
 

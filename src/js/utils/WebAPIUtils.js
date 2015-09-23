@@ -29,13 +29,13 @@ module.exports = {
         window.location.assign("/projects/login");
     },
 
-    getProject: function(projectName){
+    getProjects: function(){
         request.get( "/api/project" )
           .set('Accept', 'application/json')
           .set('x-access-token', localStorage.token)
           .end(function(error, res){
             if (res) {
-              ServerActions.receiveProject(JSON.parse(res.text));
+              ServerActions.receiveProjects(JSON.parse(res.text));
             }
           });
     }

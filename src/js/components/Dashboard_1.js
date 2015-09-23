@@ -4,7 +4,7 @@ var Report = React.createClass({
 
     render: function(){
         return (    
-            <div className="container">
+            <div className="container-fluid">
               <div id="report">
               </div>
               <hr/>

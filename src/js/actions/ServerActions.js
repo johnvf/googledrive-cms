@@ -16,10 +16,10 @@ module.exports = {
     });
   },
 
-  receiveProject: function(project) {
+  receiveProjects: function(projects) {
     AppDispatcher.handleServerAction({
-      type: "RECEIVE_PROJECT",
-      project: project
+      type: "RECEIVE_PROJECTS",
+      projects: projects
     });
   }
 
