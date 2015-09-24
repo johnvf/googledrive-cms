@@ -1,5 +1,7 @@
 var React = require('react');
 
+var Loader = require('react-loader');
+
 var ViewActions = require('../actions/ViewActions');
 var ProjectStore = require('../stores/ProjectStore')
 
@@ -7,7 +9,8 @@ var Project = require('../components/Project')
 
 function getStateFromStores() {
   return {
-    projectData: ProjectStore.getProjectData()
+    projectData: ProjectStore.getProjectData(),
+    loaded: false
   };
 }
 
@@ -38,21 +41,31 @@ var Report = React.createClass({
   render: function() {
 
 
-    var heading, body, items;
+    var heading, body, items, report_components, loaded;
 
+    loaded = this.state.loaded
     // FIXME: Rename 'reportData'
     if ( this.state.projectData ){
+        loaded = true
         heading = this.state.projectData.title;
         body = this.state.projectData.body;
         items = this.state.projectData.items;
+
+        report_components = (
+          <Panel heading={ heading } body={ body } >
+              <Dashboard items={items}/>
+          </Panel>
+        );
     }
 
     return (
-    <div>
-        <Panel heading={ heading } body={ body } >
-            <Dashboard items={items}/>
-        </Panel>
-    </div>
+      
+        <div>
+          <Loader loaded={loaded}>
+            {report_components}
+          </Loader>
+        </div>
+      
     )
   }
 });

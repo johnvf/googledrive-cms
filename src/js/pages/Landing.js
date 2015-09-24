@@ -1,5 +1,7 @@
 var React = require('react');
 
+var Loader = require('react-loader');
+
 var ViewActions = require('../actions/ViewActions');
 var ProjectStore = require('../stores/ProjectStore')
 
@@ -7,7 +9,8 @@ var Project = require('../components/Project')
 
 function getStateFromStores() {
   return {
-    projects: ProjectStore.getProjects()
+    projects: ProjectStore.getProjects(),
+    loaded: false
   };
 }
 
@@ -28,16 +31,23 @@ var Landing = React.createClass({
   },
 
   render: function() {
-    var projects = this.state.projects ? this.state.projects : [];
-
-    var project_components = projects.map( function(project){ 
-      return <Project project={project}/>
-    });
+    var projects, project_components, loaded;
+    loaded = this.state.loaded;
+    
+    if( this.state.projects ){
+      loaded = true;
+      project_components = this.state.projects.map( function(project, i){ 
+        return <Project key={i} project={project}/>
+      });
+    }
 
     return (
-    <div>
-      {project_components}
-    </div>
+      
+        <div>
+          <Loader loaded={loaded}>
+            {project_components}
+          </Loader>
+        </div>
     );
   }
 });

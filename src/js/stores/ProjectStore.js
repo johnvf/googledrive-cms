@@ -33,10 +33,12 @@ ProjectStore.dispatchToken = AppDispatcher.register(function(payload) {
 
   switch(action.type) {
 
+
     case "RECEIVE_PROJECTS":
       _projects = action.projects
       ProjectStore.emitChange();
       break;
+
 
     case "RECEIVE_PROJECT_DATA":
       _projectData = action.projectData

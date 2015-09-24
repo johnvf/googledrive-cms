@@ -16,7 +16,6 @@ var Navbar = React.createClass({
       else {
         items = [
         { text: "Home", target: "/landing" },
-        { text: "Project", target: "/project" },
         { text: "Logout", target: "/logout" }
         ]
       }

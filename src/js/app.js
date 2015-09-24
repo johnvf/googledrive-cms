@@ -4,7 +4,9 @@ var routerModule = require('react-router');
 var Router = routerModule.Router;
 var Route = routerModule.Route;
 var IndexRoute = routerModule.IndexRoute;
+var Redirect = routerModule.Redirect;
 var createBrowserHistory = require('history/lib/createBrowserHistory');
+
 
 var LoginStore = require( './stores/LoginStore')
 var ViewActions = require('./actions/ViewActions');
@@ -51,9 +53,11 @@ var App = React.createClass({
     return (
       <div className="main">
         <Navbar loggedIn={getStateFromStores().loggedIn}/>
+
         <div className="container-fluid centered">
           {this.props.children}
         </div>
+
       </div>
     );
   }
@@ -80,5 +84,6 @@ React.render((
       </Route>
       <Route path="logout" component={Logout} />
     </Route>
+    <Redirect from="*" to="/landing" />
   </Router>
 ), document.body);
