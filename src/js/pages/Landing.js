@@ -37,10 +37,12 @@ var Landing = React.createClass({
     loaded = this.state.loaded;
     
     if( this.state.projects ){
-      loaded = true;
-      project_components = this.state.projects.map( function(project, i){ 
-        return <Project key={i} project={project}/>
-      });
+      if( this.state.projects.length > 0){
+        loaded = true;
+        project_components = this.state.projects.map( function(project, i){ 
+          return <Project key={i} project={project}/>
+        });
+      }
     }
 
     return (

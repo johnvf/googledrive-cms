@@ -25,6 +25,7 @@
   },
   "dependencies": {
     "body-parser": "^1.13.3",
+    "c3": "^0.4.10",
     "express": "^4.13.3",
     "flux": "^2.1.1",
     "google-client-api": "^1.0.4",
