@@ -35,7 +35,9 @@ var Report = React.createClass({
   },
 
   _onChange: function() {
-    this.setState(getStateFromStores());
+    if(this.isMounted()) {
+      this.setState(getStateFromStores());
+    }
   },
 
   render: function() {

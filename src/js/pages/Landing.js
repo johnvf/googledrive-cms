@@ -27,7 +27,9 @@ var Landing = React.createClass({
     ProjectStore.addChangeListener(this._onChange);
   },
   _onChange: function() {
-    this.setState(getStateFromStores());
+    if(this.isMounted()) {
+      this.setState(getStateFromStores());
+    }
   },
 
   render: function() {
