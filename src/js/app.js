@@ -7,11 +7,13 @@ var IndexRoute = routerModule.IndexRoute;
 var Redirect = routerModule.Redirect;
 var createBrowserHistory = require('history/lib/createBrowserHistory');
 
-
+var ProjectStore = require('./stores/ProjectStore')
 var LoginStore = require( './stores/LoginStore')
+
 var ViewActions = require('./actions/ViewActions');
 
 var Navbar = require( './components/Navbar')
+var Sidebar = require( './components/Sidebar')
 
 // Pages
 var Login = require( './pages/Login'),
@@ -22,7 +24,8 @@ var Login = require( './pages/Login'),
 
 function getStateFromStores() {
   return {
-    loggedIn: LoginStore.loggedIn()
+    loggedIn: LoginStore.loggedIn(),
+    projects: ProjectStore.getProjects()
   };
 }
 
@@ -37,6 +40,7 @@ var App = React.createClass({
   },
   componentDidMount: function() {
     LoginStore.addChangeListener(this._onChange);
+    ProjectStore.addChangeListener(this._onChange);
   },
   _onChange: function() {
     this.setState(getStateFromStores());
@@ -50,10 +54,12 @@ var App = React.createClass({
 
   render: function () {
     var loggedIn = this.state.loggedIn
+    var projects = this.state.projects
+
     return (
       <div className="main">
-        <Navbar loggedIn={getStateFromStores().loggedIn}/>
-
+        <Navbar loggedIn={ loggedIn }/>
+        <Sidebar loggedIn={ loggedIn } projects={ projects } />
         <div className="container-fluid centered">
           {this.props.children}
         </div>
@@ -72,16 +78,15 @@ function requireAuth(nextState, redirectTo) {
 
 var BrowserHistory = createBrowserHistory();
 
-
+// React-Router route configuration
+// Essentially a mini-sitemap used to direct users to different pages
 React.render((
   <Router history={ BrowserHistory } >
     <Route path="/" component={App}>
       <IndexRoute component={Login} />
       <Route path="login" component={Login} />
       <Route path="landing" component={Landing} onEnter={requireAuth}/>
-      <Route path="project" onEnter={requireAuth}>
-        <Route path=":folder_id/:report_id" component={Report} onEnter={requireAuth}/>
-      </Route>
+      <Route path="/project/:folder_id/:report_id" component={Report} onEnter={requireAuth}/>
       <Route path="logout" component={Logout} />
     </Route>
     <Redirect from="*" to="/landing" />
