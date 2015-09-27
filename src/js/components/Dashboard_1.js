@@ -34,6 +34,10 @@ function getWidgets( items ){
   return widgets
 }
 
+function getLayouts(){
+  return {}
+}
+
 var Report = React.createClass({
 
     render: function(){
@@ -41,7 +45,7 @@ var Report = React.createClass({
         var widgets = getWidgets( this.props.items );
 
         // {lg: layout1, md: layout2, ...}
-        var layouts = getLayoutsFromSomewhere();
+        var layouts = getLayouts();
 
         return (    
             <div className="container-fluid">
