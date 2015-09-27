@@ -35,6 +35,7 @@
     "njwt": "^0.2.2",
     "promise": "^7.0.4",
     "react": "^0.13.3",
+    "react-grid-layout": "^0.8.5",
     "react-loader": "^1.4.0",
     "react-loaders": "^1.2.3",
     "react-router": "^1.0.0-rc1",
