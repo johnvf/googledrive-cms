@@ -1,28 +1,30 @@
 var express = require('express'),
-	bodyParser = require('body-parser'),
-	http = require('http'),
-	source = require('shell-source');
+    bodyParser = require('body-parser'),
+    http = require('http'),
+    source = require('shell-source'),
+    path = require('path');
 
+function setupServer() {
+    // Set up the app
+    var app = express();
+    app.use(bodyParser.json());
+    app.use(bodyParser.urlencoded({
+        extended: true
+    }));
 
-function setupServer(){
-	// Set variables
-	var port = process.env.PORT
-	var staticRoot = process.env.STATICROOT
+    // Init routes
+    require("./modules/routes")(app);
 
-	// Set up the app
-	var app = express();
-	app.use( bodyParser.json() );
-	app.use( bodyParser.urlencoded({ extended: true }) );
+    // Serves the SPA
+    app.use(express.static(process.env.STATICROOT));
+    app.get("*", function(req, res, next) {
+        res.sendFile(process.env.STATICROOT + '/index.html');
+    });
 
-	// Init routes
-	app.use("/", express.static( staticRoot ));
-
-	var server = http.createServer(app).listen(port, function() {
-		console.log('Server listening on port ' + port);
-	});
+    app.listen(process.env.PORT);
 }
 
-source( __dirname + "/env.sh" , function(err) {
-  if (err) return console.error(err);
-  setupServer();
+source(__dirname + "/env.sh", function(err) {
+    if (err) return console.error(err);
+    setupServer();
 });

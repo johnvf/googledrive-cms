@@ -14,4 +14,7 @@ Mock-Up for dynamic content driven by spreadsheets/docs
 
 ### Notes:
 
-* env.sh should remain untracked using `git update-index --assume-unchanged env.sh`, then updated with personal keys etc. In deployment, these variables would come from elsewhere.
+# Requires several API keys. These must be placed in a folder called '.keys' in the repo
+* One Google service account key from https://console.developers.google.com. Rename to google.json
+* One Stormpath API key from https://api.stormpath.com/ui2/index.html#/. Rename to stormpath.properties
+* Info in .keys/stormpath.properties must be added to env.sh per https://docs.stormpath.com/nodejs/express/latest/configuration.html

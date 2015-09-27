@@ -1,14 +1,42 @@
 @import "../../bower_components/bootstrap/less/bootstrap.less";
+@import "./bootswatch.less";
+@import "./variables.less";
+@import (inline) "../../node_modules/c3/c3.min.css";
+
+body {
+  font-family: "Helvetica Neue", Arial;
+  font-weight: 200;
+}
 
 .row{
 	display: flex;
 }
 
-.lg{
+.col-8{
 	flex: 8;
+  padding-left: 15px;
+  padding-right: 15px;
 }
 
-.sm{
+.col-4{
 	flex: 4;
-    padding-top: 120px;
+  padding-left: 15px;
+  padding-right: 15px;
+}
+
+.main{
+    margin-top: 50px;
+}
+
+.navbar{
+     max-height: 50px;
+}
+
+.container-fluid{
+  margin-top: 87px;
+}
+
+.centered{
+    max-width: 66.666%;
+    margin-left: 16.666%;
 }

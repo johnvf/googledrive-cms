@@ -1,8 +1,10 @@
 *.log
 
 env.sh
+
 .DS_Store
 
 dist
+.keys
 node_modules
 bower_components
