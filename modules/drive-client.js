@@ -9,6 +9,9 @@ var google = require('googleapis');
     Promise = require('promise'),
     yaml = require('yamljs');
 
+var request = require('request');
+var utf8 = require('utf8')
+
 var key = require('../.keys/google.json');
 var scopes = ['https://www.googleapis.com/auth/drive'];
 var jwtClient = new google.auth.JWT(key.client_email, null, key.private_key, scopes , null);
@@ -71,10 +74,22 @@ function getProject( folder_id ){
         var drive = google.drive({ version: 'v2', auth: jwtClient });
 
         drive.children.list({ 'folderId': folder_id, q: q }, function(err, resp){ 
+            // console.log(resp);
+            drive.files.get({ 'fileId': resp.items[0].id }, function(err, resp){ 
 
-            drive.files.get({ 'fileId': resp.items[0].id , 'alt': 'media'}, function(err, resp){ 
-                resolve( { folder: folder_id, config:  yaml.parse(resp) } )
-            } );
+                var file_resource = resp
+
+                request({
+                  uri: file_resource.exportLinks['text/plain'],
+                  headers: {
+                    authorization: 'Bearer ' + jwtClient.credentials.access_token
+                  }
+                }, function( err, resp, body){
+                    var cleanBody = utf8.encode(body.trim());
+                    resolve( { folder: folder_id, config:  yaml.parse(cleanBody) } )
+                });
+
+            });
 
         }); 
 
@@ -130,16 +145,7 @@ function getSheetData( item ){
  */
 
 function test( ){
-
-    var gotData = function(projectData){ console.log(JSON.stringify(projectData, undefined, 2)) };
-
-    var gotProjects = function (projects){
-        projects.forEach( function(project){
-            getProjectData(project, gotData)
-        });
-    }
-
-    getProjects( gotProjects );
+    getProjectList( function(data){ console.log(data) });
 }
 
 if (!module.parent) {

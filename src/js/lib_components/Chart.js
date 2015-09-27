@@ -2,6 +2,10 @@ var React = require('react');
 
 var c3 = require('c3')
 
+function cellsToRowCols(cells){
+    
+}
+
 var Chart = React.createClass({
     // ...
     _renderChart: function (data) {
