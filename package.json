@@ -39,6 +39,7 @@
     "react-loader": "^1.4.0",
     "react-loaders": "^1.2.3",
     "react-router": "^1.0.0-rc1",
+    "react-ui-tree": "^2.2.2",
     "request": "^2.64.0",
     "shell-source": "^1.1.0",
     "stormpath": "^0.11.4",

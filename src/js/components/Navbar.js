@@ -32,7 +32,7 @@ var Navbar = React.createClass({
     })
 
       return (
-      <div className="navbar navbar navbar-fixed-top" role="navigation">
+      <div className="navbar-inverse navbar-fixed-top" role="navigation">
         <div className="container">
           <div className="navbar-header">
             <a className="navbar-brand" href="#">BRAND | reports</a>
