@@ -9,50 +9,74 @@ var Table = require('../lib_components/Table');
 var Chart = require('../lib_components/Chart');
 
 
-function getWidgets( items ){
-  widgets = []
-  Object.keys(items).forEach( function(item_id){
-
-    var item = items[ item_id ];
-
-    switch (item.type) {
-      case "text":
-        widgets.push( <Text key={item_id} id={item_id} item={item}/> )
-        break;
-
-      case "table":
-        widgets.push( <Table key={item_id} id={item_id} item={item}/> )
-        break;
-
-      case "chart":
-        widgets.push( <Chart key={item_id} id={item_id} item={item}/> )
-        break;
-    }
-
-  });
-
-  return widgets
-}
-
-function getLayouts(){
-  return {}
-}
-
 var Report = React.createClass({
+
+   getInitialState: function() {
+      var layout = this.getLayout();
+      return {
+        layout: layout
+      };
+    },
+
+    onResizeStop: function( layout ){
+      console.log(layout);
+      this.setState({ layout: { lg: layout} })
+    },
+
+    getLayout: function(){
+      return {lg: [
+        { x: 0, y: 0, w: 4, h: 1},
+        { x: 4, y: 0, w: 8, h: 1},
+        { x: 0, y: 1, w: 8, h: 1},
+        { x: 8, y: 1, w: 4, h: 1},
+        { x: 0, y: 2, w: 4, h: 1},
+        { x: 4, y: 2, w: 8, h: 1}
+        ]}
+    },
+
+    getWidgets: function( items ){
+      widgets = []
+
+      var self = this;
+      var layout = this.state.layout
+
+      Object.keys(items).forEach( function(item_id, i){
+
+        var item = items[ item_id ];
+
+        switch (item.type) {
+          case "text":
+            widgets.push( <div key={i}><Text layout={layout} id={item_id} item={item}/></div> )
+            break;
+
+          case "table":
+            widgets.push( <div key={i}><Table layout={layout} id={item_id} item={item}/></div> )
+            break;
+
+          case "chart":
+            widgets.push( <div key={i} ><Chart layout={layout} id={item_id} item={item}/></div> )
+            break;
+        }
+
+      });
+
+      return widgets
+    },
 
     render: function(){
 
-        var widgets = getWidgets( this.props.items );
+        var widgets = this.getWidgets( this.props.items );
 
         // {lg: layout1, md: layout2, ...}
-        var layouts = getLayouts();
-
         return (    
             <div className="container-fluid">
-              <ResponsiveReactGridLayout className="layout" layouts={layouts}
+              <ResponsiveReactGridLayout className="layout" layouts={this.state.layout}
                 breakpoints={{lg: 1200, md: 996, sm: 768, xs: 480, xxs: 0}}
-                cols={{lg: 12, md: 10, sm: 6, xs: 4, xxs: 2}}>
-                { widgets }
+                cols={{lg: 12, md: 10, sm: 6, xs: 4, xxs: 2}}
+                isDraggable={true}
+                isResizable={true}
+                onResizeStop={ this.onResizeStop }>
+                {widgets}
               </ResponsiveReactGridLayout>
             </div>
         )      

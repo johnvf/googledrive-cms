@@ -22,13 +22,20 @@ var Chart = React.createClass({
     },
 
     componentDidMount: function () {
+        // console.log("re-render chart");
         this._renderChart(this.props.data);
     },
+
 
     componentWillReceiveProps: function (newProps) {
         // this.chart.load({
         //     json: newProps.data
         // }); // or whatever API you need
+        
+        // this._renderChart(this.props.data);
+        console.log("resize chart");
+         this._renderChart();
+        // this.render();
     },
 
     render: function(){
