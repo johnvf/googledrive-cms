@@ -13,7 +13,7 @@ var LoginStore = require( './stores/LoginStore')
 var ViewActions = require('./actions/ViewActions');
 
 var Navbar = require( './components/Navbar')
-// var Sidebar = require( './components/Sidebar')
+var Sidebar = require( './components/Sidebar')
 
 // Pages
 var Login = require( './pages/Login'),
@@ -55,11 +55,10 @@ var App = React.createClass({
   render: function () {
     var loggedIn = this.state.loggedIn
     var projects = this.state.projects
-// <Sidebar loggedIn={ loggedIn } projects={ projects } />
     return (
       <div className="main">
         <Navbar loggedIn={ loggedIn }/>
-        
+        <Sidebar loggedIn={ loggedIn } projects={ projects } />
         <div className="container-fluid centered">
           {this.props.children}
         </div>
