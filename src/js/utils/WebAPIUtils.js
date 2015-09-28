@@ -35,7 +35,13 @@ module.exports = {
           .set('x-access-token', localStorage.token)
           .end(function(error, res){
             if (res) {
-              ServerActions.receiveProjects(JSON.parse(res.text));
+              response = JSON.parse(res.text)
+              if( response.success == "false" ){
+                console.log("unable to load project data");
+              }
+              else{
+                ServerActions.receiveProjects(JSON.parse(res.text));
+              }
             }
           });
     },
@@ -47,7 +53,13 @@ module.exports = {
           .set('x-access-token', localStorage.token)
           .end(function(error, res){
             if (res) {
-              ServerActions.receiveProjectData(JSON.parse(res.text));
+              response = JSON.parse(res.text)
+              if( response.success == "false" ){
+                console.log("unable to load project data");
+              }
+              else{
+                ServerActions.receiveProjectData(JSON.parse(res.text));
+              }
             }
           });
     }

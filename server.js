@@ -12,11 +12,13 @@ function setupServer() {
         extended: true
     }));
 
-    // Init routes
-    require("./modules/routes")(app);
 
     // Serves the SPA
     app.use(express.static(process.env.STATICROOT));
+
+    // Init routes
+    require("./modules/routes")(app);
+    
     app.get("*", function(req, res, next) {
         res.sendFile(process.env.STATICROOT + '/index.html');
     });

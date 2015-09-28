@@ -72,7 +72,8 @@ function requireAuth(nextState, redirectTo) {
   if (!LoginStore.loggedIn()){
     console.log( LoginStore.loggedIn() );
     // FIXME: This is supposed to redirect to the original url on login, doesn't quite work
-    redirectTo('/login', '/login', { nextPathname: nextState.location.pathname });
+    // redirectTo('/login', '/login', { nextPathname: nextState.location.pathname });
+    BrowserHistory.replaceState({ nextPathname: nextState.location.pathname }, '/login');
   }
 }
 
@@ -85,10 +86,9 @@ React.render((
     <Route path="/" component={App}>
       <Route path="login" component={Login} />
       <Route path="logout" component={Logout} />
-      <Route path="/project/:folder_id/:report_id" component={Report} onEnter={requireAuth}/>
+      <Route path="project/:folder_id/:report_id" component={Report} onEnter={requireAuth}/>
       <Route path="landing" component={Landing} onEnter={requireAuth}/>
-      <IndexRoute component={Landing} onEnter={requireAuth} />
-      <Redirect from="*" to="/landing" />
+      <Redirect from="*" to="/landing"/>
     </Route>
   </Router>
 ), document.body);
