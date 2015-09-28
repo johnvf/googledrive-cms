@@ -34,7 +34,10 @@ var Chart = React.createClass({
         
         // this._renderChart(this.props.data);
         console.log("resize chart");
-         this._renderChart();
+        if ( this.chart ){
+            this.chart.resize();
+        }
+         // this._renderChart();
         // this.render();
     },
 

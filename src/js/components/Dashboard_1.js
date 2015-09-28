@@ -24,14 +24,7 @@ var Report = React.createClass({
     },
 
     getLayout: function(){
-      return {lg: [
-        { x: 0, y: 0, w: 4, h: 1},
-        { x: 4, y: 0, w: 8, h: 1},
-        { x: 0, y: 1, w: 8, h: 1},
-        { x: 8, y: 1, w: 4, h: 1},
-        { x: 0, y: 2, w: 4, h: 1},
-        { x: 4, y: 2, w: 8, h: 1}
-        ]}
+      return {lg: []}
     },
 
     getWidgets: function( items ){
