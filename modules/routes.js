@@ -13,7 +13,7 @@ module.exports = function(app) {
     })
   });
 
-  // // Route middleware to verify a token
+  // Route middleware to verify a token
   app.use('/api/*', function(req, res, next) {
 
     // check header or url parameters or post parameters for token

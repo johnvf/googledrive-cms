@@ -38,7 +38,7 @@ function getProjectFolders( ){
         console.log('loading project folders..')
         var drive = google.drive({ version: 'v2', auth: jwtClient });
 
-        var q =  "title contains 'cms'"
+        var q =  "title = 'CMS_ROOT'"
         drive.files.list({ auth: jwtClient, q: q}, function(err, resp) {
 
             var cms_folder = resp.items[0]

@@ -6,7 +6,15 @@ var CHANGE_EVENT = 'change';
 
 var WebAPIUtils = require('../utils/WebAPIUtils');
 
-var _loggedIn = false;
+var _loggedIn;
+
+
+if( localStorage.token ){
+  _loggedIn = true;
+}
+else{
+  _loggedIn = false;
+}
 
 var LoginStore = assign({}, EventEmitter.prototype, {
 
