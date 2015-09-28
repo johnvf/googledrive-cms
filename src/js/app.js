@@ -6,6 +6,7 @@ var Route = routerModule.Route;
 var IndexRoute = routerModule.IndexRoute;
 var Redirect = routerModule.Redirect;
 var createBrowserHistory = require('history/lib/createBrowserHistory');
+var useBasename = require('history/lib/useBasename')
 
 var ProjectStore = require('./stores/ProjectStore')
 var LoginStore = require( './stores/LoginStore')
@@ -36,7 +37,7 @@ var App = React.createClass({
     return getStateFromStores();
   },
   componentWillMount: function() {
-    ViewActions.login();
+    // ViewActions.checkAuth();
   },
   componentDidMount: function() {
     LoginStore.addChangeListener(this._onChange);
@@ -72,13 +73,19 @@ function requireAuth(nextState, redirectTo) {
   if (!LoginStore.loggedIn()){
     console.log( LoginStore.loggedIn() );
     // FIXME: This is supposed to redirect to the original url on login, doesn't quite work
-    // redirectTo('/login', '/login', { nextPathname: nextState.location.pathname });
+    // redirectTo('/login', { nextPathname: nextState.location.pathname });
     BrowserHistory.replaceState({ nextPathname: nextState.location.pathname }, '/login');
+
+    // redirectTo('/login', { nextPathname: nextState.location.pathname });
   }
 }
 
-var BrowserHistory = createBrowserHistory();
+// var BrowserHistory = createBrowserHistory();
+var BrowserHistory = useBasename(createBrowserHistory)({
+  basename: ''
+})
 
+// <Route path="/project/:folder_id/:report_id" component={Report} onEnter={requireAuth}/>
 // React-Router route configuration
 // Essentially a mini-sitemap used to direct users to different pages
 React.render((
@@ -86,9 +93,8 @@ React.render((
     <Route path="/" component={App}>
       <Route path="login" component={Login} />
       <Route path="logout" component={Logout} />
-      <Route path="project/:folder_id/:report_id" component={Report} onEnter={requireAuth}/>
+      <Route path="project" component={Report} onEnter={requireAuth}/>
       <Route path="landing" component={Landing} onEnter={requireAuth}/>
-      <Redirect from="*" to="/landing"/>
     </Route>
   </Router>
 ), document.body);

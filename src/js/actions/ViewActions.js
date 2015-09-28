@@ -19,6 +19,11 @@ module.exports = {
     });
   },
 
+  checkAuth: function( ){
+    console.log("checking auth")
+    WebAPIUtils.checkAuth( );
+  },
+
   getProjects: function(){
     WebAPIUtils.getProjects( )
     AppDispatcher.handleViewAction({

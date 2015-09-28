@@ -21,8 +21,11 @@ var Login = React.createClass({
       var { location } = this.props;
 
       if (location.state && location.state.nextPathname) {
+        console.log( "location state found")
+        console.log("redirecting to: "+location.state.nextPathname)
         this.history.replaceState(null, location.state.nextPathname);
       } else {
+        console.log( "no location state found")
         this.history.replaceState(null, '/landing');
       }
     });
@@ -37,6 +40,7 @@ var Login = React.createClass({
   },
 
   render: function(){
+    console.log("login")
     return (
       <form className="form-signin centered">
         <h2 className="form-signin-heading">Please sign in</h2>

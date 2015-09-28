@@ -30,6 +30,13 @@ module.exports = function(app) {
 
     }
   });
+
+  app.get('/api/checkauth', function(req,res){
+    res.status(200).send({
+        success: true,
+        message: 'Token verified.'
+      });
+  });
   
   // Gets all available projects
   app.get('/api/project', function(req, res) {

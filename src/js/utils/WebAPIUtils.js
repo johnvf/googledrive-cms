@@ -29,6 +29,18 @@ module.exports = {
         window.location.assign("/projects/login");
     },
 
+    checkAuth: function( ){
+      request.get( "/api/checkAuth" )
+          .set('Accept', 'application/json')
+          .set('x-access-token', localStorage.token)
+          .end(function(error, res){
+            if (res) {
+              response = JSON.parse(res.text)
+              ServerActions.authChecked( response )
+            }
+          });
+    },
+
     getProjects: function(){
         request.get( "/api/project" )
           .set('Accept', 'application/json')
