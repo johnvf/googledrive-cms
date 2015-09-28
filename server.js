@@ -12,16 +12,35 @@ function setupServer() {
         extended: true
     }));
 
-
-    // Serves the SPA
-    app.use(express.static(process.env.STATICROOT));
-
     // Init routes
     require("./modules/routes")(app);
+
+    /*
+     * Static Stuff
+     */
+
+    // Longterm, some kind of generic URL rewrite may be needed for static files...
+
+    // app.use('*', function(req, res, next) {
+    //     req.url = req.url.replace(/\/([^\/]+)\.[0-9a-f]+\.(css|js|jpg|png|gif|svg)$/, "/$1.$2");
+    //     console.log(req.url)
+    //     next();
+    // });
     
+    // For now, just re-writing the key files
+    app.get("*/App.js", function(req, res, next) { 
+        req.url = '/js/App.js'; next(); 
+    });
+    app.get("*/styles.css", function(req, res, next) { 
+        req.url = '/css/styles.css'; next(); 
+    });
+    
+    app.use( express['static'](process.env.STATICROOT));
     app.get("*", function(req, res, next) {
         res.sendFile(process.env.STATICROOT + '/index.html');
     });
+
+    
 
     app.listen(process.env.PORT);
 }

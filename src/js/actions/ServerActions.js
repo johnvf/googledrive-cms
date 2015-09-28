@@ -16,13 +16,6 @@ module.exports = {
     });
   },
 
-  authChecked: function(res) {
-    AppDispatcher.handleServerAction({
-      type: "AUTH_CHECKED",
-      res: res
-    });
-  },
-
   receiveProjects: function(projects) {
     AppDispatcher.handleServerAction({
       type: "RECEIVE_PROJECTS",

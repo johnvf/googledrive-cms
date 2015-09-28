@@ -20,13 +20,17 @@ var Login = React.createClass({
 
       var { location } = this.props;
 
+      console.log(this.history)
+      console.log(location);
+      console.log(location.state);
+
       if (location.state && location.state.nextPathname) {
         console.log( "location state found")
         console.log("redirecting to: "+location.state.nextPathname)
         this.history.replaceState(null, location.state.nextPathname);
       } else {
         console.log( "no location state found")
-        this.history.replaceState(null, '/landing');
+        this.history.replaceState(null, '/');
       }
     });
   },

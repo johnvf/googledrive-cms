@@ -36,8 +36,8 @@ var Report = React.createClass({
   },
 
   componentWillReceiveProps: function(nextProps){
-    var { folder_id, report_id } = nextProps.params;
-    ViewActions.getProjectData(folder_id , report_id);
+    // var { folder_id, report_id } = nextProps.params;
+    // ViewActions.getProjectData(folder_id , report_id);
   },
 
   _onChange: function() {

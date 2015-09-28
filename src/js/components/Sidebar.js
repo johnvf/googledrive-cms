@@ -61,6 +61,13 @@ getInitialState: function() {
   render: function() {
   	// var items = this.props.items
 
+    // FIXME: 
+    // If props.projects is empty, 
+    // the navbar should be given a callback to call to get the items
+    //
+    // Right now, if the navbar loads directly from a report that is accessed, it will not have items, 
+    // since the call to load items happens in the landing page
+
 	// If loggedIn, show the sidebar. Else, hide
 	if( this.props.loggedIn && this.state.tree ){
 	    return (

@@ -29,18 +29,6 @@ module.exports = {
         window.location.assign("/projects/login");
     },
 
-    checkAuth: function( ){
-      request.get( "/api/checkAuth" )
-          .set('Accept', 'application/json')
-          .set('x-access-token', localStorage.token)
-          .end(function(error, res){
-            if (res) {
-              response = JSON.parse(res.text)
-              ServerActions.authChecked( response )
-            }
-          });
-    },
-
     getProjects: function(){
         request.get( "/api/project" )
           .set('Accept', 'application/json')
@@ -48,8 +36,8 @@ module.exports = {
           .end(function(error, res){
             if (res) {
               response = JSON.parse(res.text)
-              if( response.success == "false" ){
-                console.log("unable to load project data");
+              if( response.success == false ){
+                alert("Unable to load project data. Authentication may have expired. Please logout & back in");
               }
               else{
                 ServerActions.receiveProjects(JSON.parse(res.text));
@@ -66,8 +54,8 @@ module.exports = {
           .end(function(error, res){
             if (res) {
               response = JSON.parse(res.text)
-              if( response.success == "false" ){
-                console.log("unable to load project data");
+              if( response.success == false ){
+                alert("Unable to load project data. Authentication may have expired. Please logout & back in");
               }
               else{
                 ServerActions.receiveProjectData(JSON.parse(res.text));
