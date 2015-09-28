@@ -1,81 +1,80 @@
 var React = require('react');
+// Some considerations with grid layout:
+// - What do we do if the user makes a layout, then adds an additional widget without redoing the layout?
+// - Standard keys vs. custom keys? Maybe custom keys, since they're more explicit?
+var ResponsiveReactGridLayout = require('react-grid-layout').Responsive;
 
 var Text = require('../lib_components/Text');
 var Table = require('../lib_components/Table');
 var Chart = require('../lib_components/Chart');
 
 
-function getWidgets( items ){
-  widgets = {}
-  Object.keys(items).forEach( function(item_id){
-
-    var item = items[ item_id ];
-
-    switch (item.type) {
-      case "text":
-        widgets[item_id] = <Text id={item_id} item={item}/>
-        break;
-
-      case "table":
-        widgets[item_id] = <Table id={item_id} item={item}/>
-        break;
-
-      case "chart":
-        widgets[item_id] = <Chart id={item_id} item={item}/>
-        day = "table";
-        break;
-    }
-
-  });
-
-  return widgets
-}
-
 var Report = React.createClass({
+
+   getInitialState: function() {
+      var layout = this.getLayout();
+      return {
+        layout: layout
+      };
+    },
+
+    onResizeStop: function( layout ){
+      console.log(layout);
+      this.setState({ layout: { lg: layout} })
+    },
+
+    getLayout: function(){
+      return {lg: []}
+    },
+
+    getWidgets: function( items ){
+      widgets = []
+
+      var self = this;
+      var layout = this.state.layout
+
+      Object.keys(items).forEach( function(item_id, i){
+
+        var item = items[ item_id ];
+
+        switch (item.type) {
+          case "text":
+            widgets.push( <div key={i}><Text layout={layout} id={item_id} item={item}/></div> )
+            break;
+
+          case "table":
+            widgets.push( <div key={i}><Table layout={layout} id={item_id} item={item}/></div> )
+            break;
+
+          case "chart":
+            widgets.push( <div key={i} ><Chart layout={layout} id={item_id} item={item}/></div> )
+            break;
+        }
+
+      });
+
+      return widgets
+    },
 
     render: function(){
 
-        var widgets = getWidgets( this.props.items );
+        var widgets = this.getWidgets( this.props.items );
 
-        var text = "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aliquam hendrerit mi posuere lectus."
-
-
-        // NOTE: If we only wan't to support a repeating, staggered pattern (like below), this could be generalized.
-        // Right now, the assumption is that there is a single template with a max. size + non-repeating layout.
+        // {lg: layout1, md: layout2, ...}
         return (    
             <div className="container-fluid">
-
-                <div className="row">
-                  <div className="col-8">
-                     { widgets["A"] }
-                  </div>
-                  <div className="col-4">
-                    { widgets["B"] }
-                  </div>
-                </div>
-
-
-                <div className="row">
-                  <div className="col-4">
-                    { widgets["C"] }
-                  </div>
-                  <div className="col-8">
-                    { widgets["D"] }
-                  </div>
-                </div>
-
-                <div className="row">
-                  <div className="col-8">
-                    { widgets["E"] }
-                  </div>
-                  <div className="col-4">
-                    { widgets["F"] }
-                  </div>
-                </div>
-
+              <ResponsiveReactGridLayout className="layout" layouts={this.state.layout}
+                breakpoints={{lg: 1200, md: 996, sm: 768, xs: 480, xxs: 0}}
+                cols={{lg: 12, md: 10, sm: 6, xs: 4, xxs: 2}}
+                isDraggable={true}
+                isResizable={true}
+                onResizeStop={ this.onResizeStop }>
+                {widgets}
+              </ResponsiveReactGridLayout>
             </div>
-        )
+        )      
     }
+
 });
 
 
