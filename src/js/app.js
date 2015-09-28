@@ -13,7 +13,7 @@ var LoginStore = require( './stores/LoginStore')
 var ViewActions = require('./actions/ViewActions');
 
 var Navbar = require( './components/Navbar')
-var Sidebar = require( './components/Sidebar')
+// var Sidebar = require( './components/Sidebar')
 
 // Pages
 var Login = require( './pages/Login'),
@@ -55,11 +55,11 @@ var App = React.createClass({
   render: function () {
     var loggedIn = this.state.loggedIn
     var projects = this.state.projects
-
+// <Sidebar loggedIn={ loggedIn } projects={ projects } />
     return (
       <div className="main">
         <Navbar loggedIn={ loggedIn }/>
-        <Sidebar loggedIn={ loggedIn } projects={ projects } />
+        
         <div className="container-fluid centered">
           {this.props.children}
         </div>
@@ -71,6 +71,7 @@ var App = React.createClass({
 
 function requireAuth(nextState, redirectTo) {
   if (!LoginStore.loggedIn()){
+    console.log( LoginStore.loggedIn() );
     // FIXME: This is supposed to redirect to the original url on login, doesn't quite work
     redirectTo('/login', '/login', { nextPathname: nextState.location.pathname });
   }
@@ -83,12 +84,12 @@ var BrowserHistory = createBrowserHistory();
 React.render((
   <Router history={ BrowserHistory } >
     <Route path="/" component={App}>
-      <IndexRoute component={Login} />
       <Route path="login" component={Login} />
-      <Route path="landing" component={Landing} onEnter={requireAuth}/>
-      <Route path="/project/:folder_id/:report_id" component={Report} onEnter={requireAuth}/>
       <Route path="logout" component={Logout} />
+      <Route path="/project/:folder_id/:report_id" component={Report} onEnter={requireAuth}/>
+      <Route path="landing" component={Landing} onEnter={requireAuth}/>
+      <IndexRoute component={Landing} onEnter={requireAuth} />
+      <Redirect from="*" to="/landing" />
     </Route>
-    <Redirect from="*" to="/landing" />
   </Router>
 ), document.body);

@@ -8,7 +8,6 @@ var WebAPIUtils = require('../utils/WebAPIUtils');
 
 var _loggedIn;
 
-
 if( localStorage.token ){
   _loggedIn = true;
 }

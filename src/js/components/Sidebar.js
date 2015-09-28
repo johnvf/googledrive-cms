@@ -37,7 +37,7 @@ getInitialState: function() {
   },
 
   componentWillReceiveProps: function(nextProps){
-  	if ( Array.isArray(nextProps.projects) ){
+  	if ( nextProps.projects ){
 		this.setState({
 			tree: makeTree(nextProps.projects)
 		});		

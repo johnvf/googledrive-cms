@@ -28,6 +28,9 @@ var Report = React.createClass({
   },
   componentDidMount: function() {
     ProjectStore.addChangeListener(this._onChange);
+    
+    var { folder_id, report_id } = this.props.params;
+    ViewActions.getProjectData(folder_id , report_id);
   },
 
   componentWillReceiveProps: function(nextProps){
