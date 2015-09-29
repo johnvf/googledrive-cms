@@ -29,15 +29,13 @@ var Report = React.createClass({
   componentDidMount: function() {
     ProjectStore.addChangeListener(this._onChange);
     
-    // var { folder_id, report_id } = this.props.params;
-    var folder_id = "0B2GRGnCnDHZjRUxzaGZ1emFCb1U"
-    var report_id = "2015_0801_Foo"
+    var { folder_id, report_id } = this.props.params;
     ViewActions.getProjectData(folder_id , report_id);
   },
 
   componentWillReceiveProps: function(nextProps){
-    // var { folder_id, report_id } = nextProps.params;
-    // ViewActions.getProjectData(folder_id , report_id);
+    var { folder_id, report_id } = nextProps.params;
+    ViewActions.getProjectData(folder_id , report_id);
   },
 
   _onChange: function() {

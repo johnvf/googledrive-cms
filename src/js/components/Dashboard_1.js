@@ -24,7 +24,17 @@ var Report = React.createClass({
     },
 
     getLayout: function(){
-      return {lg: []}
+
+      // TODO: Get layout from google drive
+
+      // if layout is undefined, make layout:
+      var layout
+      if( this.props.items ){
+        layout = Object.keys( this.props.items ).map(function(item, i){
+          return {h: 2 , i: String(i) , w: 5 , x: 0 , y: i}
+        })
+      }
+      return {lg: layout }
     },
 
     getWidgets: function( items ){
