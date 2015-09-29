@@ -3,14 +3,23 @@ var React = require('react');
 var c3 = require('c3')
 
 function cellsToRowCols( cells ){
+
+    // Convert nested cells into a nested array
     var data = Object.keys( cells ).map(function( row_i ){
-        row_cells = cells[row_i]
-        var row_data = Object.keys( row_cells ).map(function( col_i ){
+        var row_data = Object.keys( cells[row_i] ).map(function( col_i ){
+
             var cell = cells[row_i][col_i]
             return cell["value"]
         });
+
         return row_data
     });
+
+    // For convenience, convert each row into a JSON
+    var data = data.map(function(row, row_i){
+        return { "xAxis": row[0], "value": row[1] }
+    })
+
     return data
 }
 
@@ -22,9 +31,18 @@ var Chart = React.createClass({
         this.chart = c3.generate({
             bindto: '#'+this.props.id,
             data: {
-                rows: data
+                json: data,
+                keys: {
+                  x: 'xAxis', // it's possible to specify 'x' when category axis
+                  value: ['value'],
+                }
+            },
+            axis: {
+                x: {
+                  type: 'category'
+                }
             }
-        });
+        })
     },
 
     componentDidMount: function () {
