@@ -24,7 +24,9 @@ var Landing = React.createClass({
   },
   componentDidMount: function() {
     ProjectStore.addChangeListener(this._onChange);
-    ViewActions.getProjects();
+    if (!this.state.projects){
+      ViewActions.getProjects();
+    }
   },
   _onChange: function() {
     if(this.isMounted()) {

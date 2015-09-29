@@ -9,7 +9,6 @@ var Redirect = routerModule.Redirect;
 var createBrowserHistory = require('history/lib/createBrowserHistory');
 var useBasename = require('history/lib/useBasename')
 
-var ProjectStore = require('./stores/ProjectStore')
 var LoginStore = require( './stores/LoginStore')
 
 var ViewActions = require('./actions/ViewActions');
@@ -27,7 +26,6 @@ var Login = require( './pages/Login'),
 function getStateFromStores() {
   return {
     loggedIn: LoginStore.loggedIn(),
-    projects: ProjectStore.getProjects()
   };
 }
 
@@ -40,7 +38,6 @@ var App = React.createClass({
 
   componentDidMount: function() {
     LoginStore.addChangeListener(this._onChange);
-    ProjectStore.addChangeListener(this._onChange);
   },
   _onChange: function() {
     this.setState(getStateFromStores());
@@ -54,11 +51,11 @@ var App = React.createClass({
 
   render: function () {
     var loggedIn = this.state.loggedIn
-    var projects = this.state.projects
+
     return (
       <div className="main">
         <Navbar loggedIn={ loggedIn }/>
-        <Sidebar loggedIn={ loggedIn } projects={ projects } />
+        <Sidebar loggedIn={ loggedIn }/>
         <div className="container-fluid centered">
           {this.props.children}
         </div>
@@ -71,16 +68,9 @@ var App = React.createClass({
 
 function requireAuth(locationObj, replaceState) {
   if (!LoginStore.loggedIn()){
-    console.log( LoginStore.loggedIn() );
 
-    console.log( locationObj.location );
-    console.log("replaceState: ")
-    console.log( {nextPathname: locationObj.location.pathname} )
-    console.log(history)
-    // FIXME: This is supposed to redirect to the original url on login, doesn't quite work
     replaceState({ nextPathname: locationObj.location.pathname }, '/login');
-    // console.log(BrowserHistory)
-    // redirectTo('/login');
+
   }
 }
 
