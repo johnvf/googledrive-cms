@@ -46,6 +46,7 @@ var Report = React.createClass({
 
   render: function() {
 
+    var { folder_id, report_id } = this.props.params;
 
     var heading, body, items, report_components, loaded;
 
@@ -59,7 +60,10 @@ var Report = React.createClass({
 
         report_components = (
           <Panel heading={ heading } body={ body } >
-              <Dashboard items={items}/>
+              <Dashboard  items={items} 
+                          onLoad={ ViewActions.getReportLayout.bind(null, folder_id, report_id) } 
+                          onSave={ ViewActions.saveReportLayout.bind(null, folder_id, report_id) } 
+              />
           </Panel>
         );
     }

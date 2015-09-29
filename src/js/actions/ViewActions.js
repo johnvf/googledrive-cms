@@ -31,6 +31,20 @@ module.exports = {
     AppDispatcher.handleViewAction({
       type: "GET_REPORT"
     });
+  },
+
+  getReportLayout: function(folder_id , report_id){
+    WebAPIUtils.getReport(folder_id , report_id)
+    AppDispatcher.handleViewAction({
+      type: "GET_REPORT_LAYOUT"
+    });
+  },
+
+  saveReportLayout: function(layout, folder_id , report_id){
+    WebAPIUtils.getReport(folder_id , report_id)
+    AppDispatcher.handleViewAction({
+      type: "SAVE_REPORT_LAYOUT"
+    });
   }
 
 };

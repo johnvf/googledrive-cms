@@ -11,79 +11,89 @@ var Chart = require('../lib_components/Chart');
 
 var Report = React.createClass({
 
-   getInitialState: function() {
-      var layout = this.getLayout();
-      return {
-        layout: layout
-      };
-    },
-
-    onResizeStop: function( layout ){
-      console.log(layout);
-      this.setState({ layout: { lg: layout} })
-    },
-
-    getLayout: function(){
-
-      // TODO: Get layout from google drive
-
-      // if layout is undefined, make layout:
-      var layout
-      if( this.props.items ){
-        layout = Object.keys( this.props.items ).map(function(item, i){
-          return {h: 2 , i: String(i) , w: 5 , x: 0 , y: i}
-        })
-      }
-      return {lg: layout }
-    },
-
-    getWidgets: function( items ){
-      widgets = []
-
-      var self = this;
-      var layout = this.state.layout
-
-      Object.keys(items).forEach( function(item_id, i){
-
-        var item = items[ item_id ];
-
-        switch (item.type) {
-          case "text":
-            widgets.push( <div key={i}><Text layout={layout} id={item_id} item={item}/></div> )
-            break;
-
-          case "table":
-            widgets.push( <div key={i}><Table layout={layout} id={item_id} item={item}/></div> )
-            break;
-
-          case "chart":
-            widgets.push( <div key={i} ><Chart layout={layout} id={item_id} item={item}/></div> )
-            break;
-        }
-
-      });
-
-      return widgets
-    },
-
-    render: function(){
-
-        var widgets = this.getWidgets( this.props.items );
-
-        // {lg: layout1, md: layout2, ...}
-        return (    
-            <div className="container-fluid">
-              <ResponsiveReactGridLayout className="layout" layouts={this.state.layout}
-                breakpoints={{lg: 1200, md: 996, sm: 768, xs: 480, xxs: 0}}
-                cols={{lg: 12, md: 10, sm: 6, xs: 4, xxs: 2}}
-                isDraggable={true}
-                isResizable={true}
-                onResizeStop={ this.onResizeStop }>
-                {widgets}
-              </ResponsiveReactGridLayout>
-            </div>
-        )      
+  getDefaultProps: function() {
+    var ls = {};
+    if (localStorage) {
+      try {
+        ls = JSON.parse(localStorage.getItem( this.props.report_id )) || {};
+      } catch(e) {}
     }
+    return {
+      className: "layout",
+      cols: {lg: 12, md: 10, sm: 6, xs: 4, xxs: 2},
+      rowHeight: 30,
+      layouts: ls.layouts || {}
+    };
+  },
+
+
+  componentDidUpdate: function(prevProps, prevState) {
+    this._saveToLocalStorage();
+  },
+
+  resetLayout: function() {
+    this.setState({layout: []});
+  },
+
+  _saveToLocalStorage: function() {
+    if (localStorage) {
+      localStorage.setItem( this.props.report_id , JSON.stringify({
+        layouts: this.state.layouts
+      }));
+    }
+  },
+
+
+  onLayoutChange: function(layout, layouts) {
+    if( this.props.onLayoutChange ){
+      this.props.onLayoutChange(layout);
+    }
+    this.setState({layout: layout, layouts: layouts});
+  },
+
+  getWidgets: function( items ){
+    widgets = []
+
+    var self = this;
+
+    Object.keys(items).forEach( function(item_id, i){
+
+      var item = items[ item_id ];
+
+      switch (item.type) {
+        case "text":
+          widgets.push( <div key={i}><Text id={item_id} item={item}/></div> )
+          break;
+
+        case "table":
+          widgets.push( <div key={i}><Table id={item_id} item={item}/></div> )
+          break;
+
+        case "chart":
+          widgets.push( <div key={i} ><Chart id={item_id} item={item}/></div> )
+          break;
+      }
+
+    });
+
+    return widgets
+  },
+
+  render: function(){
+
+      var widgets = this.getWidgets( this.props.items );
+
+      // {lg: layout1, md: layout2, ...}
+      return (    
+          <div className="container-fluid">
+            <ResponsiveReactGridLayout className="layout"
+              {...this.props}
+              onLayoutChange={this.onLayoutChange}>
+              {widgets}
+            </ResponsiveReactGridLayout>
+          </div>
+      )      
+  }
 
 });
 
