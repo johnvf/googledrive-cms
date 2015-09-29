@@ -2,30 +2,23 @@
 @import "./bootswatch.less";
 @import "./variables.less";
 @import (inline) "../../node_modules/c3/c3.min.css";
+@import (inline) "../../node_modules/react-grid-layout/css/styles.css";
+@import (inline) "../../node_modules/react-grid-layout/node_modules/react-resizable/css/styles.css";
+@import (inline) "../../node_modules/react-grid-layout/node_modules/react-draggable/lib/styles.css";
 
 body {
   font-family: "Helvetica Neue", Arial;
   font-weight: 200;
 }
 
-.row{
-	display: flex;
-}
-
-.col-8{
-	flex: 8;
-  padding-left: 15px;
-  padding-right: 15px;
-}
-
-.col-4{
-	flex: 4;
-  padding-left: 15px;
-  padding-right: 15px;
-}
-
 .main{
     margin-top: 50px;
+}
+
+.editor{
+    position: relative;
+    float: right;
+    top: -50px;
 }
 
 .navbar{
@@ -39,4 +32,9 @@ body {
 .centered{
     max-width: 66.666%;
     margin-left: 16.666%;
+}
+
+ul.nav-sidebar{
+  margin-left: 20px;
+  font-size: 9pt;
 }

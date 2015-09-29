@@ -6,7 +6,15 @@ var CHANGE_EVENT = 'change';
 
 var WebAPIUtils = require('../utils/WebAPIUtils');
 
-var _loggedIn = false;
+// Always start logged out..
+// var _loggedIn = false;
+var _loggedIn
+if (localStorage.token) {
+  _loggedIn = true
+}
+else{
+  _loggedIn = false
+}
 
 var LoginStore = assign({}, EventEmitter.prototype, {
 
@@ -69,14 +77,6 @@ LoginStore.dispatchToken = AppDispatcher.register(function(payload) {
       LoginStore.logout()
       LoginStore.emitChange();
       break;
-
-    // case "LOGGED_IN":
-    //   LoginStore.emitChange();
-    //   break;
-
-    // case "LOGGED_OUT":
-    //   LoginStore.emitChange();
-    //   break;
 
     default:
       // do nothing

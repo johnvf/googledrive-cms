@@ -13,7 +13,7 @@ module.exports = function(app) {
     })
   });
 
-  // // Route middleware to verify a token
+  // Route middleware to verify a token
   app.use('/api/*', function(req, res, next) {
 
     // check header or url parameters or post parameters for token
@@ -33,15 +33,40 @@ module.exports = function(app) {
   
   // Gets all available projects
   app.get('/api/project', function(req, res) {
-    driveClient.getProjectList(function(data) {
+    driveClient.getProjects(function(data) {
+      res.send(data);
+    });
+  });
+  
+
+  // Gets specific project report data
+  app.get('/api/project/:folder_id/:report_id', function(req, res) {
+    driveClient.getReport( req.params.folder_id, req.params.report_id, function(data) {
       res.send(data);
     });
   });
 
-  // Gets specific project report data
-  app.get('/api/project/:folder_id/:report_id', function(req, res) {
-    driveClient.getProjectData( req.params.folder_id, req.params.report_id, function(data) {
+  // Gets specific project report layout
+  app.get('/api/project/:folder_id/:report_id/layout', function(req, res) {
+    driveClient.getReportLayout( req.params.folder_id, req.params.report_id, function(data) {
       res.send(data);
+    });
+  });
+
+  // Saves the specific project report layout
+  app.put('/api/project/:folder_id/:report_id/layout', function(req, res) {
+    driveClient.saveReportLayout( req.params.folder_id, req.params.report_id, req.body, function(success) {
+      if( success ){
+        return res.status(200).send({
+          success: true,
+          message: 'Layout saved.'
+        });
+      } else {
+        return res.status(500).send({
+          success: false,
+          message: 'Layout not saved.'
+        });
+      }
     });
   });
 

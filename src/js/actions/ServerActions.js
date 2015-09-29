@@ -23,11 +23,18 @@ module.exports = {
     });
   },
 
-  receiveProjectData: function(projectData) {
+  receiveReport: function(report) {
     AppDispatcher.handleServerAction({
-      type: "RECEIVE_PROJECT_DATA",
-      projectData: projectData
+      type: "RECEIVE_REPORT",
+      report: report
     });
-  }
+  },
+
+  receiveReportLayouts: function(reportLayouts) {
+    AppDispatcher.handleServerAction({
+      type: "RECEIVE_REPORT_LAYOUTS",
+      reportLayouts: reportLayouts
+    });
+  },
 
 };

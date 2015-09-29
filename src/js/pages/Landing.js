@@ -23,8 +23,10 @@ var Landing = React.createClass({
     return getStateFromStores();
   },
   componentDidMount: function() {
-    ViewActions.getProjects();
     ProjectStore.addChangeListener(this._onChange);
+    if (!this.state.projects){
+      ViewActions.getProjects();
+    }
   },
   _onChange: function() {
     if(this.isMounted()) {
@@ -35,7 +37,7 @@ var Landing = React.createClass({
   render: function() {
     var projects, project_components, loaded;
     loaded = this.state.loaded;
-    
+    console.log("landing")
     if( this.state.projects ){
       if( this.state.projects.length > 0){
         loaded = true;

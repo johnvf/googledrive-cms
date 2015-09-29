@@ -2,33 +2,66 @@ var React = require('react');
 
 var c3 = require('c3')
 
-function cellsToRowCols(cells){
-    
+function cellsToRowCols( cells ){
+
+    // Convert nested cells into a nested array
+    var data = Object.keys( cells ).map(function( row_i ){
+        var row_data = Object.keys( cells[row_i] ).map(function( col_i ){
+
+            var cell = cells[row_i][col_i]
+            return cell["value"]
+        });
+
+        return row_data
+    });
+
+    // For convenience, convert each row into a JSON
+    var data = data.map(function(row, row_i){
+        return { "xAxis": row[0], "value": row[1] }
+    })
+
+    return data
 }
 
 var Chart = React.createClass({
     // ...
     _renderChart: function (data) {
         // save reference to our chart to the instance
+        console.log(data);
         this.chart = c3.generate({
             bindto: '#'+this.props.id,
             data: {
-              columns: [
-                ['data1', 30, 200, 100, 400, 150, 250],
-                ['data2', 50, 20, 10, 40, 15, 25]
-                ]
-              }
-        });
+                json: data,
+                keys: {
+                  x: 'xAxis', // it's possible to specify 'x' when category axis
+                  value: ['value'],
+                }
+            },
+            axis: {
+                x: {
+                  type: 'category'
+                }
+            }
+        })
     },
 
     componentDidMount: function () {
-        this._renderChart(this.props.data);
+        // console.log("re-render chart");
+        var self = this;
+        var data = cellsToRowCols( this.props.item.data.cells )
+        this._renderChart(data);
+
+        // FIXME: This shouldn't be necessary - prop updates should work too
+        this.props.subscribeToLayoutChange( function(){ 
+            console.log("resize chart");
+            self.chart.resize() 
+        })
     },
 
+
     componentWillReceiveProps: function (newProps) {
-        // this.chart.load({
-        //     json: newProps.data
-        // }); // or whatever API you need
+        // TODO: Update graph data if new data is loaded.
+        // this would allow the graph to be dynamic..
     },
 
     render: function(){

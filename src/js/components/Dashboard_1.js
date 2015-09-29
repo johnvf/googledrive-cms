@@ -1,81 +1,134 @@
 var React = require('react');
+// Some considerations with grid layout:
+// - What do we do if the user makes a layout, then adds an additional widget without redoing the layout?
+// - Standard keys vs. custom keys? Maybe custom keys, since they're more explicit?
+var ResponsiveReactGridLayout = require('react-grid-layout').Responsive;
 
 var Text = require('../lib_components/Text');
 var Table = require('../lib_components/Table');
 var Chart = require('../lib_components/Chart');
 
 
-function getWidgets( items ){
-  widgets = {}
-  Object.keys(items).forEach( function(item_id){
-
-    var item = items[ item_id ];
-
-    switch (item.type) {
-      case "text":
-        widgets[item_id] = <Text id={item_id} item={item}/>
-        break;
-
-      case "table":
-        widgets[item_id] = <Table id={item_id} item={item}/>
-        break;
-
-      case "chart":
-        widgets[item_id] = <Chart id={item_id} item={item}/>
-        day = "table";
-        break;
-    }
-
-  });
-
-  return widgets
-}
-
 var Report = React.createClass({
 
-    render: function(){
+  getDefaultProps: function() {
+    var ls = {};
 
-        var widgets = getWidgets( this.props.items );
-
-        var text = "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aliquam hendrerit mi posuere lectus."
-
-
-        // NOTE: If we only wan't to support a repeating, staggered pattern (like below), this could be generalized.
-        // Right now, the assumption is that there is a single template with a max. size + non-repeating layout.
-        return (    
-            <div className="container-fluid">
-
-                <div className="row">
-                  <div className="col-8">
-                     { widgets["A"] }
-                  </div>
-                  <div className="col-4">
-                    { widgets["B"] }
-                  </div>
-                </div>
-
-
-                <div className="row">
-                  <div className="col-4">
-                    { widgets["C"] }
-                  </div>
-                  <div className="col-8">
-                    { widgets["D"] }
-                  </div>
-                </div>
-
-                <div className="row">
-                  <div className="col-8">
-                    { widgets["E"] }
-                  </div>
-                  <div className="col-4">
-                    { widgets["F"] }
-                  </div>
-                </div>
-
-            </div>
-        )
+    if (localStorage) {
+      try {
+        ls = JSON.parse(localStorage.getItem( this.props.report_id )) || {};
+      } catch(e) {}
     }
+    return {
+      className: "layout",
+      cols: {lg: 12, md: 10, sm: 6, xs: 4, xxs: 2},
+      rowHeight: 30,
+      layouts: ls.layouts || {}
+    };
+  },
+
+  getInitialState: function(){
+    return { layoutChangeCallbacks: [] }
+  },
+
+  componentDidUpdate: function(prevProps, prevState) {
+    this._saveToLocalStorage();
+  },
+
+  componentWillReceiveProps: function(nextProps){
+    this.setState({ layouts: nextProps.layouts });
+  },
+
+  resetLayout: function() {
+    this.setState({layout: []});
+  },
+
+  _saveToLocalStorage: function() {
+    if (localStorage) {
+      localStorage.setItem( this.props.report_id , JSON.stringify({
+        layouts: this.state.layouts
+      }));
+    }
+  },
+
+  // Allow widgets to hook into the onLayoutChange event
+  // FIXME: This shouldn't be necessary - prop updates should work too
+  subscribeToLayoutChange: function( callback ){
+    this.state.layoutChangeCallbacks.push( callback )
+  },
+
+
+  onLayoutChange: function(layout, layouts) {
+    if( this.props.onLayoutChange ){
+      this.props.onLayoutChange(layout);
+    }
+    
+    // Execute widget callbacks
+    // FIXME: This shouldn't be necessary - prop updates should work too
+    this.state.layoutChangeCallbacks.forEach( function(callback){
+      callback();
+    })
+
+    this.setState({ layouts: layouts });
+  },
+
+  onSave: function(){
+    if( this.props.onSave ){
+      this.props.onSave(this.state.layouts);
+    } 
+  },
+
+  getWidgets: function( items ){
+    widgets = []
+
+    var self = this;
+
+    Object.keys(items).forEach( function(item_id, i){
+
+      var item = items[ item_id ];
+
+      switch (item.type) {
+        case "text":
+          widgets.push( <div key={i}><Text id={item_id} item={item}/></div> )
+          break;
+
+        case "table":
+          widgets.push( <div key={i}><Table id={item_id} item={item}/></div> )
+          break;
+
+        case "chart":
+          widgets.push( <div key={i} ><Chart subscribeToLayoutChange={self.subscribeToLayoutChange} id={item_id} item={item}/></div> )
+          break;
+      }
+
+    });
+
+    return widgets
+  },
+
+  render: function(){
+
+      var widgets = this.getWidgets( this.props.items );
+
+      // TODO: Set this flag based on permissions of current user
+      var editable = true
+      var editor;
+      if( editable ){
+        editor = (<button className="btn btn-default btn-sm editor" onClick={this.onSave}> SAVE LAYOUT </button> );
+      }
+      // {lg: layout1, md: layout2, ...}
+      return (    
+          <div className="container-fluid">
+            { editor }
+            <ResponsiveReactGridLayout className="layout"
+              {...this.props}
+              onLayoutChange={this.onLayoutChange}>
+              {widgets}
+            </ResponsiveReactGridLayout>
+          </div>
+      )      
+  }
+
 });
 
 

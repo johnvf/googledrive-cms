@@ -5,9 +5,10 @@ var Router = routerModule.Router;
 var Route = routerModule.Route;
 var IndexRoute = routerModule.IndexRoute;
 var Redirect = routerModule.Redirect;
-var createBrowserHistory = require('history/lib/createBrowserHistory');
 
-var ProjectStore = require('./stores/ProjectStore')
+var createBrowserHistory = require('history/lib/createBrowserHistory');
+var useBasename = require('history/lib/useBasename')
+
 var LoginStore = require( './stores/LoginStore')
 
 var ViewActions = require('./actions/ViewActions');
@@ -25,7 +26,6 @@ var Login = require( './pages/Login'),
 function getStateFromStores() {
   return {
     loggedIn: LoginStore.loggedIn(),
-    projects: ProjectStore.getProjects()
   };
 }
 
@@ -35,12 +35,9 @@ var App = React.createClass({
   getInitialState: function() {
     return getStateFromStores();
   },
-  componentWillMount: function() {
-    ViewActions.login();
-  },
+
   componentDidMount: function() {
     LoginStore.addChangeListener(this._onChange);
-    ProjectStore.addChangeListener(this._onChange);
   },
   _onChange: function() {
     this.setState(getStateFromStores());
@@ -54,12 +51,11 @@ var App = React.createClass({
 
   render: function () {
     var loggedIn = this.state.loggedIn
-    var projects = this.state.projects
 
     return (
       <div className="main">
         <Navbar loggedIn={ loggedIn }/>
-        <Sidebar loggedIn={ loggedIn } projects={ projects } />
+        <Sidebar loggedIn={ loggedIn }/>
         <div className="container-fluid centered">
           {this.props.children}
         </div>
@@ -69,26 +65,28 @@ var App = React.createClass({
   }
 });
 
-function requireAuth(nextState, redirectTo) {
+
+function requireAuth(locationObj, replaceState) {
   if (!LoginStore.loggedIn()){
-    // FIXME: This is supposed to redirect to the original url on login, doesn't quite work
-    redirectTo('/login', '/login', { nextPathname: nextState.location.pathname });
+
+    replaceState({ nextPathname: locationObj.location.pathname }, '/login');
+
   }
 }
 
-var BrowserHistory = createBrowserHistory();
+const history = useBasename(createBrowserHistory)({
+  basename: ''
+})
 
 // React-Router route configuration
 // Essentially a mini-sitemap used to direct users to different pages
 React.render((
-  <Router history={ BrowserHistory } >
+  <Router history={ history } >
     <Route path="/" component={App}>
-      <IndexRoute component={Login} />
-      <Route path="login" component={Login} />
-      <Route path="landing" component={Landing} onEnter={requireAuth}/>
+      <IndexRoute component={Landing} onEnter={requireAuth} />
       <Route path="/project/:folder_id/:report_id" component={Report} onEnter={requireAuth}/>
+      <Route path="login" component={Login} />
       <Route path="logout" component={Logout} />
     </Route>
-    <Redirect from="*" to="/landing" />
   </Router>
 ), document.body);
