@@ -8,6 +8,8 @@ var _projects;
 
 var _report;
 
+var _reportLayouts;
+
 var ProjectStore = assign({}, EventEmitter.prototype, {
 
   emitChange: function() {
@@ -24,6 +26,10 @@ var ProjectStore = assign({}, EventEmitter.prototype, {
 
   getReport: function(){
     return _report;
+  },
+
+  getReportLayouts: function(){
+    return _reportLayouts;
   }
 
 });
@@ -42,6 +48,11 @@ ProjectStore.dispatchToken = AppDispatcher.register(function(payload) {
 
     case "RECEIVE_REPORT":
       _report = action.report
+      ProjectStore.emitChange();
+      break;
+
+    case "RECEIVE_REPORT_LAYOUTS":
+      _reportLayouts = action.reportLayouts
       ProjectStore.emitChange();
       break;
 

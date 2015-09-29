@@ -33,18 +33,13 @@ module.exports = {
     });
   },
 
-  getReportLayout: function(folder_id , report_id){
-    WebAPIUtils.getReport(folder_id , report_id)
-    AppDispatcher.handleViewAction({
-      type: "GET_REPORT_LAYOUT"
-    });
+  getReportLayouts: function(folder_id , report_id){
+    WebAPIUtils.getReportLayouts(folder_id , report_id)
+
   },
 
-  saveReportLayout: function(layout, folder_id , report_id){
-    WebAPIUtils.getReport(folder_id , report_id)
-    AppDispatcher.handleViewAction({
-      type: "SAVE_REPORT_LAYOUT"
-    });
+  saveReportLayouts: function(folder_id , report_id, layouts){
+    WebAPIUtils.saveReportLayouts(folder_id , report_id, layouts)
   }
 
 };

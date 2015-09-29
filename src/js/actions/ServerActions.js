@@ -28,6 +28,13 @@ module.exports = {
       type: "RECEIVE_REPORT",
       report: report
     });
-  }
+  },
+
+  receiveReportLayouts: function(reportLayouts) {
+    AppDispatcher.handleServerAction({
+      type: "RECEIVE_REPORT_LAYOUTS",
+      reportLayouts: reportLayouts
+    });
+  },
 
 };

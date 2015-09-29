@@ -10,6 +10,7 @@ var Project = require('../components/Project')
 function getStateFromStores() {
   return {
     report: ProjectStore.getReport(),
+    layouts: ProjectStore.getReportLayouts(),
     loaded: false
   };
 }
@@ -31,6 +32,7 @@ var Report = React.createClass({
     
     var { folder_id, report_id } = this.props.params;
     ViewActions.getReport(folder_id , report_id);
+    ViewActions.getReportLayouts(folder_id, report_id);
   },
 
   componentWillReceiveProps: function(nextProps){
@@ -48,7 +50,7 @@ var Report = React.createClass({
 
     var { folder_id, report_id } = this.props.params;
 
-    var heading, body, items, report_components, loaded;
+    var heading, body, items, layouts, report_components, loaded;
 
     loaded = this.state.loaded
     // FIXME: Rename 'reportData'
@@ -57,12 +59,14 @@ var Report = React.createClass({
         heading = this.state.report.title;
         body = this.state.report.body;
         items = this.state.report.items;
+        layouts = this.state.layouts
 
         report_components = (
           <Panel heading={ heading } body={ body } >
               <Dashboard  items={items} 
-                          onLoad={ ViewActions.getReportLayout.bind(null, folder_id, report_id) } 
-                          onSave={ ViewActions.saveReportLayout.bind(null, folder_id, report_id) } 
+                          report_id={report_id}
+                          layouts={ layouts }
+                          onSave={ ViewActions.saveReportLayouts.bind(null, folder_id, report_id) } 
               />
           </Panel>
         );

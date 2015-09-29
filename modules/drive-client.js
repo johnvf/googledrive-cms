@@ -16,6 +16,9 @@ var key = require('../.keys/google.json');
 var scopes = ['https://www.googleapis.com/auth/drive'];
 var jwtClient = new google.auth.JWT(key.client_email, null, key.private_key, scopes , null);
 
+
+var _layout;
+
 /*
  * Private
  */
@@ -143,23 +146,57 @@ function getDriveSheetData( item ){
 function getDriveReportLayout( folder_id, report_id ){
     return new Promise( function(resolve,reject){
 
-        /// FIXME: Placeholder for now
-        var reportLayout = [    
-                            {h: 3 , i: "0" , w: 6 , x: 0 , y: 0},
-                            {h: 3 , i: "1" , w: 6 , x: 0 , y: 1},
-                            {h: 3 , i: "2" , w: 6 , x: 0 , y: 2},
-                            {h: 3 , i: "3" , w: 6 , x: 0 , y: 3},
-                            {h: 3 , i: "4" , w: 6 , x: 0 , y: 4},
-                            {h: 3 , i: "5" , w: 6 , x: 0 , y: 5},
-                            {h: 3 , i: "6" , w: 6 , x: 0 , y: 6}  
-                            ]
-        resolve( reportLayout )
-    }); 
+        var drive = google.drive({ version: 'v2', auth: jwtClient });
+
+        q ="title contains '" + report_id+"_layout.json' "
+
+        drive.children.list({ 'folderId': folder_id, q: q }, function(err, resp){ 
+            console.log(resp);
+
+            if ( resp.items[0] ){
+                drive.files.get({ 'fileId': resp.items[0].id, 'alt': 'media' }, function(err, resp){
+                    resolve( resp )
+                })
+            }
+            else{
+                resolve( null )
+            }
+        });
+    }) 
 }
 
 function saveDriveReportLayout( folder_id, report_id, layout ){
-    console.log("saved layout: ")
-    console.log(JSON.stringify(layout, undefined, 2))
+
+    var drive = google.drive({ version: 'v2', auth: jwtClient });
+
+    q ="title contains '" + report_id+"_layout.json' "
+
+    drive.children.list({ 'folderId': folder_id, q: q }, function(err, resp){ 
+        console.log(resp);
+
+        if ( resp.items[0] )
+            drive.files.update({ 
+                'fileId': resp.items[0].id,
+                media: {
+                    mimeType: 'text/plain',
+                    body: JSON.stringify(layout)
+                }
+            });
+        else{
+            drive.files.insert({
+              resource: {
+                title: report_id+"_layout.json",
+                mimeType: 'text/plain',
+                parents: [{id: folder_id }]
+              },
+              media: {
+                mimeType: 'text/plain',
+                body: JSON.stringify(layout)
+              }
+            });
+        }
+    });
+
     return true
 }
 /*

@@ -13,6 +13,7 @@ var Report = React.createClass({
 
   getDefaultProps: function() {
     var ls = {};
+
     if (localStorage) {
       try {
         ls = JSON.parse(localStorage.getItem( this.props.report_id )) || {};
@@ -26,9 +27,12 @@ var Report = React.createClass({
     };
   },
 
-
   componentDidUpdate: function(prevProps, prevState) {
     this._saveToLocalStorage();
+  },
+
+  componentWillReceiveProps: function(nextProps){
+    this.setState({ layouts: nextProps.layouts });
   },
 
   resetLayout: function() {
@@ -48,7 +52,13 @@ var Report = React.createClass({
     if( this.props.onLayoutChange ){
       this.props.onLayoutChange(layout);
     }
-    this.setState({layout: layout, layouts: layouts});
+    this.setState({ layouts: layouts });
+  },
+
+  onSave: function(){
+    if( this.props.onSave ){
+      this.props.onSave(this.state.layouts);
+    } 
   },
 
   getWidgets: function( items ){
@@ -83,9 +93,16 @@ var Report = React.createClass({
 
       var widgets = this.getWidgets( this.props.items );
 
+      // TODO: Set this flag based on permissions of current user
+      var editable = true
+      var editor;
+      if( editable ){
+        editor = (<button className="btn btn-default btn-sm editor" onClick={this.onSave}> SAVE LAYOUT </button> );
+      }
       // {lg: layout1, md: layout2, ...}
       return (    
           <div className="container-fluid">
+            { editor }
             <ResponsiveReactGridLayout className="layout"
               {...this.props}
               onLayoutChange={this.onLayoutChange}>
