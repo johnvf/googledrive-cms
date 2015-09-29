@@ -27,6 +27,10 @@ var Report = React.createClass({
     };
   },
 
+  getInitialState: function(){
+    return { layoutChangeCallbacks: [] }
+  },
+
   componentDidUpdate: function(prevProps, prevState) {
     this._saveToLocalStorage();
   },
@@ -47,11 +51,24 @@ var Report = React.createClass({
     }
   },
 
+  // Allow widgets to hook into the onLayoutChange event
+  // FIXME: This shouldn't be necessary - prop updates should work too
+  subscribeToLayoutChange: function( callback ){
+    this.state.layoutChangeCallbacks.push( callback )
+  },
+
 
   onLayoutChange: function(layout, layouts) {
     if( this.props.onLayoutChange ){
       this.props.onLayoutChange(layout);
     }
+    
+    // Execute widget callbacks
+    // FIXME: This shouldn't be necessary - prop updates should work too
+    this.state.layoutChangeCallbacks.forEach( function(callback){
+      callback();
+    })
+
     this.setState({ layouts: layouts });
   },
 
@@ -80,7 +97,7 @@ var Report = React.createClass({
           break;
 
         case "chart":
-          widgets.push( <div key={i} ><Chart id={item_id} item={item}/></div> )
+          widgets.push( <div key={i} ><Chart subscribeToLayoutChange={self.subscribeToLayoutChange} id={item_id} item={item}/></div> )
           break;
       }
 
