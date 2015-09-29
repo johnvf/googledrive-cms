@@ -46,8 +46,7 @@ module.exports = {
           });
     },
 
-    getProjectData: function(folder_id, project_id){
-        // FIXME: Make this accept the folder_id + project_id
+    getReport: function(folder_id, project_id){
         request.get( "/api/project/" + folder_id + "/" + project_id )
           .set('Accept', 'application/json')
           .set('x-access-token', localStorage.token)
@@ -58,7 +57,7 @@ module.exports = {
                 alert("Unable to load project data. Authentication may have expired. Please logout & back in");
               }
               else{
-                ServerActions.receiveProjectData(JSON.parse(res.text));
+                ServerActions.receiveReport(JSON.parse(res.text));
               }
             }
           });

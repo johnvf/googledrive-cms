@@ -6,7 +6,7 @@ var CHANGE_EVENT = 'change';
 
 var _projects;
 
-var _projectData;
+var _report;
 
 var ProjectStore = assign({}, EventEmitter.prototype, {
 
@@ -22,8 +22,8 @@ var ProjectStore = assign({}, EventEmitter.prototype, {
     return _projects;
   },
 
-  getProjectData: function(){
-    return _projectData;
+  getReport: function(){
+    return _report;
   }
 
 });
@@ -40,8 +40,8 @@ ProjectStore.dispatchToken = AppDispatcher.register(function(payload) {
       break;
 
 
-    case "RECEIVE_PROJECT_DATA":
-      _projectData = action.projectData
+    case "RECEIVE_REPORT":
+      _report = action.report
       ProjectStore.emitChange();
       break;
 

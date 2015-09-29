@@ -26,10 +26,10 @@ module.exports = {
     });
   },
 
-  getProjectData: function(folder_id , report_id){
-    WebAPIUtils.getProjectData(folder_id , report_id)
+  getReport: function(folder_id , report_id){
+    WebAPIUtils.getReport(folder_id , report_id)
     AppDispatcher.handleViewAction({
-      type: "GET_PROJECT_DATA"
+      type: "GET_REPORT"
     });
   }
 

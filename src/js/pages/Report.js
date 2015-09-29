@@ -9,7 +9,7 @@ var Project = require('../components/Project')
 
 function getStateFromStores() {
   return {
-    projectData: ProjectStore.getProjectData(),
+    report: ProjectStore.getReport(),
     loaded: false
   };
 }
@@ -30,12 +30,12 @@ var Report = React.createClass({
     ProjectStore.addChangeListener(this._onChange);
     
     var { folder_id, report_id } = this.props.params;
-    ViewActions.getProjectData(folder_id , report_id);
+    ViewActions.getReport(folder_id , report_id);
   },
 
   componentWillReceiveProps: function(nextProps){
     var { folder_id, report_id } = nextProps.params;
-    ViewActions.getProjectData(folder_id , report_id);
+    ViewActions.getReport(folder_id , report_id);
   },
 
   _onChange: function() {
@@ -51,11 +51,11 @@ var Report = React.createClass({
 
     loaded = this.state.loaded
     // FIXME: Rename 'reportData'
-    if ( this.state.projectData ){
+    if ( this.state.report ){
         loaded = true
-        heading = this.state.projectData.title;
-        body = this.state.projectData.body;
-        items = this.state.projectData.items;
+        heading = this.state.report.title;
+        body = this.state.report.body;
+        items = this.state.report.items;
 
         report_components = (
           <Panel heading={ heading } body={ body } >

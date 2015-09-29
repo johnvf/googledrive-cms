@@ -33,7 +33,7 @@ function auth( ){
     })
 }
 
-function getProjectFolders( ){
+function getDriveProjectFolders( ){
     return new Promise( function(resolve,reject){
         console.log('loading project folders..')
         var drive = google.drive({ version: 'v2', auth: jwtClient });
@@ -51,13 +51,13 @@ function getProjectFolders( ){
     })
 }
 
-function getProjects( folders ){
+function getDriveProjects( folders ){
     return new Promise( function(resolve,reject){
         console.log('loading configs..')
 
         var folder_ids = folders.map( function( folder ){ return folder.id });
         
-        var projects = folder_ids.map(  getProject );
+        var projects = folder_ids.map(  getDriveProject );
 
         Promise.all( projects )
             .then(function (resp) {
@@ -67,7 +67,7 @@ function getProjects( folders ){
     })
 }
 
-function getProject( folder_id ){
+function getDriveProject( folder_id ){
     return new Promise( function(resolve,reject){
 
         q ="title contains 'config'"
@@ -98,14 +98,14 @@ function getProject( folder_id ){
 
 // FIXME: If reports are configured in separate text files (which they should be), 
 // this will change
-function getReport( report_id, project ){
+function getDriveReport( report_id, project ){
     return new Promise( function(resolve,reject){
         resolve( project.config.reports[report_id] )
     }); 
 }
 
 // Loads data from spreadsheets and assigns to config
-function getData( report ){
+function getDriveData( report ){
     return new Promise( function(resolve,reject){
         // Array of items that need to have spreadsheet data loaded
         sheetRefItems = []
@@ -117,14 +117,14 @@ function getData( report ){
             }
         })
 
-        Promise.all( sheetRefItems.map( getSheetData ) ).done( function(){
+        Promise.all( sheetRefItems.map( getDriveSheetData ) ).done( function(){
             resolve( report )
         });
     });
 }
 
 // Loads data from a spreadsheet
-function getSheetData( item ){
+function getDriveSheetData( item ){
     return new Promise( function(resolve,reject){
         spreadsheets({ key: item.key, auth: jwtClient }, function(err, spreadsheet) {
             if(!spreadsheet){
@@ -140,40 +140,78 @@ function getSheetData( item ){
     });
 }
 
+function getDriveReportLayout( folder_id, report_id ){
+    return new Promise( function(resolve,reject){
+
+        /// FIXME: Placeholder for now
+        var reportLayout = [    
+                            {h: 3 , i: "0" , w: 6 , x: 0 , y: 0},
+                            {h: 3 , i: "1" , w: 6 , x: 0 , y: 1},
+                            {h: 3 , i: "2" , w: 6 , x: 0 , y: 2},
+                            {h: 3 , i: "3" , w: 6 , x: 0 , y: 3},
+                            {h: 3 , i: "4" , w: 6 , x: 0 , y: 4},
+                            {h: 3 , i: "5" , w: 6 , x: 0 , y: 5},
+                            {h: 3 , i: "6" , w: 6 , x: 0 , y: 6}  
+                            ]
+        resolve( reportLayout )
+    }); 
+}
+
+function saveDriveReportLayout( folder_id, report_id, layout ){
+    console.log("saved layout: ")
+    console.log(JSON.stringify(layout, undefined, 2))
+    return true
+}
 /*
  * Public
  */
 
 function test( ){
-    getProjectList( function(data){ console.log(data) });
+    getDriveProjects( function(data){ console.log(data) });
+}
+
+// Connects to google drive, loads the configs from their folders, 
+// and passes this information back to the callback
+function getProjects( callback ){
+    console.log("getting projects...");
+    auth()
+    .then( getDriveProjectFolders )
+    .then( getDriveProjects )
+    .then( callback )
+}
+
+// Connects to google drive, loads the configs from their folders, 
+// and passes this information back to the callback
+function getReport( folder_id, report_id, callback ){
+    console.log("getting project data...");
+    auth()
+    .then( getDriveProject.bind( null, folder_id ))
+    .then( getDriveReport.bind( null, report_id))
+    .then( getDriveData )
+    .then( callback )
+}
+
+function getReportLayout( folder_id, report_id, callback ){
+    console.log("getting report layout...")
+    auth()
+    .then( getDriveReportLayout.bind( null, folder_id, report_id ))
+    .then( callback )
+}
+
+function saveReportLayout( folder_id, report_id, layout, callback){
+    console.log("saving report layout...") 
+    auth()
+    .then( saveDriveReportLayout.bind( null, folder_id, report_id, layout ))
+    .then( callback )
 }
 
 if (!module.parent) {
     test();
 }
 
-// Connects to google drive, loads the configs from their folders, 
-// and passes this information back to the callback
-function getProjectList( callback ){
-    console.log("getting projects...");
-    auth()
-        .then( getProjectFolders )
-        .then( getProjects )
-        .then( callback )
-}
-
-// Connects to google drive, loads the configs from their folders, 
-// and passes this information back to the callback
-function getProjectData( folder_id, report_id, callback ){
-    console.log("getting project data...");
-    auth()
-        .then( getProject.bind( null, folder_id ))
-        .then( getReport.bind( null, report_id))
-        .then( getData )
-        .then( callback )
-}
-
 module.exports = {
-    getProjectList: getProjectList,
-    getProjectData: getProjectData
+    getProjects: getProjects,
+    getReport: getReport,
+    getReportLayout: getReportLayout,
+    saveReportLayout: saveReportLayout
 }
