@@ -21,7 +21,6 @@ var Sidebar = require( './components/Sidebar')
 var Login = require( './pages/Login'),
     Logout = require( './pages/Logout'),
     Landing = require('./pages/Landing'),
-    Test = require('./pages/Test');
     Report = require('./pages/Report');
 
 
