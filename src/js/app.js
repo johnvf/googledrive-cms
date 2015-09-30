@@ -11,8 +11,6 @@ var useBasename = require('history/lib/useBasename')
 
 var LoginStore = require( './stores/LoginStore')
 
-var ViewActions = require('./actions/ViewActions');
-
 var Navbar = require( './components/Navbar')
 var Sidebar = require( './components/Sidebar')
 
@@ -53,7 +51,7 @@ var App = React.createClass({
     var loggedIn = this.state.loggedIn
 
     return (
-      <div className="main">
+      <div>
         <Navbar loggedIn={ loggedIn }/>
         <Sidebar loggedIn={ loggedIn }/>
         <div className="container-fluid centered">

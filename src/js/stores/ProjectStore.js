@@ -2,13 +2,14 @@ var AppDispatcher = require('../dispatcher/AppDispatcher');
 var EventEmitter = require('events').EventEmitter;
 var assign = require("react/lib/Object.assign");
 
+var WebAPIUtils = require('../utils/WebAPIUtils');
+
 var CHANGE_EVENT = 'change';
 
 var _projects;
 
-var _report;
-
-var _reportLayouts;
+var _reports = {};
+var _reportLayouts = {};
 
 var ProjectStore = assign({}, EventEmitter.prototype, {
 
@@ -21,15 +22,36 @@ var ProjectStore = assign({}, EventEmitter.prototype, {
   },
 
   getProjects: function(){
-    return _projects;
+    if( _projects ){
+      console.log("projects already loaded, using")
+      return _projects;
+    }
+    else{
+      console.log("projects not loaded, getting from server")
+      WebAPIUtils.getProjects( )
+    }
+    
   },
 
-  getReport: function(){
-    return _report;
+  getReport: function( project_id, report_id ){
+    if( _reports[report_id]){
+      console.log("report already loaded, using")
+      return _reports[ report_id ];
+    }
+    else{
+      console.log("report not loaded, getting from server")
+      WebAPIUtils.getReport(project_id , report_id)
+    }
   },
 
-  getReportLayouts: function(){
-    return _reportLayouts;
+  getReportLayouts: function( project_id, report_id ){
+    if( _reportLayouts[ report_id ] ){
+      return _reportLayouts[ report_id ];
+    }
+    else{
+      WebAPIUtils.getReportLayouts(project_id , report_id)
+    }
+    
   }
 
 });
@@ -47,12 +69,17 @@ ProjectStore.dispatchToken = AppDispatcher.register(function(payload) {
 
 
     case "RECEIVE_REPORT":
-      _report = action.report
+      _reports[ action.report_id ] = action.report
       ProjectStore.emitChange();
       break;
 
     case "RECEIVE_REPORT_LAYOUTS":
-      _reportLayouts = action.reportLayouts
+      _reportLayouts[ action.report_id ] = action.reportLayouts
+      ProjectStore.emitChange();
+      break;
+
+    case "SAVE_REPORT_LAYOUTS":
+      _reportLayouts[ action.report_id ] = action.reportLayouts
       ProjectStore.emitChange();
       break;
 

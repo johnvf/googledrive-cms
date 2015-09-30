@@ -51,7 +51,7 @@ var Table = React.createClass({
         var tableMarkup = array2Table(array)
 
         return (
-            <div id={this.props.id} className="table-responsive">
+            <div id={this.props.id} className="table-responsive"  style={ {overflow: "hidden"} }>
                 { tableMarkup }
             </div>
         )

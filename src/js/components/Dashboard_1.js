@@ -10,7 +10,7 @@ var Table = require('../lib_components/Table');
 var Chart = require('../lib_components/Chart');
 
 
-var Report = React.createClass({
+var Dashboard = React.createClass({
 
   getDefaultProps: function() {
     var ls = {};
@@ -136,7 +136,7 @@ var Report = React.createClass({
       }
       // {lg: layout1, md: layout2, ...}
       return (    
-          <div className="container-fluid report">
+          <div className="container-fluid dashboard">
             { editor }
             <ResponsiveReactGridLayout className="layout"
               {...this.props}
@@ -150,4 +150,4 @@ var Report = React.createClass({
 });
 
 
-module.exports = Report
+module.exports = Dashboard

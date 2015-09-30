@@ -2,7 +2,6 @@ var React = require('react');
 
 var Loader = require('react-loader');
 
-var ViewActions = require('../actions/ViewActions');
 var ProjectStore = require('../stores/ProjectStore')
 
 var Project = require('../components/Project')
@@ -24,9 +23,6 @@ var Landing = React.createClass({
   },
   componentDidMount: function() {
     ProjectStore.addChangeListener(this._onChange);
-    if (!this.state.projects){
-      ViewActions.getProjects();
-    }
   },
   _onChange: function() {
     if(this.isMounted()) {

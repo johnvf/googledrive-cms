@@ -18,28 +18,14 @@ module.exports = {
       type: "LOG_OUT"
     });
   },
-
-  getProjects: function(){
-    WebAPIUtils.getProjects( )
-    AppDispatcher.handleViewAction({
-      type: "GET_PROJECTS"
-    });
-  },
-
-  getReport: function(project_id , report_id){
-    WebAPIUtils.getReport(project_id , report_id)
-    AppDispatcher.handleViewAction({
-      type: "GET_REPORT"
-    });
-  },
-
-  getReportLayouts: function(project_id , report_id){
-    WebAPIUtils.getReportLayouts(project_id , report_id)
-
-  },
-
-  saveReportLayouts: function(project_id , report_id, layouts){
+  
+  saveReportLayouts: function(project_id , report_id, reportLayouts){
     WebAPIUtils.saveReportLayouts(project_id , report_id, layouts)
+    AppDispatcher.handleViewAction({
+      type: "SAVE_REPORT_LAYOUTS",
+      report_id: report_id,
+      reportLayouts: reportLayouts
+    });
   }
 
-};
+}

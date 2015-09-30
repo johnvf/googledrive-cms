@@ -7,10 +7,10 @@ var ProjectStore = require('../stores/ProjectStore')
 
 var Project = require('../components/Project')
 
-function getStateFromStores() {
+function getStateFromStores( project_id, report_id  ) {
   return {
-    report: ProjectStore.getReport(),
-    layouts: ProjectStore.getReportLayouts(),
+    report: ProjectStore.getReport( project_id, report_id  ),
+    layouts: ProjectStore.getReportLayouts( project_id, report_id  ),
     loaded: false
   };
 }
@@ -25,24 +25,26 @@ var Report = React.createClass({
    * State Boilerplate 
    */
   getInitialState: function() {
-    return getStateFromStores();
+    var { project_id, report_id } = this.props.params;    
+    return getStateFromStores( project_id, report_id);
   },
+
   componentDidMount: function() {
-    ProjectStore.addChangeListener(this._onChange);
-    
-    var { project_id, report_id } = this.props.params;
-    ViewActions.getReport(project_id , report_id);
-    ViewActions.getReportLayouts(project_id, report_id);
+    ProjectStore.addChangeListener(this._onChange);  
   },
 
   componentWillReceiveProps: function(nextProps){
-    var { project_id, report_id } = nextProps.params;
-    ViewActions.getReport(project_id , report_id);
+    if( nextProps.params.report_id != this.props.params.report_id ){
+      console.log("report changed")
+      var { project_id, report_id } = nextProps.params;
+      this.setState(getStateFromStores( project_id, report_id ));
+    }
   },
 
   _onChange: function() {
     if(this.isMounted()) {
-      this.setState(getStateFromStores());
+      var { project_id, report_id } = this.props.params;    
+      this.setState(getStateFromStores( project_id, report_id ));
     }
   },
 

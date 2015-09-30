@@ -57,9 +57,7 @@ module.exports = {
                 alert("Unable to load project data. Authentication may have expired. Please logout & back in");
               }
               else{
-                // TODO: Receive this WITH: project_id & report_id,
-                // Hang onto this data in localStorage
-                ServerActions.receiveReport(JSON.parse(res.text));
+                ServerActions.receiveReport( report_id, JSON.parse(res.text));
               }
             }
           });
@@ -76,9 +74,7 @@ module.exports = {
                 alert("Unable to load layout");
               }
               else{
-                // TODO: Receive this WITH: project_id & report_id,
-                // Hang onto this data in localStorage
-                ServerActions.receiveReportLayouts(JSON.parse(res.text));
+                ServerActions.receiveReportLayouts( report_id , JSON.parse(res.text));
               }
             }
           });

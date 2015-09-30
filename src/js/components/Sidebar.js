@@ -1,7 +1,6 @@
 var React = require('react');
 var Link = require('react-router').Link;
 
-var ViewActions = require('../actions/ViewActions');
 var ProjectStore = require('../stores/ProjectStore')
 
 
@@ -69,14 +68,11 @@ var SidebarNode = React.createClass({
 var Sidebar = React.createClass({
 
     getInitialState: function() {
-        return getStateFromStores()
+        return {}
     },
 
     componentDidMount: function() {
         ProjectStore.addChangeListener(this._onChange);
-        if (!this.state.projects && this.props.loggedIn ){
-            ViewActions.getProjects();
-        }
     },
 
     _onChange: function() {
