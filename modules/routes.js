@@ -40,22 +40,22 @@ module.exports = function(app) {
   
 
   // Gets specific project report data
-  app.get('/api/project/:folder_id/:report_id', function(req, res) {
-    driveClient.getReport( req.params.folder_id, req.params.report_id, function(data) {
+  app.get('/api/project/:project_id/:report_id', function(req, res) {
+    driveClient.getReport( req.params.project_id, req.params.report_id, function(data) {
       res.send(data);
     });
   });
 
   // Gets specific project report layout
-  app.get('/api/project/:folder_id/:report_id/layout', function(req, res) {
-    driveClient.getReportLayout( req.params.folder_id, req.params.report_id, function(data) {
+  app.get('/api/project/:project_id/:report_id/layout', function(req, res) {
+    driveClient.getReportLayout( req.params.project_id, req.params.report_id, function(data) {
       res.send(data);
     });
   });
 
   // Saves the specific project report layout
-  app.put('/api/project/:folder_id/:report_id/layout', function(req, res) {
-    driveClient.saveReportLayout( req.params.folder_id, req.params.report_id, req.body, function(success) {
+  app.put('/api/project/:project_id/:report_id/layout', function(req, res) {
+    driveClient.saveReportLayout( req.params.project_id, req.params.report_id, req.body, function(success) {
       if( success ){
         return res.status(200).send({
           success: true,

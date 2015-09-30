@@ -46,8 +46,8 @@ module.exports = {
           });
     },
 
-    getReport: function(folder_id, project_id){
-        request.get( "/api/project/" + folder_id + "/" + project_id )
+    getReport: function(project_id, report_id){
+        request.get( "/api/project/" + project_id + "/" + report_id )
           .set('Accept', 'application/json')
           .set('x-access-token', localStorage.token)
           .end(function(error, res){
@@ -57,7 +57,7 @@ module.exports = {
                 alert("Unable to load project data. Authentication may have expired. Please logout & back in");
               }
               else{
-                // TODO: Receive this WITH: folder_id & project_id,
+                // TODO: Receive this WITH: project_id & report_id,
                 // Hang onto this data in localStorage
                 ServerActions.receiveReport(JSON.parse(res.text));
               }
@@ -65,8 +65,8 @@ module.exports = {
           });
     },
 
-    getReportLayouts: function(folder_id, project_id){
-        request.get( "/api/project/" + folder_id + "/" + project_id + "/layout" )
+    getReportLayouts: function(project_id, report_id){
+        request.get( "/api/project/" + project_id + "/" + report_id + "/layout" )
           .set('Accept', 'application/json')
           .set('x-access-token', localStorage.token)
           .end(function(error, res){
@@ -76,7 +76,7 @@ module.exports = {
                 alert("Unable to load layout");
               }
               else{
-                // TODO: Receive this WITH: folder_id & project_id,
+                // TODO: Receive this WITH: project_id & report_id,
                 // Hang onto this data in localStorage
                 ServerActions.receiveReportLayouts(JSON.parse(res.text));
               }
@@ -84,8 +84,8 @@ module.exports = {
           });
     },
 
-    saveReportLayouts: function(folder_id, project_id, layout){
-        request.put( "/api/project/" + folder_id + "/" + project_id + "/layout")
+    saveReportLayouts: function(project_id, report_id, layout){
+        request.put( "/api/project/" + project_id + "/" + report_id + "/layout")
           .set('Accept', 'application/json')
           .set('x-access-token', localStorage.token)
           .send(layout)

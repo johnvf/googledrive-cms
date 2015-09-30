@@ -26,20 +26,20 @@ module.exports = {
     });
   },
 
-  getReport: function(folder_id , report_id){
-    WebAPIUtils.getReport(folder_id , report_id)
+  getReport: function(project_id , report_id){
+    WebAPIUtils.getReport(project_id , report_id)
     AppDispatcher.handleViewAction({
       type: "GET_REPORT"
     });
   },
 
-  getReportLayouts: function(folder_id , report_id){
-    WebAPIUtils.getReportLayouts(folder_id , report_id)
+  getReportLayouts: function(project_id , report_id){
+    WebAPIUtils.getReportLayouts(project_id , report_id)
 
   },
 
-  saveReportLayouts: function(folder_id , report_id, layouts){
-    WebAPIUtils.saveReportLayouts(folder_id , report_id, layouts)
+  saveReportLayouts: function(project_id , report_id, layouts){
+    WebAPIUtils.saveReportLayouts(project_id , report_id, layouts)
   }
 
 };

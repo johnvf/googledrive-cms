@@ -30,14 +30,14 @@ var Report = React.createClass({
   componentDidMount: function() {
     ProjectStore.addChangeListener(this._onChange);
     
-    var { folder_id, report_id } = this.props.params;
-    ViewActions.getReport(folder_id , report_id);
-    ViewActions.getReportLayouts(folder_id, report_id);
+    var { project_id, report_id } = this.props.params;
+    ViewActions.getReport(project_id , report_id);
+    ViewActions.getReportLayouts(project_id, report_id);
   },
 
   componentWillReceiveProps: function(nextProps){
-    var { folder_id, report_id } = nextProps.params;
-    ViewActions.getReport(folder_id , report_id);
+    var { project_id, report_id } = nextProps.params;
+    ViewActions.getReport(project_id , report_id);
   },
 
   _onChange: function() {
@@ -48,7 +48,7 @@ var Report = React.createClass({
 
   render: function() {
 
-    var { folder_id, report_id } = this.props.params;
+    var { project_id, report_id } = this.props.params;
 
     var heading, body, items, layouts, report_components, loaded;
 
@@ -66,7 +66,7 @@ var Report = React.createClass({
               <Dashboard  items={items} 
                           report_id={report_id}
                           layouts={ layouts }
-                          onSave={ ViewActions.saveReportLayouts.bind(null, folder_id, report_id) } 
+                          onSave={ ViewActions.saveReportLayouts.bind(null, project_id, report_id) } 
               />
           </Panel>
         );

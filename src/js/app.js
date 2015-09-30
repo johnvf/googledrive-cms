@@ -84,7 +84,7 @@ React.render((
   <Router history={ history } >
     <Route path="/" component={App}>
       <IndexRoute component={Landing} onEnter={requireAuth} />
-      <Route path="/project/:folder_id/:report_id" component={Report} onEnter={requireAuth}/>
+      <Route path="/project/:project_id/:report_id" component={Report} onEnter={requireAuth}/>
       <Route path="login" component={Login} />
       <Route path="logout" component={Logout} />
     </Route>
