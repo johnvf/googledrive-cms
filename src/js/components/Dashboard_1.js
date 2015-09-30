@@ -114,7 +114,16 @@ var Report = React.createClass({
       var editable = true
       var editor;
       if( editable ){
-        editor = (<button className="btn btn-default btn-sm editor" onClick={this.onSave}> SAVE LAYOUT </button> );
+        editor = (
+          <div className="editor">
+            <button className="btn btn-default btn-sm" onClick={this.onSave}> SAVE LAYOUT </button> 
+            {/* 
+              <button className="btn btn-default btn-sm" onClick={this.onSave}> SOME FEATURE </button>
+              <button className="btn btn-default btn-sm" onClick={this.onSave}> OTHER FEATURE </button>
+            */}
+          </div>
+
+        );
       }
       // {lg: layout1, md: layout2, ...}
       return (    

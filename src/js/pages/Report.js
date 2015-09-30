@@ -57,12 +57,11 @@ var Report = React.createClass({
     if ( this.state.report ){
         loaded = true
         heading = this.state.report.title;
-        body = this.state.report.body;
         items = this.state.report.items;
         layouts = this.state.layouts
 
         report_components = (
-          <Panel heading={ heading } body={ body } >
+          <Panel heading={ heading } >
               <Dashboard  items={items} 
                           report_id={report_id}
                           layouts={ layouts }
