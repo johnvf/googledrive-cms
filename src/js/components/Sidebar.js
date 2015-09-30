@@ -74,7 +74,7 @@ var Sidebar = React.createClass({
 
     componentDidMount: function() {
         ProjectStore.addChangeListener(this._onChange);
-        if (!this.state.projects){
+        if (!this.state.projects && this.props.loggedIn ){
             ViewActions.getProjects();
         }
     },
