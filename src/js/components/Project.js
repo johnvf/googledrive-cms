@@ -10,7 +10,7 @@ var Project = React.createClass({
 
     var project = this.props.project;
 
-    var folder_id = project.folder
+    var project_id = project.project_id
 
     var heading = project.config.properties.name;
     var body = project.config.properties.body
@@ -18,7 +18,7 @@ var Project = React.createClass({
 
       var report_heading = project.config.reports[report_id].title
 
-      return( <Link to={ "/project/"+folder_id+"/"+report_id }>{ report_heading}</Link>)
+      return( <Link to={ "/project/"+project_id+"/"+report_id }>{ report_heading}</Link>)
     })
 
     return (

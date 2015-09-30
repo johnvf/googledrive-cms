@@ -11,8 +11,6 @@ var useBasename = require('history/lib/useBasename')
 
 var LoginStore = require( './stores/LoginStore')
 
-var ViewActions = require('./actions/ViewActions');
-
 var Navbar = require( './components/Navbar')
 var Sidebar = require( './components/Sidebar')
 
@@ -53,7 +51,7 @@ var App = React.createClass({
     var loggedIn = this.state.loggedIn
 
     return (
-      <div className="main">
+      <div>
         <Navbar loggedIn={ loggedIn }/>
         <Sidebar loggedIn={ loggedIn }/>
         <div className="container-fluid centered">
@@ -84,7 +82,7 @@ React.render((
   <Router history={ history } >
     <Route path="/" component={App}>
       <IndexRoute component={Landing} onEnter={requireAuth} />
-      <Route path="/project/:folder_id/:report_id" component={Report} onEnter={requireAuth}/>
+      <Route path="/project/:project_id/:report_id" component={Report} onEnter={requireAuth}/>
       <Route path="login" component={Login} />
       <Route path="logout" component={Logout} />
     </Route>

@@ -1,0 +1,34 @@
+@import (inline) "../../../node_modules/c3/c3.min.css";
+@import (inline) "../../../node_modules/react-grid-layout/css/styles.css";
+@import (inline) "../../../node_modules/react-grid-layout/node_modules/react-resizable/css/styles.css";
+@import (inline) "../../../node_modules/react-grid-layout/node_modules/react-draggable/lib/styles.css";
+
+.dashboard{
+    background: rgb(250,250,250);
+}
+
+// For some reason, react-grid-layout transforms things off-center
+// This recenters things
+.layout{
+    margin-left: -0.2vw;
+}
+
+.widget{
+  background: rgb(255,255,255);
+  overflow: hidden;
+}
+
+.editor{
+    position: relative;
+    float: right;
+    top: -39px;
+    right: -16px;
+}
+
+.editor > .btn{
+  margin-right: 5px;
+}
+
+@media print {
+  .editor{ display: none!important }
+}

@@ -1,7 +1,6 @@
 var React = require('react');
 var Link = require('react-router').Link;
 
-var ViewActions = require('../actions/ViewActions');
 var ProjectStore = require('../stores/ProjectStore')
 
 
@@ -11,13 +10,13 @@ function makeTree(projects){
 	tree.items = projects.map( function(project){
 		project_tree = { text: project.config.properties.name,  href:'/' }
 
-		var folder_id = project.folder
+		var project_id = project.project_id
 		var project_reports = project.config.reports
 
 		project_tree.items = Object.keys( project_reports ).map( function( report_id ){
 
 			var report = project_reports[report_id]
-			report_tree = { text: report.title , href: '/project/'+ folder_id +'/'+ report_id }
+			report_tree = { text: report.title , href: '/project/'+ project_id +'/'+ report_id }
 
 			return report_tree
 		})
@@ -69,14 +68,11 @@ var SidebarNode = React.createClass({
 var Sidebar = React.createClass({
 
     getInitialState: function() {
-        return getStateFromStores()
+        return {}
     },
 
     componentDidMount: function() {
         ProjectStore.addChangeListener(this._onChange);
-        if (!this.state.projects){
-            ViewActions.getProjects();
-        }
     },
 
     _onChange: function() {

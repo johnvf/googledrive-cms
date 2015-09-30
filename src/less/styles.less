@@ -1,40 +1,29 @@
 @import "../../bower_components/bootstrap/less/bootstrap.less";
 @import "./bootswatch.less";
 @import "./variables.less";
-@import (inline) "../../node_modules/c3/c3.min.css";
-@import (inline) "../../node_modules/react-grid-layout/css/styles.css";
-@import (inline) "../../node_modules/react-grid-layout/node_modules/react-resizable/css/styles.css";
-@import (inline) "../../node_modules/react-grid-layout/node_modules/react-draggable/lib/styles.css";
+@import "./components.less";
+
+/*
+ * Only include styles confined to app.js here.
+ */
 
 body {
   font-family: "Helvetica Neue", Arial;
   font-weight: 200;
 }
 
-.main{
-    margin-top: 50px;
-}
-
-.editor{
-    position: relative;
-    float: right;
-    top: -50px;
-}
-
-.navbar{
-     max-height: 50px;
-}
-
-.container-fluid{
-  margin-top: 87px;
-}
-
 .centered{
-    max-width: 66.666%;
-    margin-left: 16.666%;
+  margin-top: 86px;
+  max-width: 66.666%;
+  margin-left: 16.666%;
 }
 
-ul.nav-sidebar{
-  margin-left: 20px;
-  font-size: 9pt;
+@media print {
+  .panel{ border: none!important }
+  .centered{ 
+    width: 100%!important; 
+    max-width: 100%!important; 
+    margin-left: 0%!important; 
+    margins: 25px!important;
+  }
 }

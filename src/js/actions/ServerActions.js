@@ -23,17 +23,19 @@ module.exports = {
     });
   },
 
-  receiveReport: function(report) {
+  receiveReport: function(report_id, report) {
     AppDispatcher.handleServerAction({
       type: "RECEIVE_REPORT",
-      report: report
+      report: report,
+      report_id: report_id
     });
   },
 
-  receiveReportLayouts: function(reportLayouts) {
+  receiveReportLayouts: function(report_id, reportLayouts) {
     AppDispatcher.handleServerAction({
       type: "RECEIVE_REPORT_LAYOUTS",
-      reportLayouts: reportLayouts
+      reportLayouts: reportLayouts,
+      report_id: report_id
     });
   },
 

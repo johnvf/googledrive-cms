@@ -2,10 +2,10 @@ var React = require('react');
 
 var c3 = require('c3')
 
-function cellsToRowCols( cells ){
+function cells2Array( cells ){
 
     // Convert nested cells into a nested array
-    var data = Object.keys( cells ).map(function( row_i ){
+    var array = Object.keys( cells ).map(function( row_i ){
         var row_data = Object.keys( cells[row_i] ).map(function( col_i ){
 
             var cell = cells[row_i][col_i]
@@ -15,8 +15,12 @@ function cellsToRowCols( cells ){
         return row_data
     });
 
+    return array
+}
+
+function array2JSON( array){
     // For convenience, convert each row into a JSON
-    var data = data.map(function(row, row_i){
+    var data = array.map(function(row, row_i){
         return { "xAxis": row[0], "value": row[1] }
     })
 
@@ -48,7 +52,7 @@ var Chart = React.createClass({
     componentDidMount: function () {
         // console.log("re-render chart");
         var self = this;
-        var data = cellsToRowCols( this.props.item.data.cells )
+        var data = array2JSON( cells2Array( this.props.item.data.cells ) );
         this._renderChart(data);
 
         // FIXME: This shouldn't be necessary - prop updates should work too
