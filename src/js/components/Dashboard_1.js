@@ -59,11 +59,7 @@ var Dashboard = React.createClass({
   },
 
 
-  onLayoutChange: function(layout, layouts) {
-    if( this.props.onLayoutChange ){
-      this.props.onLayoutChange(layout);
-    }
-    
+  onLayoutChange: function(layout, layouts) {    
     // Execute widget callbacks
     // FIXME: This shouldn't be necessary - prop updates should work too
     this.state.layoutChangeCallbacks.forEach( function(callback){
