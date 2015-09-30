@@ -5,6 +5,7 @@ var React = require('react');
 var ResponsiveReactGridLayout = require('react-grid-layout').Responsive;
 
 var Text = require('../lib_components/Text');
+var Image = require('../lib_components/Image');
 var Table = require('../lib_components/Table');
 var Chart = require('../lib_components/Chart');
 
@@ -89,15 +90,23 @@ var Report = React.createClass({
 
       switch (item.type) {
         case "text":
-          widgets.push( <div key={i}><Text id={item_id} item={item}/></div> )
+          widgets.push( <div key={i} className="widget"><Text id={item_id} item={item}/></div> )
+          break;
+
+        case "image":
+          widgets.push( <div key={i} className="widget"><Image id={item_id} item={item}/></div> )
           break;
 
         case "table":
-          widgets.push( <div key={i}><Table id={item_id} item={item}/></div> )
+          widgets.push( <div key={i} className="widget"><Table id={item_id} item={item}/></div> )
           break;
 
         case "chart":
-          widgets.push( <div key={i} ><Chart subscribeToLayoutChange={self.subscribeToLayoutChange} id={item_id} item={item}/></div> )
+          widgets.push( 
+            <div key={i} className="widget">
+              <Chart subscribeToLayoutChange={self.subscribeToLayoutChange} id={item_id} item={item}/>
+            </div> 
+          )
           break;
       }
 
@@ -127,7 +136,7 @@ var Report = React.createClass({
       }
       // {lg: layout1, md: layout2, ...}
       return (    
-          <div className="container-fluid">
+          <div className="container-fluid report">
             { editor }
             <ResponsiveReactGridLayout className="layout"
               {...this.props}

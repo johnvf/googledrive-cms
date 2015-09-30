@@ -130,7 +130,7 @@ function getDriveData( report ){
 
         Object.keys(report.items).forEach( function(item_key){
             var item = report.items[item_key]
-            if( item.type === "chart" ){
+            if( item.type === "chart" || item.type === "table" ){
                 sheetRefItems.push( item )
             }
         })
@@ -228,7 +228,7 @@ function getDocAsPlaintext( file_resource ){
                 authorization: 'Bearer ' + jwtClient.credentials.access_token
               }
             }, function( err, resp, body){
-                var cleanBody = utf8.encode(body.trim());
+                var cleanBody = body.trim();
                 resolve( cleanBody );
             });
 
@@ -243,6 +243,7 @@ function getConfig( folder_id ){
         drive.children.list({ 'folderId': folder_id, q: q }, function(err, resp){ 
             var file_resource = resp.items[0]
             getDocAsPlaintext( file_resource ).then( function(configText){
+                console.log(configText);
                 resolve( yaml.parse(configText) )
             })
         });        

@@ -12,14 +12,14 @@ body {
 }
 
 .main{
-    margin-top: 50px;
+    margin-top: 86px;
 }
 
 .editor{
     position: relative;
     float: right;
-    top: -126px;
-    right: -12px;
+    top: -39px;
+    right: -16px;
 }
 
 .editor > .btn{
@@ -30,10 +30,6 @@ body {
  max-height: 50px;
 }
 
-.container-fluid{
-  margin-top: 87px;
-}
-
 .centered{
     max-width: 66.666%;
     margin-left: 16.666%;
@@ -42,4 +38,28 @@ body {
 ul.nav-sidebar{
   margin-left: 20px;
   font-size: 9pt;
+}
+
+.report{
+  background: rgb(250,250,250);
+}
+
+// For some reason, react-grid-layout transforms things off-center
+// This recenters things
+.layout{
+  margin-left: -0.2vw;
+}
+
+.widget{
+  background: rgb(255,255,255);
+  overflow: hidden;
+}
+
+.image-widget > img {
+  max-width: 100%;
+  max-height: 100%;
+}
+
+.table-responsive {
+  overflow: hidden;
 }
