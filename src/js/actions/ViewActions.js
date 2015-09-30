@@ -20,7 +20,7 @@ module.exports = {
   },
   
   saveReportLayouts: function(project_id , report_id, reportLayouts){
-    WebAPIUtils.saveReportLayouts(project_id , report_id, layouts)
+    WebAPIUtils.saveReportLayouts(project_id , report_id, reportLayouts)
     AppDispatcher.handleViewAction({
       type: "SAVE_REPORT_LAYOUTS",
       report_id: report_id,
