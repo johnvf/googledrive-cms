@@ -19,6 +19,7 @@ var jwtClient = new google.auth.JWT(key.client_email, null, key.private_key, sco
 var drive = google.drive({ version: 'v2', auth: jwtClient });
 
 var _layout;
+var _layout_filename = ".layout.json"
 
 /*
  * Private
@@ -161,7 +162,7 @@ function getDriveSheetData( item ){
 function getDriveReportLayout( project_id, report_id ){
     return new Promise( function(resolve,reject){
 
-        q ="title contains '" + report_id + "_layout.json' "
+        q ="title = '" + _layout_filename + "'"
 
         drive.children.list({ 'folderId': report_id, q: q }, function(err, resp){ 
             console.log(resp);
@@ -180,7 +181,7 @@ function getDriveReportLayout( project_id, report_id ){
 
 function saveDriveReportLayout( project_id, report_id, layout ){
 
-    q ="title contains '" + report_id+"_layout.json' "
+    q ="title = '" + _layout_filename + "'"
 
     drive.children.list({ 'folderId': report_id, q: q }, function(err, resp){ 
         console.log(resp);
@@ -196,7 +197,7 @@ function saveDriveReportLayout( project_id, report_id, layout ){
         else{
             drive.files.insert({
               resource: {
-                title: report_id+"_layout.json",
+                title: _layout_filename,
                 mimeType: 'text/plain',
                 parents: [{id: report_id }]
               },
