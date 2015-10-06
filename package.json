@@ -14,6 +14,12 @@
   "author": "John Faichney",
   "license": "MIT",
   "devDependencies": {
+  },
+  "dependencies": {
+    "body-parser": "^1.13.3",
+    "c3": "^0.4.10",
+    "express": "^4.13.3",
+    "flux": "^2.1.1",
     "browserify": "^8.1.1",
     "gulp": "^3.8.10",
     "gulp-browserify": "^0.5.1",
@@ -24,13 +30,7 @@
     "gulp-react": "^2.0.0",
     "gulp-util": "^3.0.4",
     "reactify": "^1.1.1",
-    "vinyl-source-stream": "^1.1.0"
-  },
-  "dependencies": {
-    "body-parser": "^1.13.3",
-    "c3": "^0.4.10",
-    "express": "^4.13.3",
-    "flux": "^2.1.1",
+    "vinyl-source-stream": "^1.1.0",
     "google-client-api": "^1.0.4",
     "google-spreadsheets": "^0.4.2",
     "googleapis": "^2.1.3",
