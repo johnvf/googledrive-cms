@@ -17,6 +17,7 @@
   },
   "dependencies": {
     "body-parser": "^1.13.3",
+    "bootstrap": "~3.3.5",
     "c3": "^0.4.10",
     "express": "^4.13.3",
     "flux": "^2.1.1",

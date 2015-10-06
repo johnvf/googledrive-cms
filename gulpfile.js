@@ -15,7 +15,7 @@ gulp.task('serve',  function() {
 
 gulp.task('watch', function(){
   gulp.watch(['src/**/*.*'], ['build' , server.notify]);
-  gulp.watch('bower_components/**/*.*', ['build' , server.notify]);
+  gulp.watch('node_modules/**/*.*', ['build' , server.notify]);
   gulp.watch('./server.js', server.start);
 })
 
@@ -42,11 +42,11 @@ gulp.task('copy', function() {
     .pipe(gulp.dest('./dist/img'));
   gulp.src('./src/fonts/**/*.*')
     .pipe(gulp.dest('./dist/fonts'));    
-  gulp.src('./bower_components/bootstrap/fonts/**/*.*')
+  gulp.src('./node_modules/bootstrap/fonts/**/*.*')
     .pipe(gulp.dest('./dist/fonts'));
-  gulp.src('./bower_components/bootstrap/dist/js/*')
+  gulp.src('./node_modules/bootstrap/dist/js/*')
     .pipe(gulp.dest('./dist/js'));
-  gulp.src('./bower_components/jquery/dist/*')
+  gulp.src('./node_modules/jquery/dist/*')
     .pipe(gulp.dest('./dist/js'));
 });
 
