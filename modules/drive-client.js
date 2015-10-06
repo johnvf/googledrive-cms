@@ -12,7 +12,18 @@ var google = require('googleapis');
 var request = require('request');
 var utf8 = require('utf8')
 
-var key = require('../.keys/google.json');
+
+// Regexes to swap badly escaped newlines + unicode '=' from the key
+var private_key = process.env['GAPI_PRIVATE_KEY'].replace(/\\n/g, '\n').replace(/\\u003d/g, "=");
+
+var key = {
+  private_key_id:  process.env['GAPI_PRIVATE_KEY_ID'],
+  private_key: private_key,
+  client_email:  process.env['GAPI_CLIENT_EMAIL'],
+  client_id:  process.env['GAPI_CLIENT_ID'],
+  type:  process.env['GAPI_TYPE']
+};
+
 var scopes = ['https://www.googleapis.com/auth/drive'];
 
 var jwtClient = new google.auth.JWT(key.client_email, null, key.private_key, scopes , null);
