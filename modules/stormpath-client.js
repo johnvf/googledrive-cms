@@ -1,6 +1,6 @@
 var stormpath = require('stormpath');
 var uuid = require('uuid');
-var nJwt = require('nJwt');
+var njwt = require('njwt');
 
 var client = null;
 
@@ -67,7 +67,7 @@ function makeToken( account ){
           scope: account.projects
         }
         console.log("made token");
-        var jwt = nJwt.create(claims, process.env['STORMPATH_SECRET_KEY'] )
+        var jwt = njwt.create(claims, process.env['STORMPATH_SECRET_KEY'] )
         resolve( jwt.compact() )
     })
 }
@@ -95,7 +95,7 @@ function getToken( username, password , callback ){
 
 function verifyToken( req, res, next, token ){
     // verifies secret and checks exp
-    nJwt.verify(token, process.env['STORMPATH_SECRET_KEY'], function(err,decoded){    
+    njwt.verify(token, process.env['STORMPATH_SECRET_KEY'], function(err,decoded){    
       if (err) {
         return res.json({ success: false, message: 'Failed to authenticate token.' });    
       } else {
