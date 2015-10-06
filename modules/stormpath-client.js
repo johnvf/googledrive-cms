@@ -2,34 +2,32 @@ var stormpath = require('stormpath');
 var uuid = require('uuid');
 var nJwt = require('nJwt');
 
-// FIXME: Should this be passed in via some environment variable?
-// Needs to be shared by all containers running the app.
-// Perhaps use the application secret key when loaded?
-var signingKey = uuid.v4(); // For example purposes
-
 var client = null;
 
 var homedir = process.cwd()
-var keyfile = homedir + '/.keys/stormpath.properties';
+
 var appName = 'My Application'
+
+var apiKey = new stormpath.ApiKey(
+  process.env['STORMPATH_API_KEY_ID'],
+  process.env['STORMPATH_API_KEY_SECRET']
+);
 
 var app;
 
+
 function getApp(name){
     return new Promise( function(resolve,reject){
-        stormpath.loadApiKey(keyfile, function apiKeyFileLoaded(err, apiKey) {
             // if (err){ throw err; reject(); }; // FIXME: Add proper error handling
-            if (err){ console.log(err); reject(); return};
-
+            // if (err){ console.log(err); reject(); return};
+            console.log("connecting to stormpath at %s", process.env['STORMPATH_URL']);
             client = new stormpath.Client({apiKey: apiKey});
 
-            client.getApplications({name: name }, function(err, applications){
+            client.getApplication( process.env['STORMPATH_URL'], function(err, app){
                 if (err) throw err;
-
-                app = applications.items[0];
+                console.log("got app");
                 resolve(app)
             });
-        });
     })
 
 }
@@ -40,7 +38,7 @@ function login(  username, password, app ){
         app.authenticateAccount({ username: username, password: password }, function (err, result) {
           // if (err){ throw err; reject(); }; // FIXME: Add proper error handling
           if (err){ console.log(err); reject(); return};
-
+          console.log("logged in");
           account = result.account;
           resolve( account )
         });
@@ -52,6 +50,7 @@ function getCustomData( account ){
         client.getAccount(account.href, function(err, account) {
           account.getCustomData(function(err, customData) {
             account.projects = customData.projects
+            console.log("got data");
             resolve(account)
           });
         });
@@ -63,12 +62,12 @@ function makeToken( account ){
         var split_url = account.href.split('/')
 
         var claims = {
-          iss: "http://localhost:3000/",  // The URL of your service
+          iss:  process.env['URL'], // this used to be 'http://localhost:5000/' is the trailing slash needed?The URL of your service
           sub: "users/"+split_url[split_url.length-1],    // The UID of the user in your system
           scope: account.projects
         }
-
-        var jwt = nJwt.create(claims,signingKey)
+        console.log("made token");
+        var jwt = nJwt.create(claims, process.env['STORMPATH_SECRET_KEY'] )
         resolve( jwt.compact() )
     })
 }
@@ -96,7 +95,7 @@ function getToken( username, password , callback ){
 
 function verifyToken( req, res, next, token ){
     // verifies secret and checks exp
-    nJwt.verify(token, signingKey, function(err,decoded){    
+    nJwt.verify(token, process.env['STORMPATH_SECRET_KEY'], function(err,decoded){    
       if (err) {
         return res.json({ success: false, message: 'Failed to authenticate token.' });    
       } else {

@@ -40,9 +40,11 @@ function setupServer() {
         res.sendFile( __dirname + '/dist/index.html');
     });
 
-    
 
-    app.listen(process.env.PORT || 3000);
+    app.listen( process.env['PORT'] || 5000, function () {
+      var port = process.env['PORT']
+      console.log('Example app listening at http://localhost:%s', port);
+    });
 }
 
 setupServer();
