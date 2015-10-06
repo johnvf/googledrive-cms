@@ -1,6 +1,7 @@
 *.log
 
 env.sh
+.env
 
 .DS_Store
 

@@ -35,17 +35,14 @@ function setupServer() {
         req.url = '/css/styles.css'; next(); 
     });
     
-    app.use( express['static'](process.env.STATICROOT));
+    app.use( express['static']( __dirname + '/dist' ));
     app.get("*", function(req, res, next) {
-        res.sendFile(process.env.STATICROOT + '/index.html');
+        res.sendFile( __dirname + '/dist/index.html');
     });
 
     
 
-    app.listen(process.env.PORT);
+    app.listen(process.env.PORT || 3000);
 }
 
-source(__dirname + "/env.sh", function(err) {
-    if (err) return console.error(err);
-    setupServer();
-});
+setupServer();

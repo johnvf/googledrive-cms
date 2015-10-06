@@ -52,4 +52,4 @@ gulp.task('copy', function() {
 
 gulp.task('build',['browserify','less', 'copy']);
 gulp.task('dev',['browserify','less', 'copy', 'serve', 'watch']);
-gulp.task('default',['dev']);
+gulp.task('default',['build']);
