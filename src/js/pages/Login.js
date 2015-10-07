@@ -46,13 +46,14 @@ var Login = React.createClass({
   render: function(){
     console.log("login")
     return (
-      <form className="form-signin centered">
-        <h2 className="form-signin-heading">Please sign in</h2>
+      <form className="form-signin login-fields">
+        <h3 className="form-signin-heading">Welcome to the Hyphae <br/> Reports Portal</h3> 
+        <h4 className="form-signin-heading">Please sign in below:</h4> 
         <label for="inputEmail" className="sr-only">Email address</label>
         <input id="inputUser" className="form-control" onChange={this.changeUser} value={this.state.user} placeholder="Username" required="" autofocus=""/>
         <label for="inputPassword" className="sr-only">Password</label>
         <input type="password" id="inputPassword" className="form-control" onChange={this.changePassword} value={this.state.password} placeholder="Password" required=""/>
-        <button className="btn btn-lg btn-default btn-block" type="submit" onClick={this.login.bind(this)}>Sign in</button>
+        <button className="btn btn-lg btn-default btn-block btn-login" type="submit" onClick={this.login.bind(this)}>Sign in</button>
       </form>
       )
   }

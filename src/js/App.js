@@ -49,15 +49,31 @@ var App = React.createClass({
 
   render: function () {
     var loggedIn = this.state.loggedIn
+    var appClass;
+
+    var bg;
+
+    if (loggedIn) {
+      appClass = "app-loggedin"    
+    } else {
+      appClass = "app-loggedout"
+       bg = (
+        <img 
+          src='http://s13.postimg.org/a8vcv53s7/colorful_triangles_background_y_B0q_TG6.jpg' 
+          className="bg"/>
+      )
+    };
+
+
 
     return (
-      <div>
+      <div className= {appClass} >
+        {bg}
         <Navbar loggedIn={ loggedIn }/>
         <Sidebar loggedIn={ loggedIn }/>
         <div className="container-fluid centered">
           {this.props.children}
         </div>
-
       </div>
     );
   }

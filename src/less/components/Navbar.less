@@ -1,3 +1,38 @@
+@navbar-default-bg: @brand-primary;
+
 @media print {
-  .navbar-inverse{ display: none!important }
+  .navbar-default{ display: none!important }
+}
+
+.navbar-default{
+    border-bottom: solid 2px #FFFFFF;
+}
+
+.navbar-default.logged-out{
+	background-color: rgba(255,255,255,0);
+    border-bottom: none;
+}
+
+.navbar-brand{
+	position: fixed;
+    left: 0px;
+    padding: 0px;
+    overflow: hidden;
+}
+
+.navbar-brand.logged-out{ 
+    overflow: visible;
+}
+
+.navbar-brand > img {
+    max-width: 300%;
+    max-height: 300%;
+    margin-top: -40px;
+}
+
+.navbar-brand.logged-out > img {
+    min-width: 100%;
+    min-height: 400%;
+    opacity: .5;
+    margin-top: -45px;
 }
