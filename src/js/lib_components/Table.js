@@ -1,23 +1,7 @@
 var React = require('react');
 
 
-function cells2Array( cells ){
-
-    // Convert nested cells into a nested array
-    var array = Object.keys( cells ).map(function( row_i ){
-        var row_data = Object.keys( cells[row_i] ).map(function( col_i ){
-
-            var cell = cells[row_i][col_i]
-            return cell["value"]
-        });
-
-        return row_data
-    });
-
-    return array
-}
-
-function array2Table( array ){
+function data2Table( array ){
     var th = []
     var td = []
 
@@ -46,9 +30,7 @@ var Table = React.createClass({
 
     render: function(){
 
-        var array = cells2Array( this.props.item.data.cells );
-
-        var tableMarkup = array2Table(array)
+        var tableMarkup = data2Table( this.props.item.data )
 
         return (
             <div id={this.props.id} className="table-responsive"  style={ {overflow: "hidden"} }>
