@@ -25,12 +25,18 @@ var Chart = React.createClass({
     componentDidMount: function () {
         // console.log("re-render chart");
         var self = this;
-        this._renderChart(this.props.item);
+        try {
+            this._renderChart(this.props.item);
+        }
+        catch(err) {
+            alert( "Incorrect data for chart: " + err)
+        }
 
         // FIXME: This shouldn't be necessary - prop updates should work too
         this.props.subscribeToLayoutChange( function(){ 
-            console.log("resize chart");
-            self.chart.resize() 
+            if( self.chart ){
+                self.chart.resize()                 
+            }
         })
     },
 
