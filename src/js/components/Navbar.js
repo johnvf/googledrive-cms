@@ -8,10 +8,13 @@ var Navbar = React.createClass({
       var loggedIn = this.props.loggedIn;
       var items;
 
+      var navbarClassName = "navbar-inverse navbar-fixed-top"
+
       if ( loggedIn == false ){
         items = [
         { text: "Login", target: "/login" },
-        ]
+        ],
+        navbarClassName += " navbarLogin "
       }
       else {
         items = [
@@ -32,10 +35,11 @@ var Navbar = React.createClass({
     })
 
       return (
-      <div className="navbar-inverse navbar-fixed-top" role="navigation">
+      <div className={navbarClassName} role="navigation">
         <div className="container">
           <div className="navbar-header">
-            <a className="navbar-brand" href="#">BRAND | reports</a>
+            <a className="navbar-brand" href="#"><img src="http://s10.postimg.org/cahd4z6d5/hyphae_logo_white.png"/>
+            </a>
           </div>
         <ul className="nav navbar-nav navbar-right">
           { itemMarkup }
