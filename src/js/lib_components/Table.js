@@ -1,42 +1,41 @@
 var React = require('react');
 
 
-function cells2Array( cells ){
-
-    // Convert nested cells into a nested array
-    var array = Object.keys( cells ).map(function( row_i ){
-        var row_data = Object.keys( cells[row_i] ).map(function( col_i ){
-
-            var cell = cells[row_i][col_i]
-            return cell["value"]
-        });
-
-        return row_data
-    });
-
-    return array
-}
-
-function array2Table( array ){
+function data2Table( array ){
     var th = []
     var td = []
 
-    array.forEach(function(row, row_i){
-        th.push( <th>{row[0]}</th> )
-        td.push( <td>{row[1]}</td> )
-    })
+    for(var i = 0; i < array.length; i++){
+        row = array[i]
+        
+        if( i == 0 ){
+            var th_cells = []
+            for( var j = 0; j < row.length; j++ ){
+                if( j == 0){
+                    th_cells.push( <th></th> )
+                }
+                else{
+                    th_cells.push( <th>{row[j]}</th> )
+                }
+            }
+            th.push( <tr>{ th_cells }</tr>)
+        }
+        else{
+            var tr_cells = []
+            for( var j = 0; j < row.length; j++ ){
+                tr_cells.push( <td>{row[j]}</td> )
+            }
+            td.push( <tr>{ tr_cells }</tr> )
+        }
+    }
 
     return (
         <table className="table">
             <thead>
-              <tr>
-                {th}
-              </tr>
+              {th}
             </thead>
             <tbody>
-              <tr>
-                {td}
-              </tr>
+              {td}
             </tbody>
         </table>
     )
@@ -46,12 +45,10 @@ var Table = React.createClass({
 
     render: function(){
 
-        var array = cells2Array( this.props.item.data.cells );
-
-        var tableMarkup = array2Table(array)
+        var tableMarkup = data2Table( this.props.item.data )
 
         return (
-            <div id={this.props.id} className="table-responsive"  style={ {overflow: "hidden"} }>
+            <div id={this.props.id} className="table-responsive"  style={ { overflow: "auto", width: "100%", height: "100%", fontSize: "small"} }>
                 { tableMarkup }
             </div>
         )
