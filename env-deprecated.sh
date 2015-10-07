@@ -1,8 +1,0 @@
-export DEPLOYMENT=test
-
-export HOST=localhost
-export PORT=3000
-export STATICROOT=$PWD/dist
-
-export CLIENT_ID=<YOUR CLIENT ID HERE>
-export CLIENT_SECRET=<YOUR CLIENT SECRET HERE>
