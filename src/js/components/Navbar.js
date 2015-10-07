@@ -8,13 +8,15 @@ var Navbar = React.createClass({
       var loggedIn = this.props.loggedIn;
       var items;
 
-      var navbarClassName = "navbar-inverse navbar-fixed-top"
+      var navbarClassName = "navbar-default navbar-fixed-top"
+      var brandClassName = "navbar-brand"
 
       if ( loggedIn == false ){
         items = [
         { text: "Login", target: "/login" },
         ],
-        navbarClassName += " navbarLogin "
+        navbarClassName += " logged-out"
+        brandClassName += " logged-out"
       }
       else {
         items = [
@@ -38,7 +40,7 @@ var Navbar = React.createClass({
       <div className={navbarClassName} role="navigation">
         <div className="container">
           <div className="navbar-header">
-            <a className="navbar-brand" href="#"><img src="http://s10.postimg.org/cahd4z6d5/hyphae_logo_white.png"/>
+            <a className={brandClassName} href="#"><img src="http://s10.postimg.org/cahd4z6d5/hyphae_logo_white.png"/>
             </a>
           </div>
         <ul className="nav navbar-nav navbar-right">

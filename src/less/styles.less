@@ -3,6 +3,15 @@
 @import "./variables.less";
 @import "./components.less";
 
+// @brand-success: #18B4BC;
+
+@brand-primary:         #F3CD60; // YELLOW
+@brand-success:         #66BCA5; // TURQ
+@brand-info:            #176974; // DARKISH TURQ
+@brand-warning:         #F36B4B; // RED
+@brand-danger:          #101C29; // DARK BLUE
+
+@background:            #6D7B84;
 /*
  * Only include styles confined to app.js here.
  */
@@ -10,10 +19,7 @@
 body {
   font-family: "Helvetica Neue", Arial;
   font-weight: 200;
-}
-
-.app-loggedin{
-  background-color: #e5e5e5;
+  background-color: @background;
 }
 
 img.bg {
@@ -28,7 +34,8 @@ img.bg {
 }
 
 .centered {
-  margin-top: 86px;
+  margin-top: 120px;
+  padding-top: 20px;
   max-width: 66.666%;
   margin-left: 16.666%;
 }
