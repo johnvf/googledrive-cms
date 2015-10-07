@@ -12,6 +12,7 @@ var google = require('googleapis');
 var request = require('request');
 var utf8 = require('utf8')
 
+var chartPreprocessor = require('./chart-preprocessor');
 
 // Regexes to swap badly escaped newlines + unicode '=' from the key
 var private_key = process.env['GAPI_PRIVATE_KEY'].replace(/\\n/g, '\n').replace(/\\u003d/g, "=");
@@ -163,8 +164,10 @@ function getDriveSheetData( item ){
                 return
             }
             spreadsheet.worksheets[parseInt(item.sheet)].cells({ range: item.range}, function(err, cells) {
-                item.data = cells
-                resolve( cells )
+                if (err) { console.log( err );}
+                var data = chartPreprocessor.processGoogleSheet( cells )
+                item.data = data
+                resolve( data )
             });
         });
     });
