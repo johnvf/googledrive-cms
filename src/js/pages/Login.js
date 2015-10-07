@@ -8,7 +8,7 @@ var Login = React.createClass({
   mixins: [ History ],
   
   getInitialState: function() {
-    return {user: "tk421", password: "Changeme1", error: false };
+    return {user: "", password: "", error: false };
   },
 
   // This will be called when the user clicks on the login button
