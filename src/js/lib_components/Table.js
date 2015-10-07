@@ -5,22 +5,37 @@ function data2Table( array ){
     var th = []
     var td = []
 
-    array.forEach(function(row, row_i){
-        th.push( <th>{row[0]}</th> )
-        td.push( <td>{row[1]}</td> )
-    })
+    for(var i = 0; i < array.length; i++){
+        row = array[i]
+        
+        if( i == 0 ){
+            var th_cells = []
+            for( var j = 0; j < row.length; j++ ){
+                if( j == 0){
+                    th_cells.push( <th></th> )
+                }
+                else{
+                    th_cells.push( <th>{row[j]}</th> )
+                }
+            }
+            th.push( <tr>{ th_cells }</tr>)
+        }
+        else{
+            var tr_cells = []
+            for( var j = 0; j < row.length; j++ ){
+                tr_cells.push( <td>{row[j]}</td> )
+            }
+            td.push( <tr>{ tr_cells }</tr> )
+        }
+    }
 
     return (
         <table className="table">
             <thead>
-              <tr>
-                {th}
-              </tr>
+              {th}
             </thead>
             <tbody>
-              <tr>
-                {td}
-              </tr>
+              {td}
             </tbody>
         </table>
     )
@@ -33,7 +48,7 @@ var Table = React.createClass({
         var tableMarkup = data2Table( this.props.item.data )
 
         return (
-            <div id={this.props.id} className="table-responsive"  style={ {overflow: "hidden"} }>
+            <div id={this.props.id} className="table-responsive"  style={ { overflow: "auto", width: "100%", height: "100%", fontSize: "small"} }>
                 { tableMarkup }
             </div>
         )

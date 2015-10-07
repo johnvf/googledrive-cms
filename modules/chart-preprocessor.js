@@ -1,5 +1,4 @@
 function processGoogleSheet( data ){
-    console.log( JSON.stringify(data));
     var cells = data.cells;
     // Convert nested cells into a nested array
     var array = Object.keys( cells ).map(function( row_i ){
@@ -11,7 +10,6 @@ function processGoogleSheet( data ){
 
         return row_data
     });
-    console.log( JSON.stringify(array));
     return array
 }
 
