@@ -61,6 +61,11 @@ ProjectStore.dispatchToken = AppDispatcher.register(function(payload) {
 
   switch(action.type) {
 
+    case "LOG_OUT":
+      _projects = null;
+      _reports = {};
+      ProjectStore.emitChange();
+      break;
 
     case "RECEIVE_PROJECTS":
       _projects = action.projects
