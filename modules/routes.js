@@ -2,6 +2,17 @@ var path = require('path');
 var driveClient = require('./drive-client');
 var stormpathClient = require('./stormpath-client')
 
+function get_user_project_access(req){
+    if( req.decoded ){
+      var projects = req.decoded.body.scope
+      return projects
+    }
+    else {
+      console.log("No projects attribute found for this user.")
+      return []
+    }
+}
+
 module.exports = function(app) {
 
 
@@ -33,7 +44,8 @@ module.exports = function(app) {
   
   // Gets all available projects
   app.get('/api/project', function(req, res) {
-    driveClient.getProjects(function(data) {
+    var projects_allowed = get_user_project_access(req)
+    driveClient.getProjects( projects_allowed, function(data) {
       res.send(data);
     });
   });
@@ -41,7 +53,8 @@ module.exports = function(app) {
 
   // Gets specific project report data
   app.get('/api/project/:project_id/:report_id', function(req, res) {
-    driveClient.getReport( req.params.project_id, req.params.report_id, function(data) {
+    var projects_allowed = get_user_project_access(req)
+    driveClient.getReport( projects_allowed, req.params.project_id, req.params.report_id, function(data) {
       res.send(data);
     });
   });

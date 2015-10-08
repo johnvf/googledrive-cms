@@ -67,33 +67,67 @@ function getDriveProjectFolders( ){
     })
 }
 
-function getDriveProjects( folders ){
+function getDriveProjects( projects_allowed, folders ){
     return new Promise( function(resolve,reject){
-        console.log('loading configs..')
-
+        console.log('loading configs..folders:')
+        console.log( JSON.stringify(folders) );
         var folder_ids = folders.map( function( folder ){ return folder.id });
         
-        var projects = folder_ids.map(  getDriveProject );
+        var projects = folder_ids.map(  getDriveProject.bind( null, projects_allowed ) );
 
         Promise.all( projects )
         .then(function (resp) {
-            resolve(resp)
+            var valid_projects = resp.filter(function(val) { return val !== null; })
+            resolve( valid_projects )
         });
 
     })
 }
 
-function getDriveProject( project_id ){
+function getDriveProjectPermission( projects_allowed, project_id ){
     return new Promise( function(resolve,reject){
-        console.log('loading project..')
-        // Maps folder Ids to project ids
-        getConfig( project_id ).then( function(config){
-            var project = { project_id: project_id, config: config }
+        console.log('haz permission?..')
 
-            getDriveProjectReports( project ).then( function( project ){
-                resolve( project )
+        if ( projects_allowed.indexOf("all") != -1 ){
+            resolve( true );
+        } 
+        else {  
+             drive.files.get({ 'fileId': project_id }, function(err, resp){
+
+                if ( projects_allowed.indexOf( resp.title ) != -1 ){
+                    resolve( true );
+                } 
+                else{
+                    resolve( false );
+                }
             })
-        })
+        }
+
+    });
+}
+
+function getDriveProject( projects_allowed, project_id ){
+    return new Promise( function(resolve,reject){
+        
+
+        getDriveProjectPermission( projects_allowed, project_id ).then(function( permitted ){
+            if ( permitted ){
+                console.log('loading project..')
+                getConfig( project_id ).then( function(config){
+                    var project = { project_id: project_id, config: config }
+
+                    getDriveProjectReports( project ).then( function( project ){
+                        resolve( project )
+                    })
+                })
+            }
+            else{
+                resolve(null);
+            }
+
+
+        });
+
     });      
 }
 
@@ -131,7 +165,12 @@ function getDriveProjectReports( project ){
 // this will change
 function getDriveReport( report_id, project ){
     return new Promise( function(resolve,reject){
-        resolve( project.config.reports[report_id] )
+        if( project ){
+            resolve( project.config.reports[report_id] )
+        }
+        else{
+            reject();
+        }
     }); 
 }
 
@@ -298,21 +337,21 @@ function test( ){
 
 // Connects to google drive, loads the configs from their folders, 
 // and passes this information back to the callback
-function getProjects( callback ){
+function getProjects( projects_allowed, callback ){
     console.log("getting projects...");
     auth()
     .then( getDriveProjectFolders )
-    .then( getDriveProjects )
+    .then( getDriveProjects.bind( null, projects_allowed) )
     .then( callback )
 }
 
 // Connects to google drive, loads the configs from their folders, 
 // and passes this information back to the callback
-function getReport( project_id, report_id, callback ){
+function getReport( projects_allowed, project_id, report_id, callback ){
     console.log("getting project data...");
     auth()
-    .then( getDriveProject.bind( null, project_id ))
-    .then( getDriveReport.bind( null, report_id))
+    .then( getDriveProject.bind( null, projects_allowed, project_id ))
+    .then( getDriveReport.bind( null, report_id ))
     .then( getDriveData )
     .then( callback )
 }
