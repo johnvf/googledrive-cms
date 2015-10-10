@@ -20,6 +20,12 @@ var Chart = React.createClass({
                 }
             }
         })
+
+        var self = this;
+
+        setTimeout(function () {
+            self.chart.groups( item.groups )
+        }, 1000);
     },
 
     componentDidMount: function () {
