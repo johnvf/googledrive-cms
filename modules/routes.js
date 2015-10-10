@@ -43,44 +43,57 @@ module.exports = function(app) {
   });
   
   // Gets all available projects
-  app.get('/api/project', function(req, res) {
+  app.get('/api/project', function(req, res, next) {
     var projects_allowed = get_user_project_access(req)
-    driveClient.getProjects( projects_allowed, function(data) {
-      res.send(data);
-    });
+
+    driveClient.getProjects( projects_allowed, 
+      function(data) {
+        res.send(data);
+      }, 
+      function(err){ next(err); }
+    );
+
   });
   
 
   // Gets specific project report data
-  app.get('/api/project/:project_id/:report_id', function(req, res) {
+  app.get('/api/project/:project_id/:report_id', function(req, res, next) {
     var projects_allowed = get_user_project_access(req)
-    driveClient.getReport( projects_allowed, req.params.project_id, req.params.report_id, function(data) {
-      res.send(data);
-    });
+
+    driveClient.getReport( projects_allowed, req.params.project_id, req.params.report_id, 
+      function(data) {
+        res.send(data);
+      }, 
+      function(err){ next(err); }
+    );
+
   });
 
   // Gets specific project report layout
-  app.get('/api/project/:project_id/:report_id/layout', function(req, res) {
-    driveClient.getReportLayout( req.params.project_id, req.params.report_id, function(data) {
-      res.send(data);
-    });
+  app.get('/api/project/:project_id/:report_id/layout', function(req, res, next) {
+
+    driveClient.getReportLayout( req.params.project_id, req.params.report_id, 
+      function(data) {
+        res.send(data);
+      }, 
+      function(err){ next(err); }
+    );
+
   });
 
   // Saves the specific project report layout
   app.put('/api/project/:project_id/:report_id/layout', function(req, res) {
-    driveClient.saveReportLayout( req.params.project_id, req.params.report_id, req.body, function(success) {
-      if( success ){
+    
+    driveClient.saveReportLayout( req.params.project_id, req.params.report_id, req.body, 
+      function(success) {
         return res.status(200).send({
           success: true,
           message: 'Layout saved.'
         });
-      } else {
-        return res.status(500).send({
-          success: false,
-          message: 'Layout not saved.'
-        });
-      }
-    });
+      },
+      function(err){ next(err); }
+    );
+
   });
 
 };

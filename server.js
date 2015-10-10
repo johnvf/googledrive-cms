@@ -4,6 +4,15 @@ var express = require('express'),
     source = require('shell-source'),
     path = require('path');
 
+function errorHandler(err, req, res, next) {
+    console.error( JSON.stringify(err.stack) )
+    if (res.headersSent) {
+        return next(err);
+    }
+    res.status(500);
+    res.send( { error: err } );
+}
+
 function setupServer() {
     // Set up the app
     var app = express();
@@ -29,6 +38,7 @@ function setupServer() {
     
     // For now, just re-writing the key files
     app.get("*/App.js", function(req, res, next) { 
+        // if (err) { return next(err); }
         req.url = '/js/App.js'; next(); 
     });
     app.get("*/styles.css", function(req, res, next) { 
@@ -40,6 +50,7 @@ function setupServer() {
         res.sendFile( __dirname + '/dist/index.html');
     });
 
+    app.use(errorHandler);
 
     app.listen( process.env['PORT'] || 5000, function () {
       var port = process.env['PORT']

@@ -24,7 +24,7 @@ function getApp(name){
             client = new stormpath.Client({apiKey: apiKey});
 
             client.getApplication( process.env['STORMPATH_URL'], function(err, app){
-                if (err) throw err;
+                if (err){ throw err; reject(); };
                 console.log("got app");
                 resolve(app)
             });
@@ -37,7 +37,7 @@ function login(  username, password, app ){
 
         app.authenticateAccount({ username: username, password: password }, function (err, result) {
           // if (err){ throw err; reject(); }; // FIXME: Add proper error handling
-          if (err){ console.log(err); reject(); return};
+          if (err){ throw err; reject(); };
           console.log("logged in");
           account = result.account;
           resolve( account )
