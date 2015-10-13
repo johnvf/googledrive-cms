@@ -50,7 +50,7 @@ module.exports = function(app) {
       function(data) {
         res.send(data);
       }, 
-      function(err){ next(err); }
+      function(err){ console.log("error"); next(err); }
     );
 
   });

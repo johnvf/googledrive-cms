@@ -112,21 +112,25 @@ function getDriveProject( projects_allowed, project_id ){
         getDriveProjectPermission( projects_allowed, project_id ).then(function( permitted ){
             if ( permitted ){
                 console.log('loading project..')
-                getConfig( project_id ).then( function(config){
+                getConfig( project_id )
+                .then( function(config){
                     var project = { project_id: project_id, config: config }
 
                     getDriveProjectReports( project ).then( function( project ){
                         resolve( project )
                     })
                 })
-                .catch(function(err){ console.log("got hereeee!!"); throw err; reject();})
+                .catch( function(err){ console.log("got hereeee!!"); throw err; reject();})
+                
             }
             else{
                 resolve(null);
             }
 
 
-        });
+        })
+        .catch( function(err){ console.log("got here too!!"); reject();})
+        ;
 
     });      
 }
@@ -287,23 +291,25 @@ function getDocAsPlaintext( file_resource ){
 
 function getConfig( folder_id ){
     return new Promise( function(resolve,reject){
+        console.log("getting config")
         q ="title contains 'config'"
-
         drive.children.list({ 'folderId': folder_id, q: q }, function(err, resp){ 
             if (err){ throw err; reject(); };
             var file_resource = resp.items[0]
             getDocAsPlaintext( file_resource ).then( function(configText){
                 var yamlConfig;
-                // try{
-                //      yamlConfig = yaml.parse(configText)
-                // }
-                // catch(err){ 
-                //     console.log("error")
-                //     throw err; reject(); 
-                // }
-                throw err; reject();
+                try{
+                     yamlConfig = yaml.parse(configText)
+                     throw "Unable to parse YAML"
+                }
+                catch(err){ 
+                    console.log(err)
+                    throw err;
+                }
+                
                 resolve( yamlConfig )
             })
+            .catch( function(err){ reject(); });
         });        
     })
 }
