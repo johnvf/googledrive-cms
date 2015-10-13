@@ -50,7 +50,9 @@ function auth( ){
 function getDriveProjectFolders( ){
     return new Promise( function(resolve,reject){
         console.log('loading project folders..')
-        var q =  "title = 'NEW_CMS'"
+
+        var q =  "title = '" + process.env['CMS_ROOT_FOLDER'] +"'"
+        
         drive.files.list({ auth: jwtClient, q: q}, function(err, resp) {
             if (err){ throw err; reject(); };
             var cms_folder = resp.items[0]
