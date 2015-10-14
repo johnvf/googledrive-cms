@@ -18,13 +18,11 @@ var app;
 
 function getApp(name){
     return new Promise( function(resolve,reject){
-            // if (err){ throw err; reject(); }; // FIXME: Add proper error handling
-            // if (err){ console.log(err); reject(); return};
             console.log("connecting to stormpath at %s", process.env['STORMPATH_URL']);
             client = new stormpath.Client({apiKey: apiKey});
 
             client.getApplication( process.env['STORMPATH_URL'], function(err, app){
-                if (err) throw err;
+                if (err){ reject(err);};
                 console.log("got app");
                 resolve(app)
             });
@@ -36,12 +34,14 @@ function login(  username, password, app ){
     return new Promise( function(resolve, reject){
 
         app.authenticateAccount({ username: username, password: password }, function (err, result) {
-          // if (err){ throw err; reject(); }; // FIXME: Add proper error handling
-          if (err){ console.log(err); reject(); return};
-          console.log("logged in");
-          account = result.account;
-          resolve( account )
+          if (err){ reject( err.userMessage ); }
+          else{
+            console.log("logged in");
+            account = result.account;
+            resolve( account ) 
+          }
         });
+
     })
 }
 
@@ -72,20 +72,22 @@ function makeToken( account ){
     })
 }
 
-function getToken( username, password , callback ){
+function getToken( username, password , callback, errback ){
     if (!!username && !!password ){
         if( !app ){
-            getApp(appName)
-            .then( login.bind( this, username, password ) )
-            .then( getCustomData )
-            .then( makeToken )
-            .then( callback );
+          getApp(appName)
+          .then( login.bind( this, username, password ) )
+          .catch( errback )
+          .then( getCustomData )
+          .then( makeToken )
+          .then( callback )   
         }
         else{
-            login( username, password, app )
-            .then( getCustomData )
-            .then( makeToken )
-            .then( callback );
+          login( username, password, app )
+          .catch( errback )
+          .then( getCustomData )
+          .then( makeToken )
+          .then( callback )
         }
     }
     else{
@@ -94,11 +96,13 @@ function getToken( username, password , callback ){
 }
 
 function verifyToken( req, res, next, token ){
+    console.log("got here")
     // verifies secret and checks exp
     njwt.verify(token, process.env['STORMPATH_SECRET_KEY'], function(err,decoded){    
-      if (err) {
-        return res.json({ success: false, message: 'Failed to authenticate token.' });    
-      } else {
+      // if (err) { console.log("unable to verify"); throw err; } 
+      if (err) { console.log("unable to verify");  } 
+      else {
+        
         // if everything is good, save to request for use in other routes
         req.decoded = decoded;    
         next();

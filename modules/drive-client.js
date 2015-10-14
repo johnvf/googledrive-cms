@@ -40,10 +40,7 @@ var _layout_filename = ".layout.json"
 function auth( ){
     return new Promise( function(resolve,reject){
         jwtClient.authorize(function(err, tokens) {
-            if (err) {
-                console.log(err);
-                return;
-            }
+            if (err){ reject(err);};
             console.log("authed")
             resolve( );        
         });
@@ -55,8 +52,9 @@ function getDriveProjectFolders( ){
         console.log('loading project folders..')
 
         var q =  "title = '" + process.env['CMS_ROOT_FOLDER'] +"'"
+        
         drive.files.list({ auth: jwtClient, q: q}, function(err, resp) {
-
+            if (err){ reject(err); };
             var cms_folder = resp.items[0]
             q = "mimeType = 'application/vnd.google-apps.folder'"
 
@@ -76,6 +74,7 @@ function getDriveProjects( projects_allowed, folders ){
         var projects = folder_ids.map(  getDriveProject.bind( null, projects_allowed ) );
 
         Promise.all( projects )
+        .catch( function(err){ reject(err); } )
         .then(function (resp) {
             var valid_projects = resp.filter(function(val) { return val !== null; })
             resolve( valid_projects )
@@ -93,7 +92,7 @@ function getDriveProjectPermission( projects_allowed, project_id ){
         } 
         else {  
              drive.files.get({ 'fileId': project_id }, function(err, resp){
-
+                if (err){ reject(err); };
                 if ( projects_allowed.indexOf( resp.title ) != -1 ){
                     resolve( true );
                 } 
@@ -113,21 +112,25 @@ function getDriveProject( projects_allowed, project_id ){
         getDriveProjectPermission( projects_allowed, project_id ).then(function( permitted ){
             if ( permitted ){
                 console.log('loading project..')
-                getConfig( project_id ).then( function(config){
+                getConfig( project_id )
+                .then( function(config){
                     var project = { project_id: project_id, config: config }
 
                     getDriveProjectReports( project ).then( function( project ){
                         resolve( project )
                     })
+                    .catch( function(err){ reject(err); })
                 })
+                .catch( function(err){ reject(err); })
+                
             }
             else{
                 resolve(null);
             }
 
 
-        });
-
+        })
+        // .catch( function(err){ console.log("got here too!!"); reject();})
     });      
 }
 
@@ -137,7 +140,7 @@ function getDriveProjectReports( project ){
         // Get all report folders
         q = "mimeType = 'application/vnd.google-apps.folder' and title != '_data'"
         drive.children.list({ 'folderId': project.project_id, q: q }, function(err, resp){ 
-
+            if (err){ reject(err); };
             var folders = resp.items
             var folder_ids = folders.map( function( folder ){ return folder.id });
 
@@ -147,6 +150,7 @@ function getDriveProjectReports( project ){
             // var folder_names = folders.map( getFolderName ) 
 
             Promise.all( folder_ids.map(  getConfig ) )
+            .catch( function(err){ console.log("caught"); reject(err); })
             .then(function (reportConfigs) {
                 project.config.reports = {}
                 // Maps folder ids to report ids
@@ -197,13 +201,9 @@ function getDriveData( report ){
 function getDriveSheetData( item ){
     return new Promise( function(resolve,reject){
         spreadsheets({ key: item.key, auth: jwtClient }, function(err, spreadsheet) {
-            if(!spreadsheet){
-                console.log(err);
-                reject();
-                return
-            }
+            if (err){ reject(err);};
             spreadsheet.worksheets[parseInt(item.sheet)].cells({ range: item.range}, function(err, cells) {
-                if (err) { console.log( err );}
+                if (err){ reject(err);};
                 var data = chartPreprocessor.processGoogleSheet( cells )
                 item.data = data
                 resolve( data )
@@ -218,8 +218,7 @@ function getDriveReportLayout( project_id, report_id ){
         q ="title = '" + _layout_filename + "'"
 
         drive.children.list({ 'folderId': report_id, q: q }, function(err, resp){ 
-            console.log(resp);
-
+            if (err){ reject(err);};
             if ( resp.items[0] ){
                 drive.files.get({ 'fileId': resp.items[0].id, 'alt': 'media' }, function(err, resp){
                     resolve( resp )
@@ -237,8 +236,7 @@ function saveDriveReportLayout( project_id, report_id, layout ){
     q ="title = '" + _layout_filename + "'"
 
     drive.children.list({ 'folderId': report_id, q: q }, function(err, resp){ 
-        console.log(resp);
-
+        if (err){ reject(err); };
         if ( resp.items[0] )
             drive.files.update({ 
                 'fileId': resp.items[0].id,
@@ -273,7 +271,7 @@ function getDocAsPlaintext( file_resource ){
     return new Promise( function(resolve,reject){
 
         drive.files.get({ 'fileId': file_resource.id }, function(err, resp){ 
-
+            if (err){ reject(err); };
             var file_resource = resp
 
             request({
@@ -282,6 +280,7 @@ function getDocAsPlaintext( file_resource ){
                 authorization: 'Bearer ' + jwtClient.credentials.access_token
               }
             }, function( err, resp, body){
+                if (err){ reject(err); };
                 var cleanBody = body.trim();
                 resolve( cleanBody );
             });
@@ -292,14 +291,23 @@ function getDocAsPlaintext( file_resource ){
 
 function getConfig( folder_id ){
     return new Promise( function(resolve,reject){
+        console.log("getting config")
         q ="title contains 'config'"
-
         drive.children.list({ 'folderId': folder_id, q: q }, function(err, resp){ 
+            if (err){ reject(err); };
             var file_resource = resp.items[0]
             getDocAsPlaintext( file_resource ).then( function(configText){
-                console.log(configText);
-                resolve( yaml.parse(configText) )
+                var yamlConfig;
+                try{
+                    yamlConfig = yaml.parse(configText)
+                }
+                catch(err){ 
+                    throw "bad YAML";
+                }
+                
+                resolve( yamlConfig )
             })
+            .catch( function(err){ reject(err); });
         });        
     })
 }
@@ -337,37 +345,41 @@ function test( ){
 
 // Connects to google drive, loads the configs from their folders, 
 // and passes this information back to the callback
-function getProjects( projects_allowed, callback ){
+function getProjects( projects_allowed, callback, errback ){
     console.log("getting projects...");
     auth()
     .then( getDriveProjectFolders )
     .then( getDriveProjects.bind( null, projects_allowed) )
     .then( callback )
+    .catch( errback )
 }
 
 // Connects to google drive, loads the configs from their folders, 
 // and passes this information back to the callback
-function getReport( projects_allowed, project_id, report_id, callback ){
+function getReport( projects_allowed, project_id, report_id, callback, errback  ){
     console.log("getting project data...");
     auth()
     .then( getDriveProject.bind( null, projects_allowed, project_id ))
     .then( getDriveReport.bind( null, report_id ))
     .then( getDriveData )
     .then( callback )
+    .catch( errback )
 }
 
-function getReportLayout( project_id, report_id, callback ){
+function getReportLayout( project_id, report_id, callback, errback  ){
     console.log("getting report layout...")
     auth()
     .then( getDriveReportLayout.bind( null, project_id, report_id ))
     .then( callback )
+    .catch( errback )
 }
 
-function saveReportLayout( project_id, report_id, layout, callback){
+function saveReportLayout( project_id, report_id, layout, callback, errback ){
     console.log("saving report layout...") 
     auth()
     .then( saveDriveReportLayout.bind( null, project_id, report_id, layout ))
     .then( callback )
+    .catch( errback )
 }
 
 if (!module.parent) {
