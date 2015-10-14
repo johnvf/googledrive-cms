@@ -40,7 +40,7 @@ var _layout_filename = ".layout.json"
 function auth( ){
     return new Promise( function(resolve,reject){
         jwtClient.authorize(function(err, tokens) {
-            if (err){ throw err; reject(); };
+            if (err){ reject(err); throw err; };
             console.log("authed")
             resolve( );        
         });
@@ -54,7 +54,7 @@ function getDriveProjectFolders( ){
         var q =  "title = '" + process.env['CMS_ROOT_FOLDER'] +"'"
         
         drive.files.list({ auth: jwtClient, q: q}, function(err, resp) {
-            if (err){ throw err; reject(); };
+            if (err){ reject(err); throw err; };
             var cms_folder = resp.items[0]
             q = "mimeType = 'application/vnd.google-apps.folder'"
 
@@ -74,11 +74,11 @@ function getDriveProjects( projects_allowed, folders ){
         var projects = folder_ids.map(  getDriveProject.bind( null, projects_allowed ) );
 
         Promise.all( projects )
+        .catch( function(err){ reject(err); throw err; } )
         .then(function (resp) {
             var valid_projects = resp.filter(function(val) { return val !== null; })
             resolve( valid_projects )
-        })
-        .catch( function(err){ throw err; reject(); });
+        });
 
     })
 }
@@ -92,7 +92,7 @@ function getDriveProjectPermission( projects_allowed, project_id ){
         } 
         else {  
              drive.files.get({ 'fileId': project_id }, function(err, resp){
-                if (err){ throw err; reject(); };
+                if (err){ reject(err); throw err; };
                 if ( projects_allowed.indexOf( resp.title ) != -1 ){
                     resolve( true );
                 } 
@@ -120,7 +120,7 @@ function getDriveProject( projects_allowed, project_id ){
                         resolve( project )
                     })
                 })
-                .catch( function(err){ console.log("got hereeee!!"); throw err; reject();})
+                .catch( function(err){ reject(err);  throw err;})
                 
             }
             else{
@@ -129,9 +129,7 @@ function getDriveProject( projects_allowed, project_id ){
 
 
         })
-        .catch( function(err){ console.log("got here too!!"); reject();})
-        ;
-
+        // .catch( function(err){ console.log("got here too!!"); reject();})
     });      
 }
 
@@ -141,7 +139,7 @@ function getDriveProjectReports( project ){
         // Get all report folders
         q = "mimeType = 'application/vnd.google-apps.folder' and title != '_data'"
         drive.children.list({ 'folderId': project.project_id, q: q }, function(err, resp){ 
-            if (err){ throw err; reject(); };
+            if (err){ reject(err); throw err; };
             var folders = resp.items
             var folder_ids = folders.map( function( folder ){ return folder.id });
 
@@ -201,9 +199,9 @@ function getDriveData( report ){
 function getDriveSheetData( item ){
     return new Promise( function(resolve,reject){
         spreadsheets({ key: item.key, auth: jwtClient }, function(err, spreadsheet) {
-            if (err){ throw err; reject(); };
+            if (err){ reject(err); throw err;};
             spreadsheet.worksheets[parseInt(item.sheet)].cells({ range: item.range}, function(err, cells) {
-                if (err){ throw err; reject(); };
+                if (err){ reject(err); throw err;};
                 var data = chartPreprocessor.processGoogleSheet( cells )
                 item.data = data
                 resolve( data )
@@ -218,7 +216,7 @@ function getDriveReportLayout( project_id, report_id ){
         q ="title = '" + _layout_filename + "'"
 
         drive.children.list({ 'folderId': report_id, q: q }, function(err, resp){ 
-            if (err){ throw err; reject(); };
+            if (err){ reject(err); throw err;};
             if ( resp.items[0] ){
                 drive.files.get({ 'fileId': resp.items[0].id, 'alt': 'media' }, function(err, resp){
                     resolve( resp )
@@ -236,7 +234,7 @@ function saveDriveReportLayout( project_id, report_id, layout ){
     q ="title = '" + _layout_filename + "'"
 
     drive.children.list({ 'folderId': report_id, q: q }, function(err, resp){ 
-        if (err){ throw err; reject(); };
+        if (err){ reject(err); throw err; };
         if ( resp.items[0] )
             drive.files.update({ 
                 'fileId': resp.items[0].id,
@@ -271,7 +269,7 @@ function getDocAsPlaintext( file_resource ){
     return new Promise( function(resolve,reject){
 
         drive.files.get({ 'fileId': file_resource.id }, function(err, resp){ 
-            if (err){ throw err; reject(); };
+            if (err){ reject(err); throw err; };
             var file_resource = resp
 
             request({
@@ -280,7 +278,7 @@ function getDocAsPlaintext( file_resource ){
                 authorization: 'Bearer ' + jwtClient.credentials.access_token
               }
             }, function( err, resp, body){
-                if (err){ throw err; reject(); };
+                if (err){ reject(err); throw err; };
                 var cleanBody = body.trim();
                 resolve( cleanBody );
             });
@@ -294,22 +292,20 @@ function getConfig( folder_id ){
         console.log("getting config")
         q ="title contains 'config'"
         drive.children.list({ 'folderId': folder_id, q: q }, function(err, resp){ 
-            if (err){ throw err; reject(); };
+            if (err){ reject(err); throw err; };
             var file_resource = resp.items[0]
             getDocAsPlaintext( file_resource ).then( function(configText){
                 var yamlConfig;
                 try{
-                     yamlConfig = yaml.parse(configText)
-                     throw "Unable to parse YAML"
+                    yamlConfig = yaml.parse(configText)
                 }
                 catch(err){ 
-                    console.log(err)
-                    throw err;
+                    throw "bad YAML";
                 }
                 
                 resolve( yamlConfig )
             })
-            .catch( function(err){ reject(); });
+            .catch( function(err){ reject(err); throw err; });
         });        
     })
 }

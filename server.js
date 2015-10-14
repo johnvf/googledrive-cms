@@ -5,11 +5,12 @@ var express = require('express'),
     path = require('path');
 
 function errorHandler(err, req, res, next) {
+    console.log("handling error")
     console.error( JSON.stringify(err.stack) )
     if (res.headersSent) {
         return next(err);
     }
-    res.status(500);
+    res.status(304);
     res.send( { error: err } );
 }
 

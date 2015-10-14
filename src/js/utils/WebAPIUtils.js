@@ -37,10 +37,15 @@ module.exports = {
             if (res) {
               response = JSON.parse(res.text)
               if( response.success == false ){
-                alert("Unable to load project data. Authentication may have expired. Please logout & back in");
+                alert("Unable to load project data. Authentication may have expired. Please logout & back in")                               
               }
               else{
-                ServerActions.receiveProjects(JSON.parse(res.text));
+                if( error != undefined ){
+                  alert(error.response.body.error )
+                }
+                else{
+                  ServerActions.receiveProjects(JSON.parse(res.text)); 
+                }
               }
             }
           });
