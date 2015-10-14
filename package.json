@@ -37,6 +37,7 @@
     "njwt": "^0.2.2",
     "promise": "^7.0.4",
     "react": "^0.13.3",
+    "react-bootstrap":  "0.26.x",
     "react-grid-layout": "^0.8.5",
     "react-loader": "^1.4.0",
     "react-loaders": "^1.2.3",
