@@ -1,6 +1,20 @@
 var request = require('superagent');
 var ServerActions = require('../actions/ServerActions')
 
+function handleError( errText ){
+
+  switch(errText) {
+
+    case "No token provided":
+      alert('No token. Please logout, then login again.');
+      break;
+
+    default:
+      alert('Oh no! error ' + errText);
+      // do nothing
+  }
+  
+}
 
 module.exports = {
 
@@ -8,16 +22,16 @@ module.exports = {
         request.post( "/auth/login" )
         .set('Accept', 'application/json')
         .send({username: username, password: password})
-        .end(function(error, res){
-            if (res) {
-                // ServerActions.loggedIn( res.text );
-                // window.location.assign("/projects/landing");
-                var cb_res = {
-                    authenticated: true,
-                    token: res.text
-                }
-                cb(cb_res);
+        .end(function(err, res){
+          if (err == null) {
+            var cb_res = {
+                authenticated: true,
+                token: res.text
             }
+            cb(cb_res);
+          } else {
+            handleError(res.text);
+          }
         });
     },
 
@@ -33,37 +47,26 @@ module.exports = {
         request.get( "/api/project" )
           .set('Accept', 'application/json')
           .set('x-access-token', localStorage.token)
-          .end(function(error, res){
-            if (res) {
-              response = JSON.parse(res.text)
-              if( response.success == false ){
-                alert("Unable to load project data. Authentication may have expired. Please logout & back in")                               
-              }
-              else{
-                if( error != undefined ){
-                  alert(error.response.body.error )
-                }
-                else{
-                  ServerActions.receiveProjects(JSON.parse(res.text)); 
-                }
-              }
-            }
-          });
+          .end(function(err, res){
+
+          if (err == null) {
+            ServerActions.receiveProjects(JSON.parse(res.text)); 
+          } else {
+            handleError(res.text);
+          }
+
+        });
     },
 
     getReport: function(project_id, report_id){
         request.get( "/api/project/" + project_id + "/" + report_id )
           .set('Accept', 'application/json')
           .set('x-access-token', localStorage.token)
-          .end(function(error, res){
-            if (res) {
-              response = JSON.parse(res.text)
-              if( response.success == false ){
-                alert("Unable to load project data. Authentication may have expired. Please logout & back in");
-              }
-              else{
-                ServerActions.receiveReport( report_id, JSON.parse(res.text));
-              }
+          .end(function(err, res){
+            if (err == null) {
+              ServerActions.receiveReport( report_id, JSON.parse(res.text));
+            } else {
+              handleError(res.text);
             }
           });
     },
@@ -72,15 +75,11 @@ module.exports = {
         request.get( "/api/project/" + project_id + "/" + report_id + "/layout" )
           .set('Accept', 'application/json')
           .set('x-access-token', localStorage.token)
-          .end(function(error, res){
-            if (res) {
-              response = JSON.parse(res.text)
-              if( response.success == false ){
-                alert("Unable to load layout");
-              }
-              else{
-                ServerActions.receiveReportLayouts( report_id , JSON.parse(res.text));
-              }
+          .end(function(err, res){
+            if (err == null) {
+              ServerActions.receiveReportLayouts( report_id , JSON.parse(res.text));
+            } else {
+              handleError(res.text);
             }
           });
     },
@@ -90,15 +89,11 @@ module.exports = {
           .set('Accept', 'application/json')
           .set('x-access-token', localStorage.token)
           .send(layout)
-          .end(function(error, res){
-            if (res) {
-              response = JSON.parse(res.text)
-              if( response.success == false ){
-                alert("Unable to save layout");
-              }
-              else{
-                console.log("Saved.")
-              }
+          .end(function(err, res){
+            if (err == null) {
+              console.log("Saved.")
+            } else {
+              handleError(res.text);
             }
           });
     }

@@ -19,9 +19,15 @@ module.exports = function(app) {
   // Login Route
   app.post("/auth/login", function(req, res, next) {
     console.log(req.body);
-    stormpathClient.getToken(req.body.username, req.body.password, function(jwt) {
-      res.send(jwt)
-    })
+    stormpathClient.getToken(req.body.username, req.body.password, 
+      function(jwt) {
+        res.send(jwt)
+      },
+      function(err){ 
+        console.log("got here");
+        next(err); 
+      }
+    );
   });
 
   // Route middleware to verify a token
@@ -29,17 +35,19 @@ module.exports = function(app) {
 
     // check header or url parameters or post parameters for token
     var token = req.body.token || req.query.token || req.headers['x-access-token'];
-
-    // decode token
-    if (token) {
-      stormpathClient.verifyToken(req, res, next, token)
-    } else {
-      return res.status(403).send({
-        success: false,
-        message: 'No token provided.'
-      });
-
+    try{
+      console.log("getting token")
+      // decode token
+      if (token) {
+        stormpathClient.verifyToken(req, res, next, token)
+      } else {
+        throw "No token provided"
+      }
     }
+    catch( err ) {
+      next(err)
+    }
+
   });
   
   // Gets all available projects
@@ -50,7 +58,7 @@ module.exports = function(app) {
       function(data) {
         res.send(data);
       }, 
-      function(err){ console.log("error"); next(err); }
+      function(err){ next(err); }
     );
 
   });
