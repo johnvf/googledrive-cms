@@ -19,9 +19,15 @@ module.exports = function(app) {
   // Login Route
   app.post("/auth/login", function(req, res, next) {
     console.log(req.body);
-    stormpathClient.getToken(req.body.username, req.body.password, function(jwt) {
-      res.send(jwt)
-    })
+    stormpathClient.getToken(req.body.username, req.body.password, 
+      function(jwt) {
+        res.send(jwt)
+      },
+      function(err){ 
+        console.log("got here");
+        next(err); 
+      }
+    );
   });
 
   // Route middleware to verify a token
@@ -29,58 +35,73 @@ module.exports = function(app) {
 
     // check header or url parameters or post parameters for token
     var token = req.body.token || req.query.token || req.headers['x-access-token'];
-
-    // decode token
-    if (token) {
-      stormpathClient.verifyToken(req, res, next, token)
-    } else {
-      return res.status(403).send({
-        success: false,
-        message: 'No token provided.'
-      });
-
+    try{
+      console.log("getting token")
+      // decode token
+      if (token) {
+        stormpathClient.verifyToken(req, res, next, token)
+      } else {
+        throw "No token provided"
+      }
     }
+    catch( err ) {
+      next(err)
+    }
+
   });
   
   // Gets all available projects
-  app.get('/api/project', function(req, res) {
+  app.get('/api/project', function(req, res, next) {
     var projects_allowed = get_user_project_access(req)
-    driveClient.getProjects( projects_allowed, function(data) {
-      res.send(data);
-    });
+
+    driveClient.getProjects( projects_allowed, 
+      function(data) {
+        res.send(data);
+      }, 
+      function(err){ next(err); }
+    );
+
   });
   
 
   // Gets specific project report data
-  app.get('/api/project/:project_id/:report_id', function(req, res) {
+  app.get('/api/project/:project_id/:report_id', function(req, res, next) {
     var projects_allowed = get_user_project_access(req)
-    driveClient.getReport( projects_allowed, req.params.project_id, req.params.report_id, function(data) {
-      res.send(data);
-    });
+
+    driveClient.getReport( projects_allowed, req.params.project_id, req.params.report_id, 
+      function(data) {
+        res.send(data);
+      }, 
+      function(err){ next(err); }
+    );
+
   });
 
   // Gets specific project report layout
-  app.get('/api/project/:project_id/:report_id/layout', function(req, res) {
-    driveClient.getReportLayout( req.params.project_id, req.params.report_id, function(data) {
-      res.send(data);
-    });
+  app.get('/api/project/:project_id/:report_id/layout', function(req, res, next) {
+
+    driveClient.getReportLayout( req.params.project_id, req.params.report_id, 
+      function(data) {
+        res.send(data);
+      }, 
+      function(err){ next(err); }
+    );
+
   });
 
   // Saves the specific project report layout
   app.put('/api/project/:project_id/:report_id/layout', function(req, res) {
-    driveClient.saveReportLayout( req.params.project_id, req.params.report_id, req.body, function(success) {
-      if( success ){
+    
+    driveClient.saveReportLayout( req.params.project_id, req.params.report_id, req.body, 
+      function(success) {
         return res.status(200).send({
           success: true,
           message: 'Layout saved.'
         });
-      } else {
-        return res.status(500).send({
-          success: false,
-          message: 'Layout not saved.'
-        });
-      }
-    });
+      },
+      function(err){ next(err); }
+    );
+
   });
 
 };
