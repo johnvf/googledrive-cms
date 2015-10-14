@@ -1,6 +1,6 @@
 var path = require('path');
 var driveClient = require('./drive-client');
-var stormpathClient = require('./stormpath-client')
+var stormpathClient = require('./stormpath-client');
 
 function get_user_project_access(req){
     if( req.decoded ){
