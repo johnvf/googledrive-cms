@@ -12,7 +12,6 @@ var useBasename = require('history/lib/useBasename')
 var LoginStore = require( './stores/LoginStore')
 
 var Navbar = require( './components/Navbar')
-var Sidebar = require( './components/Sidebar')
 
 // Pages
 var Login = require( './pages/Login'),
@@ -70,7 +69,6 @@ var App = React.createClass({
       <div className= {appClass} >
         {bg}
         <Navbar loggedIn={ loggedIn }/>
-        <Sidebar loggedIn={ loggedIn }/>
         <div className="container-fluid centered">
           {this.props.children}
         </div>
