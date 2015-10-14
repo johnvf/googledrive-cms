@@ -1,5 +1,18 @@
 var React = require('react');
 
+function urlify(text) {
+    var urlRegex = /(https?:\/\/[^\s]+)/g;
+    return text.split(urlRegex).map( function(token, i) {
+        if( token.match(urlRegex) ){
+          var clean_url = token.replace(/^[.\s]+|[.\s]+$/g, "");
+          return (<a href={clean_url}> { token } </a>);
+        }
+        else{
+          return ( token );
+        }
+    })
+}
+
 var Panel = React.createClass({
 
   render: function(){
@@ -8,7 +21,7 @@ var Panel = React.createClass({
     if( this.props.body ){
       body = (
         <div className="panel-body">
-          <p>{this.props.body}</p>
+          { urlify(this.props.body) }
         </div>
         )
     }
