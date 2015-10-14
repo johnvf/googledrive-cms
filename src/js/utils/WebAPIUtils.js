@@ -9,6 +9,10 @@ function handleError( errText ){
       alert('No token. Please logout, then login again.');
       break;
 
+    case "Jwt is expired":
+      alert('Expired token. Please logout, then login again.');
+      break; 
+       
     default:
       alert('Oh no! error ' + errText);
       // do nothing

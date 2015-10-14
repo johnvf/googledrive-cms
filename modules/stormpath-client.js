@@ -100,7 +100,7 @@ function verifyToken( req, res, next, token ){
     // verifies secret and checks exp
     njwt.verify(token, process.env['STORMPATH_SECRET_KEY'], function(err,decoded){    
       // if (err) { console.log("unable to verify"); throw err; } 
-      if (err) { console.log("unable to verify");  } 
+      if (err) { console.log("unable to verify"); next(err.userMessage);  } 
       else {
         
         // if everything is good, save to request for use in other routes
