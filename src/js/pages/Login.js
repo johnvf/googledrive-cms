@@ -54,6 +54,10 @@ var Login = React.createClass({
         <label for="inputPassword" className="sr-only">Password</label>
         <input type="password" id="inputPassword" className="form-control" onChange={this.changePassword} value={this.state.password} placeholder="Password" required=""/>
         <button className="btn btn-lg btn-default btn-block btn-login" type="submit" onClick={this.login.bind(this)}>Sign in</button>
+        <p className="form-signin-heading">
+          {"This page only works in modern browsers & may not work on all mobile devices. If you aren't already, consider viewing with"}
+          <a href="https://www.google.com/chrome/browser"> "Chrome" </a>
+        </p> 
       </form>
       )
   }
