@@ -302,7 +302,7 @@ function getConfig( folder_id ){
                     yamlConfig = yaml.parse(configText)
                 }
                 catch(err){ 
-                    throw "bad YAML";
+                    throw "bad YAML @ folder:"+ folder_id;
                 }
                 
                 resolve( yamlConfig )
