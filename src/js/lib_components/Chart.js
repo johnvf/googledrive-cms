@@ -2,6 +2,26 @@ var React = require('react');
 
 var c3 = require('c3')
 
+function coerceNum( str ){
+    var num = parseFloat(str.replace(/[,$]+/g, ""))
+    if( isNaN(num)){
+        return str
+    } else{
+        return num
+    }
+}
+
+function cleanData( data ){
+    // console.log(data);
+    data.forEach( function(row, i){
+        row.forEach( function(col, j){
+            data[i][j] = coerceNum( data[i][j] )
+        })
+    })
+    // console.log(data);
+    return data
+}
+
 var Chart = React.createClass({
     // ...
     _renderChart: function (item) {
@@ -9,7 +29,7 @@ var Chart = React.createClass({
         this.chart = c3.generate({
             bindto: '#'+this.props.id,
             data: {
-                rows: item.data,
+                rows: cleanData( item.data ),
                 x : 'x',
                 type: item.chart_type,
                 types: item.types
