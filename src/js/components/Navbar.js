@@ -1,22 +1,14 @@
 var React = require('react');
-var DropdownButton = require('react-bootstrap/lib/DropdownButton');
+var NavBar = require('react-bootstrap/lib/Navbar');
+var Nav = require('react-bootstrap/lib/Nav');
+var CollapsibleNav = require('react-bootstrap/lib/CollapsibleNav');
+var NavItem = require('react-bootstrap/lib/NavItem');
+var NavDropdown = require('react-bootstrap/lib/NavDropdown');
+var NavBrand = require('react-bootstrap/lib/NavBrand');
 var MenuItem = require('react-bootstrap/lib/MenuItem');
 var Link = require('react-router').Link;
 
 var ProjectStore = require('../stores/ProjectStore')
-
-// function renderDropdownButton(title, i) {
-//   return (
-//     <DropdownButton style={{float: "right", marginTop: "4px"}} bsStyle={title.toLowerCase()} title={title} key={i} id={`dropdown-basic-${i}`}>
-//       <MenuItem eventKey="1">Action</MenuItem>
-//       <MenuItem eventKey="2">Another action</MenuItem>
-//       <MenuItem eventKey="3" active>Active Item</MenuItem>
-//       <MenuItem divider />
-//       <MenuItem eventKey="4">Separated link</MenuItem>
-//     </DropdownButton>
-//   );
-// }
-
 
 function getStateFromStores() {
   return {
@@ -56,9 +48,9 @@ var Navbar = React.createClass({
     })
 
     return (
-      <DropdownButton style={{float: "left", marginTop: "4px"}} bsStyle={title.toLowerCase()} title={title} key={i} id={`dropdown-basic-${i}`} >
+      <NavDropdown bsStyle={title.toLowerCase()} title={title} key={i} id={`dropdown-basic-${i}`} >
         { menuItems }
-      </DropdownButton>
+      </NavDropdown>
     );
   },
 
@@ -71,36 +63,36 @@ var Navbar = React.createClass({
       dropdown = this.renderDropdownButton(  "Projects", 0 , this.state.projects );
     }
 
-    var navbarClassName = "navbar-default navbar-fixed-top"
-    var brandClassName = "navbar-brand"
+    var navbarClassName;
+    var brandClassName;
 
     if ( loggedIn == false ){
       items = [
-        (<li> <Link to={ "/login" }>{ "Login" }</Link> </li>),
+        (<NavItem> <Link to={ "/login" }>{ "Login" }</Link> </NavItem>),
       ],
-      navbarClassName += " logged-out"
-      brandClassName += " logged-out"
+      navbarClassName = "logged-out"
+      brandClassName = "logged-out"
     }
     else {
       items = [
         dropdown,
-        (<li> <Link to={ "/" }>{ "Home" }</Link> </li>),
-        (<li> <Link to={ "/logout" }>{ "Logout" }</Link> </li>)
+        (<NavItem> <Link to={ "/" }>{ "Home" }</Link> </NavItem>),
+        (<NavItem> <Link to={ "/logout" }>{ "Logout" }</Link> </NavItem>)
       ]
     }
 
     return (
-      <div className={navbarClassName} role="navigation">
-        <div className="container">
-          <div className="navbar-header">
-            <a className={brandClassName} href="#"><img src="http://s10.postimg.org/cahd4z6d5/hyphae_logo_white.png"/>
-            </a>
-          </div>
-        <ul className="nav navbar-nav navbar-right">
-          { items }
-        </ul>
-        </div>
-      </div>
+      <NavBar className={navbarClassName} toggleNavKey={0}>
+        <NavBrand>
+          <a className={brandClassName} href="#"><img src="http://s10.postimg.org/cahd4z6d5/hyphae_logo_white.png"/>
+          </a>
+        </NavBrand>
+        <CollapsibleNav eventKey={0}>
+          <Nav navbar right>
+            { items }
+          </Nav>
+        </CollapsibleNav>
+      </NavBar>
     )
   }
 

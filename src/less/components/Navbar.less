@@ -4,6 +4,9 @@
   .navbar-default{ display: none!important }
 }
 
+.navbar{
+}
+
 .navbar-default{
     border-bottom: solid 2px #FFFFFF;
 }
@@ -14,7 +17,7 @@
 }
 
 .navbar-brand{
-	position: fixed;
+	position: absolute!important;
     left: 0px;
     padding: 0px;
     overflow: hidden;
@@ -35,4 +38,21 @@
     min-height: 400%;
     opacity: .5;
     margin-top: -45px;
+}
+
+@media (min-width: 768px){
+    .navbar-nav > li > a {
+         padding-top: 0px; 
+         padding-bottom: 0px; 
+         margin-top: 19px;
+    }
+}
+@media screen and (max-device-width: 480px){
+
+  .navbar{
+    font-size: 32px!important;
+  }
+  .navbar-nav > li > .dropdown-menu {
+      font-size: 32px!important;
+  }
 }
