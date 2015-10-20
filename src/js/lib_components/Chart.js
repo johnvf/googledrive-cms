@@ -55,7 +55,7 @@ var Chart = React.createClass({
             this._renderChart(this.props.item);
         }
         catch(err) {
-            alert( "Incorrect data for chart: " + err)
+            alert( "Incorrect data for chart "+this.props.id+": " + err)
         }
 
         // FIXME: This shouldn't be necessary - prop updates should work too
