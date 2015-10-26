@@ -83,23 +83,27 @@ var Dashboard = React.createClass({
     Object.keys(items).forEach( function(item_id, i){
 
       var item = items[ item_id ];
+      var style;
+      if( item.background ){
+        style = { background: item.background }
+      }
 
       switch (item.type) {
         case "text":
-          widgets.push( <div key={i} className="widget"><Text id={item_id} item={item}/></div> )
+          widgets.push( <div style={style} key={i} className="widget"><Text id={item_id} item={item}/></div> )
           break;
 
         case "image":
-          widgets.push( <div key={i} className="widget"><Image id={item_id} item={item}/></div> )
+          widgets.push( <div style={style} key={i} className="widget"><Image id={item_id} item={item}/></div> )
           break;
 
         case "table":
-          widgets.push( <div key={i} className="widget"><Table id={item_id} item={item}/></div> )
+          widgets.push( <div style={style} key={i} className="widget"><Table id={item_id} item={item}/></div> )
           break;
 
         case "chart":
           widgets.push( 
-            <div key={i} className="widget">
+            <div style={style} key={i} className="widget">
               <Chart subscribeToLayoutChange={self.subscribeToLayoutChange} id={item_id} item={item}/>
             </div> 
           )
