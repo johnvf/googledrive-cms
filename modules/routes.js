@@ -19,9 +19,9 @@ module.exports = function(app) {
   // Login Route
   app.post("/auth/login", function(req, res, next) {
     console.log(req.body);
-    stormpathClient.getToken(req.body.username, req.body.password, 
-      function(jwt) {
-        res.send(jwt)
+    stormpathClient.getUser(req.body.username, req.body.password, 
+      function( user ) {
+        res.send( user )
       },
       function(err){ 
         console.log("got here");

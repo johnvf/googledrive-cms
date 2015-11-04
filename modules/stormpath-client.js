@@ -51,7 +51,11 @@ function getCustomData( account ){
           account.getCustomData(function(err, customData) {
             account.projects = customData.projects
             console.log("got data");
-            resolve(account)
+            account.getGroups(function(err, groups) {
+              console.log("got groups");
+              account.groupData = groups.items.map( function(group){ return group.name })
+              resolve(account);
+            });
           });
         });
     })
@@ -68,11 +72,27 @@ function makeToken( account ){
         }
         console.log("made token");
         var jwt = njwt.create(claims, process.env['STORMPATH_SECRET_KEY'] )
-        resolve( jwt.compact() )
+        account.jwt = jwt.compact()
+        resolve(  account )
     })
 }
 
-function getToken( username, password , callback, errback ){
+function account2UserObject( account ){
+    return new Promise( function(resolve, reject){
+
+      var user = {
+        jwt: account.jwt,
+        username: account.username,
+        fullName: account.fullName,
+        projects: account.projects,
+        groupData: account.groupData
+      }
+
+      resolve( user )
+    })
+}
+
+function getUser( username, password , callback, errback ){
     if (!!username && !!password ){
         if( !app ){
           getApp(appName)
@@ -80,6 +100,7 @@ function getToken( username, password , callback, errback ){
           .catch( errback )
           .then( getCustomData )
           .then( makeToken )
+          .then( account2UserObject )
           .then( callback )   
         }
         else{
@@ -87,6 +108,7 @@ function getToken( username, password , callback, errback ){
           .catch( errback )
           .then( getCustomData )
           .then( makeToken )
+          .then( account2UserObject )
           .then( callback )
         }
     }
@@ -111,6 +133,6 @@ function verifyToken( req, res, next, token ){
 }
 
 module.exports = {
-    getToken: getToken,
+    getUser: getUser,
     verifyToken: verifyToken
 }

@@ -4,6 +4,7 @@ var Loader = require('react-loader');
 
 var ViewActions = require('../actions/ViewActions');
 var ProjectStore = require('../stores/ProjectStore')
+var LoginStore = require('../stores/LoginStore');
 
 var Project = require('../components/Project')
 
@@ -11,6 +12,7 @@ function getStateFromStores( project_id, report_id  ) {
   return {
     report: ProjectStore.getReport( project_id, report_id  ),
     layouts: ProjectStore.getReportLayouts( project_id, report_id  ),
+    user: LoginStore.getUser(),
     loaded: false
   };
 }
@@ -31,6 +33,7 @@ var Report = React.createClass({
 
   componentDidMount: function() {
     ProjectStore.addChangeListener(this._onChange);  
+    LoginStore.addChangeListener(this._onChange);  
   },
 
   componentWillReceiveProps: function(nextProps){
@@ -62,12 +65,22 @@ var Report = React.createClass({
         items = this.state.report.items;
         layouts = this.state.layouts
 
+        var editable = false;
+        if( !!this.state.user){
+          if( Array.isArray(this.state.user.groupData) == true ){
+            if ( this.state.user.groupData.indexOf("admin") != -1 ){
+              editable = true;
+            }
+          }
+        }
+
         report_components = (
           <Panel heading={ heading } >
               <Dashboard  items={items} 
                           report_id={report_id}
                           layouts={ layouts }
                           onSave={ ViewActions.saveReportLayouts.bind(null, project_id, report_id) } 
+                          editable={ editable }
               />
           </Panel>
         );

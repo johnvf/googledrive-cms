@@ -20,6 +20,7 @@ var Dashboard = React.createClass({
         ls = JSON.parse(localStorage.getItem( this.props.report_id )) || {};
       } catch(e) {}
     }
+
     return {
       className: "layout",
       cols: {lg: 12, md: 10, sm: 6, xs: 4, xxs: 2},
@@ -120,9 +121,12 @@ var Dashboard = React.createClass({
       var widgets = this.getWidgets( this.props.items );
 
       // TODO: Set this flag based on permissions of current user
-      var editable = true
-      var editor;
+      var editable = this.props.editable
+      var editor, isDraggable, isResizable;
+
       if( editable ){
+        isDraggable = true;
+        isResizable = true;
         editor = (
           <div className="editor">
             <button className="btn btn-default btn-sm" onClick={this.onSave}> SAVE LAYOUT </button> 
@@ -134,12 +138,18 @@ var Dashboard = React.createClass({
 
         );
       }
+      else{
+        isDraggable = false;
+        isResizable = false;
+      }
       // {lg: layout1, md: layout2, ...}
       return (    
           <div className="container-fluid dashboard">
             { editor }
             <ResponsiveReactGridLayout className="layout"
               {...this.props}
+              isDraggable={isDraggable} 
+              isResizable={isResizable}
               onLayoutChange={this.onLayoutChange}>
               {widgets}
             </ResponsiveReactGridLayout>
