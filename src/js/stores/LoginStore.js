@@ -9,6 +9,8 @@ var WebAPIUtils = require('../utils/WebAPIUtils');
 // Always start logged out..
 // var _loggedIn = false;
 var _loggedIn
+var _user
+
 if (localStorage.token) {
   _loggedIn = true
 }
@@ -38,6 +40,7 @@ var LoginStore = assign({}, EventEmitter.prototype, {
       WebAPIUtils.login(email, pass, (res) => {
         if (res.authenticated) {
           localStorage.token = res.token;
+          _user = res.user
           _loggedIn = true
         } else {
           _loggedIn = false
@@ -50,6 +53,10 @@ var LoginStore = assign({}, EventEmitter.prototype, {
 
   getToken: function () {
     return localStorage.token;
+  },
+
+  getUser: function () {
+    return _user;
   },
 
   logout: function () {

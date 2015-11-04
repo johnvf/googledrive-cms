@@ -28,9 +28,11 @@ module.exports = {
         .send({username: username, password: password})
         .end(function(err, res){
           if (err == null) {
+            var user = JSON.parse(res.text)
             var cb_res = {
                 authenticated: true,
-                token: res.text
+                token: user.jwt,
+                user: user
             }
             cb(cb_res);
           } else {
