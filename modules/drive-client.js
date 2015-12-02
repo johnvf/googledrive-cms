@@ -274,16 +274,25 @@ function getDocAsPlaintext( file_resource , folder_id ){
             console.log("getting file id: "+ file_resource.id+ ' in '+ folder_id )
             drive.files.get({ 'fileId': file_resource.id }, function(err, resp){ 
                 if (err){ reject(err); };
-                request({
-                  uri: resp.exportLinks['text/plain'],
-                  headers: {
-                    authorization: 'Bearer ' + jwtClient.credentials.access_token
-                  }
-                }, function( err, resp, body){
-                    if (err){ reject(err); };
-                    var cleanBody = body.trim();
-                    resolve( cleanBody );
-                });
+                if( !!resp ){
+
+                   request({
+                      uri: resp.exportLinks['text/plain'],
+                      headers: {
+                        authorization: 'Bearer ' + jwtClient.credentials.access_token
+                      }
+                    }, function( err, resp, body){
+                        if (err){ reject(err); };
+                        var cleanBody = body.trim();
+                        resolve( cleanBody );
+                    }); 
+
+                }
+                else{
+                    throw "file not found in folder "+ folder_id
+                    reject()   
+                }
+
             });  
         }
         else{
