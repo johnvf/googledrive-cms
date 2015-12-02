@@ -141,25 +141,30 @@ function getDriveProjectReports( project ){
         q = "mimeType = 'application/vnd.google-apps.folder' and title != '_data'"
         drive.children.list({ 'folderId': project.project_id, q: q }, function(err, resp){ 
             if (err){ reject(err); };
-            var folders = resp.items
-            var folder_ids = folders.map( function( folder ){ return folder.id });
+            if( resp.items ){
+                var folders = resp.items
+                var folder_ids = folders.map( function( folder ){ return folder.id });
 
-            // FIXME: Possibly add getFolderName & getFolderId to convert from name to id and back
-            // this would allow us to have clean URLs... eg project_foo/report_bar
-            // For now, just using the google folder_id
-            // var folder_names = folders.map( getFolderName ) 
+                // FIXME: Possibly add getFolderName & getFolderId to convert from name to id and back
+                // this would allow us to have clean URLs... eg project_foo/report_bar
+                // For now, just using the google folder_id
+                // var folder_names = folders.map( getFolderName ) 
 
-            Promise.all( folder_ids.map(  getConfig ) )
-            .catch( function(err){ console.log("caught"); reject(err); })
-            .then(function (reportConfigs) {
-                project.config.reports = {}
-                // Maps folder ids to report ids
-                reportConfigs.forEach( function(reportConfig, i){
-                    project.config.reports[ folder_ids[i]] = reportConfig
-                })
-                resolve( project )
-            });
-
+                Promise.all( folder_ids.map(  getConfig ) )
+                .catch( function(err){ console.log("caught"); reject(err); })
+                .then(function (reportConfigs) {
+                    project.config.reports = {}
+                    // Maps folder ids to report ids
+                    reportConfigs.forEach( function(reportConfig, i){
+                        project.config.reports[ folder_ids[i]] = reportConfig
+                    })
+                    resolve( project )
+                });
+            }
+            else{
+                console.error( "empty report" );
+                resolve(null)
+            }
         }); 
 
     });      
