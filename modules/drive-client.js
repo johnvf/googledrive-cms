@@ -119,9 +119,9 @@ function getDriveProject( projects_allowed, project_id ){
                     getDriveProjectReports( project ).then( function( project ){
                         resolve( project )
                     })
-                    .catch( function(err){ reject(err); })
+                    .catch( function(err){ console.error(err); resolve(null) })
                 })
-                .catch( function(err){ reject(err); })
+                .catch( function(err){  console.error(err); resolve(null) })
                 
             }
             else{
@@ -267,36 +267,44 @@ function saveDriveReportLayout( project_id, report_id, layout ){
  * Utils
  */
 
-function getDocAsPlaintext( file_resource ){
+function getDocAsPlaintext( file_resource , folder_id ){
     return new Promise( function(resolve,reject){
-
-        drive.files.get({ 'fileId': file_resource.id }, function(err, resp){ 
-            if (err){ reject(err); };
-            var file_resource = resp
-
-            request({
-              uri: file_resource.exportLinks['text/plain'],
-              headers: {
-                authorization: 'Bearer ' + jwtClient.credentials.access_token
-              }
-            }, function( err, resp, body){
+        
+        if( !!file_resource ){
+            console.log("getting file id: "+ file_resource.id+ ' in '+ folder_id )
+            drive.files.get({ 'fileId': file_resource.id }, function(err, resp){ 
                 if (err){ reject(err); };
-                var cleanBody = body.trim();
-                resolve( cleanBody );
-            });
+                request({
+                  uri: resp.exportLinks['text/plain'],
+                  headers: {
+                    authorization: 'Bearer ' + jwtClient.credentials.access_token
+                  }
+                }, function( err, resp, body){
+                    if (err){ reject(err); };
+                    var cleanBody = body.trim();
+                    resolve( cleanBody );
+                });
+            });  
+        }
+        else{
+            throw "file not found in folder "+ folder_id
+            reject()
+        }
 
-        });
     })
 }
 
 function getConfig( folder_id ){
     return new Promise( function(resolve,reject){
-        console.log("getting config")
+        console.log("getting config from folder: "+folder_id)
         q ="title contains 'config'"
         drive.children.list({ 'folderId': folder_id, q: q }, function(err, resp){ 
             if (err){ reject(err); };
             var file_resource = resp.items[0]
-            getDocAsPlaintext( file_resource ).then( function(configText){
+            console.log(file_resource)
+
+            getDocAsPlaintext( file_resource , folder_id )
+            .then( function(configText){
                 var yamlConfig;
                 try{
                     yamlConfig = yaml.parse(configText)
@@ -308,6 +316,7 @@ function getConfig( folder_id ){
                 resolve( yamlConfig )
             })
             .catch( function(err){ reject(err); });
+
         });        
     })
 }
