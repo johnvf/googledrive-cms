@@ -289,14 +289,14 @@ function getDocAsPlaintext( file_resource , folder_id ){
 
                 }
                 else{
-                    throw "file not found in folder "+ folder_id
+                    console.error("file not found in folder "+ folder_id)
                     reject()   
                 }
 
             });  
         }
         else{
-            throw "file not found in folder "+ folder_id
+            console.error("file not found in folder "+ folder_id);
             reject()
         }
 
