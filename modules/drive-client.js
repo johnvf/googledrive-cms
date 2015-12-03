@@ -115,11 +115,14 @@ function getDriveProject( projects_allowed, project_id ){
                 getConfig( project_id )
                 .then( function(config){
                     var project = { project_id: project_id, config: config }
+                    // FIXME: Hacky throttling to prevent 403s from google drive
+                    setTimeout( function(){
+                        getDriveProjectReports( project ).then( function( project ){
+                            resolve( project )
+                        })
+                        .catch( function(err){ console.error(err); resolve(null) })
+                    }, 500)
 
-                    getDriveProjectReports( project ).then( function( project ){
-                        resolve( project )
-                    })
-                    .catch( function(err){ console.error(err); resolve(null) })
                 })
                 .catch( function(err){  console.error(err); resolve(null) })
                 
