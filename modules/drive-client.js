@@ -121,7 +121,7 @@ function getDriveProject( projects_allowed, project_id ){
                             resolve( project )
                         })
                         .catch( function(err){ console.error(err); resolve(null) })
-                    }, 500)
+                    }, Math.random()*500)
 
                 })
                 .catch( function(err){  console.error(err); resolve(null) })
@@ -316,28 +316,33 @@ function getDocAsPlaintext( file_resource , folder_id ){
 
 function getConfig( folder_id ){
     return new Promise( function(resolve,reject){
-        console.log("getting config from folder: "+folder_id)
-        q ="title contains 'config'"
-        drive.children.list({ 'folderId': folder_id, q: q }, function(err, resp){ 
-            if (err){ reject(err); };
-            var file_resource = resp.items[0]
-            console.log(file_resource)
+        // FIXME: Hacky throttling to prevent 403s from google drive
+        setTimeout( function(){
+            
+            console.log("getting config from folder: "+folder_id)
+            q ="title contains 'config'"
+            drive.children.list({ 'folderId': folder_id, q: q }, function(err, resp){ 
+                if (err){ reject(err); };
+                var file_resource = resp.items[0]
+                console.log(file_resource)
 
-            getDocAsPlaintext( file_resource , folder_id )
-            .then( function(configText){
-                var yamlConfig;
-                try{
-                    yamlConfig = yaml.parse(configText)
-                }
-                catch(err){ 
-                    throw "bad YAML @ folder:"+ folder_id;
-                }
-                
-                resolve( yamlConfig )
-            })
-            .catch( function(err){ console.log(err); resolve(null) });
+                getDocAsPlaintext( file_resource , folder_id )
+                .then( function(configText){
+                    var yamlConfig;
+                    try{
+                        yamlConfig = yaml.parse(configText)
+                    }
+                    catch(err){ 
+                        throw "bad YAML @ folder:"+ folder_id;
+                    }
+                    
+                    resolve( yamlConfig )
+                })
+                .catch( function(err){ console.log(err); resolve(null) });
 
-        });        
+            });     
+
+        }, Math.random()*500)
     })
 }
 
