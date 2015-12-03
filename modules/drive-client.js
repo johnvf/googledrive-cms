@@ -121,7 +121,7 @@ function getDriveProject( projects_allowed, project_id ){
                             resolve( project )
                         })
                         .catch( function(err){ console.error(err); resolve(null) })
-                    }, Math.random()*500)
+                    }, 500+Math.random()*1500)
 
                 })
                 .catch( function(err){  console.error(err); resolve(null) })
@@ -318,7 +318,7 @@ function getConfig( folder_id ){
     return new Promise( function(resolve,reject){
         // FIXME: Hacky throttling to prevent 403s from google drive
         setTimeout( function(){
-            
+
             console.log("getting config from folder: "+folder_id)
             q ="title contains 'config'"
             drive.children.list({ 'folderId': folder_id, q: q }, function(err, resp){ 
@@ -342,7 +342,7 @@ function getConfig( folder_id ){
 
             });     
 
-        }, Math.random()*500)
+        }, Math.random()*2000)
     })
 }
 
