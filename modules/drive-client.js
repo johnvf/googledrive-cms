@@ -74,11 +74,11 @@ function getDriveProjects( projects_allowed, folders ){
         var projects = folder_ids.map(  getDriveProject.bind( null, projects_allowed ) );
 
         Promise.all( projects )
-        .catch( function(err){ reject(err); } )
         .then(function (resp) {
             var valid_projects = resp.filter(function(val) { return val !== null; })
             resolve( valid_projects )
-        });
+        })
+        .catch( function(err){ reject(err); } );
 
     })
 }
@@ -141,7 +141,7 @@ function getDriveProjectReports( project ){
         q = "mimeType = 'application/vnd.google-apps.folder' and title != '_data'"
         drive.children.list({ 'folderId': project.project_id, q: q }, function(err, resp){ 
             if (err){ reject(err); };
-            if( resp.items ){
+            if( !!resp){
                 var folders = resp.items
                 var folder_ids = folders.map( function( folder ){ return folder.id });
 
@@ -151,18 +151,21 @@ function getDriveProjectReports( project ){
                 // var folder_names = folders.map( getFolderName ) 
 
                 Promise.all( folder_ids.map(  getConfig ) )
-                .catch( function(err){ console.log("caught"); reject(err); })
                 .then(function (reportConfigs) {
                     project.config.reports = {}
                     // Maps folder ids to report ids
                     reportConfigs.forEach( function(reportConfig, i){
-                        project.config.reports[ folder_ids[i]] = reportConfig
+                        if(!!reportConfig){
+                            project.config.reports[ folder_ids[i]] = reportConfig
+                        }
+                        
                     })
                     resolve( project )
-                });
+                })
+                .catch( function(err){ console.error("problem with reports"); resolve(null); });
             }
             else{
-                console.error( "empty report" );
+                console.error( "empty project" );
                 resolve(null)
             }
         }); 
@@ -329,7 +332,7 @@ function getConfig( folder_id ){
                 
                 resolve( yamlConfig )
             })
-            .catch( function(err){ reject(err); });
+            .catch( function(err){ console.log(err); resolve(null) });
 
         });        
     })
